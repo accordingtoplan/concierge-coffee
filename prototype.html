@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concierge Coffee</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 11px;
+      color: #111;
+      background: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+    /* ── NAV ─────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      height: 44px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    nav .logo {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    nav .nav-left, nav .nav-right {
+      display: flex;
+      gap: 24px;
+    }
+
+    nav a {
+      font-size: 11px;
+      letter-spacing: 0.02em;
+      color: #111;
+      transition: color 0.15s;
+    }
+
+    nav a:hover { color: #999; }
+
+    /* ── SPLIT HERO ──────────────────────────── */
+    .split-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .split-hero .sh-left {
+      height: 420px;
+      overflow: hidden;
+    }
+
+    .split-hero .sh-left img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: grayscale(100%);
+    }
+
+    .split-hero .sh-right {
+      background: #f3f1ee;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding: 24px;
+      position: relative;
+    }
+
+    .sh-right .product-aside {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      justify-content: flex-end;
+    }
+
+    .sh-right .product-thumb {
+      width: 72px;
+      height: 96px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .sh-right .product-thumb img {
+      object-fit: cover;
+    }
+
+    .sh-right .card-body {
+      align-self: flex-end;
+    }
+
+    .sh-right .card-body h2 {
+      font-size: 17px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .sh-right .card-body p {
+      font-size: 11px;
+      color: #888;
+      line-height: 1.6;
+      margin-bottom: 18px;
+      max-width: 240px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 9px 18px;
+      background: #111;
+      color: #fff;
+      font-size: 10px;
+      font-family: inherit;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover { opacity: 0.65; }
+
+    /* ── EDITORIAL ───────────────────────────── */
+    .editorial {
+      padding: 52px 20px 48px;
+    }
+
+    .editorial .eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .editorial h1 {
+      font-size: clamp(20px, 2.8vw, 36px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      max-width: 780px;
+      margin-bottom: 28px;
+    }
+
+    /* ── LIFESTYLE ROW ───────────────────────── */
+    .lifestyle-row {
+      display: grid;
+      grid-template-columns: 1.9fr 1fr;
+    }
+
+    .lifestyle-row .lr-img {
+      height: 520px;
+      overflow: hidden;
+    }
+
+    .lifestyle-row .lr-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%);
+    }
+
+    .lifestyle-row .lr-panel {
+      background: #f3f1ee;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px;
+    }
+
+    .lr-panel .badge {
+      font-size: 9.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #999;
+    }
+
+    .lr-panel .product-img {
+      width: 100%;
+      max-width: 160px;
+      height: 200px;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    .lr-panel h3 {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+
+    .lr-panel .price {
+      font-size: 11px;
+      color: #999;
+      margin-bottom: 18px;
+    }
+
+    .lr-panel .btn {
+      width: 100%;
+      text-align: center;
+    }
+
+    .lr-panel .captions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid #e4e0da;
+    }
+
+    .lr-panel .cap-title {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .lr-panel .cap-body {
+      font-size: 10.5px;
+      color: #888;
+      line-height: 1.6;
+    }
+
+    /* ── DARK ORIGIN SECTION ─────────────────── */
+    .origin-section {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      background: #111;
+      min-height: 460px;
+    }
+
+    .origin-text {
+      padding: 32px 24px 32px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .origin-text .eyebrow {
+      font-size: 9.5px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #f0c040;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .origin-text p {
+      font-size: 11px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .origin-img {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .origin-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%) brightness(0.55);
+    }
+
+    .hotspot {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9.5px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* ── 6-COL ATTRIBUTES ────────────────────── */
+    .attr-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      border-top: 1px solid #e8e8e8;
+    }
+
+    .attr-col {
+      padding: 24px 18px;
+      border-right: 1px solid #e8e8e8;
+    }
+
+    .attr-col:last-child { border-right: none; }
+
+    .attr-col .at-title {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      gap: 6px;
+      align-items: baseline;
+    }
+
+    .attr-col .at-title .num { color: #bbb; font-weight: 400; }
+
+    .attr-col p {
+      font-size: 10.5px;
+      line-height: 1.7;
+      color: #888;
+    }
+
+    /* ── JOURNAL ROW ─────────────────────────── */
+    .journal-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      height: 48px;
+      border-top: 1px solid #e8e8e8;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .journal-bar span {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .journal-bar a {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #999;
+    }
+
+    .journal-bar a:hover { color: #111; }
+
+    /* ── NEWSLETTER ──────────────────────────── */
+    .newsletter {
+      padding: 48px 20px;
+    }
+
+    .newsletter p {
+      font-size: 11px;
+      color: #888;
+      line-height: 1.7;
+      max-width: 320px;
+      margin-bottom: 20px;
+    }
+
+    .nl-row {
+      display: flex;
+      max-width: 300px;
+    }
+
+    .nl-row input {
+      flex: 1;
+      padding: 9px 12px;
+      font-size: 11px;
+      font-family: inherit;
+      border: 1px solid #ddd;
+      border-right: none;
+      outline: none;
+      background: #fff;
+    }
+
+    .nl-row input:focus { border-color: #111; }
+    .nl-row input::placeholder { color: #bbb; }
+
+    /* ── FOOTER ──────────────────────────────── */
+    footer {
+      border-top: 1px solid #e8e8e8;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 0;
+      padding: 36px 20px 24px;
+    }
+
+    footer .ft-h {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    footer .ft-logo {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    footer .ft-addr {
+      font-size: 10.5px;
+      color: #888;
+      line-height: 1.8;
+    }
+
+    footer ul { list-style: none; }
+    footer ul li { margin-bottom: 7px; }
+    footer ul a { font-size: 10.5px; color: #888; }
+    footer ul a:hover { color: #111; }
+
+    .ft-copy {
+      grid-column: 1 / -1;
+      padding-top: 28px;
+      border-top: 1px solid #e8e8e8;
+      margin-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #bbb;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <a href="#">Coffee</a>
+    <a href="#">Merch</a>
+    <a href="visit.html">Visit</a>
+  </div>
+  <a href="#" class="logo">Concierge.</a>
+  <div class="nav-right">
+    <a href="#">Wholesale</a>
+    <a href="#">Bag (0)</a>
+  </div>
+</nav>
+
+<!-- SPLIT HERO -->
+<section class="split-hero">
+  <div class="sh-left">
+    <img src="images/hero.jpeg" alt="Concierge Coffee">
+  </div>
+  <div class="sh-right">
+    <div class="product-aside">
+      <div class="product-thumb">
+        <img src="images/product-filter-single.jpg" alt="Filter Coffee">
+      </div>
+    </div>
+    <div class="card-body">
+      <h2>Concierge Filter<br>Single Origin</h2>
+      <p>Single-origin beans, roasted to order and ready for every brew method.</p>
+      <a href="#" class="btn">Find out more</a>
+    </div>
+  </div>
+</section>
+
+<!-- EDITORIAL -->
+<section class="editorial">
+  <span class="eyebrow">Everything you need and nothing more</span>
+  <h1>Sourcing coffees we know personally — traceable, seasonal, and roasted only after you order.</h1>
+  <a href="#" class="btn">Shop coffee</a>
+</section>
+
+<!-- LIFESTYLE ROW -->
+<section class="lifestyle-row">
+  <div class="lr-img">
+    <img src="images/nicaragua.jpeg" alt="Nicaragua">
+  </div>
+  <div class="lr-panel">
+    <span class="badge">Current offering</span>
+    <div>
+      <div class="product-img">
+        <img src="images/product-espresso-blend.jpg" alt="Espresso Blend">
+      </div>
+    </div>
+    <div>
+      <h3>Espresso Blend<br>250g</h3>
+      <p class="price">From $22.00</p>
+      <a href="#" class="btn">Shop coffee</a>
+      <div class="captions">
+        <div>
+          <div class="cap-title">Single origin</div>
+          <p class="cap-body">Traceable to one farm, one harvest.</p>
+        </div>
+        <div>
+          <div class="cap-title">Roasted to order</div>
+          <p class="cap-body">We roast after you buy. Not before.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DARK ORIGIN SECTION -->
+<section class="origin-section">
+  <div class="origin-text">
+    <div>
+      <span class="eyebrow">Origin focus</span>
+      <p>We've built direct relationships with the farmers behind every coffee we offer. Altitude, microclimate, and careful processing — the provenance tells you everything.</p>
+    </div>
+    <p style="font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:0.08em;text-transform:uppercase;">Arts District, LA</p>
+  </div>
+  <div class="origin-img">
+    <img src="images/espresso.jpeg" alt="Origin">
+    <div class="hotspot" style="top:32%;left:28%">1</div>
+    <div class="hotspot" style="top:50%;left:48%">2</div>
+    <div class="hotspot" style="top:28%;left:62%">3</div>
+    <div class="hotspot" style="top:62%;left:72%">4</div>
+    <div class="hotspot" style="top:44%;left:84%">5</div>
+  </div>
+</section>
+
+<!-- 6-COL ATTRIBUTES -->
+<div class="attr-grid">
+  <div class="attr-col">
+    <div class="at-title"><span class="num">01</span> Direct Trade</div>
+    <p>Relationships built directly with producers who receive above fair-trade pricing.</p>
+  </div>
+  <div class="attr-col">
+    <div class="at-title"><span class="num">02</span> Roasted to Order</div>
+    <p>We roast only after you buy. No sitting on warehouse shelves.</p>
+  </div>
+  <div class="attr-col">
+    <div class="at-title"><span class="num">03</span> Single Origin</div>
+    <p>Every coffee traceable to one farm. No blends to mask mediocrity.</p>
+  </div>
+  <div class="attr-col">
+    <div class="at-title"><span class="num">04</span> High Altitude</div>
+    <p>Sourced from farms above 1,600m where slow ripening builds complexity.</p>
+  </div>
+  <div class="attr-col">
+    <div class="at-title"><span class="num">05</span> Seasonal</div>
+    <p>Our offering rotates with harvest. When it's gone, it's gone.</p>
+  </div>
+  <div class="attr-col">
+    <div class="at-title"><span class="num">06</span> Arts District, LA</div>
+    <p>821 Traction Ave. Come in, taste something, ask questions.</p>
+  </div>
+</div>
+
+<!-- JOURNAL BAR -->
+<div class="journal-bar">
+  <span>The Journal</span>
+  <a href="#">View all →</a>
+</div>
+
+<!-- NEWSLETTER -->
+<div class="newsletter">
+  <p>Join our list for brew guides, origin stories, and considered updates.</p>
+  <div class="nl-row">
+    <input type="email" placeholder="Email address">
+    <a href="#" class="btn">Sign up</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="ft-logo">Concierge Coffee</div>
+    <div class="ft-addr">821 Traction Ave<br>Los Angeles, CA 90013</div>
+  </div>
+  <div>
+    <div class="ft-h">Shop</div>
+    <ul>
+      <li><a href="#">Coffee</a></li>
+      <li><a href="#">Merch</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="ft-h">Info</div>
+    <ul>
+      <li><a href="visit.html">Visit</a></li>
+      <li><a href="#">Wholesale</a></li>
+      <li><a href="https://www.instagram.com/conciergecoffee/" target="_blank">Instagram</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="ft-h">Policies</div>
+    <ul>
+      <li><a href="#">Shipping</a></li>
+      <li><a href="#">Returns</a></li>
+    </ul>
+  </div>
+  <div class="ft-copy">
+    <span>© 2026 Concierge Coffee LLC</span>
+    <span>conciergecoffee.com</span>
+  </div>
+</footer>
+
+</body>
+</html>
