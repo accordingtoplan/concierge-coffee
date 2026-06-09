@@ -75,7 +75,7 @@
   }
 
   .hero-title {
-    font-size: clamp(48px, 7vw, 96px);
+    font-size: clamp(32px, 4.5vw, 64px);
     font-weight: 300;
     letter-spacing: -0.03em;
     line-height: 0.92;
@@ -247,8 +247,8 @@
   footer {
     padding: 48px 32px;
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 80px;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
     border-top: 1px solid #f0f0f0;
   }
 
@@ -303,7 +303,8 @@
     <span class="logo-text">Concierge.</span>
   </div>
   <div class="nav-r">
-    <a onclick="scrollToShop()">Shop</a>
+    <a onclick="scrollToShop()">Coffee</a>
+    <a onclick="scrollToMerch()">Merch</a>
     <a href="#">Visit</a>
     <a onclick="openCart()" id="bag-link">Bag (0)</a>
   </div>
@@ -315,7 +316,7 @@
     <img src="images/hero.jpeg" alt="Concierge Coffee" />
   </div>
   <div class="hero-meta">
-    <div class="hero-title">Single<br>origin.</div>
+    <div class="hero-title">Coffee.</div>
     <div class="hero-sub">
       <span>Arts District, LA</span>
       <span>821 Traction Ave</span>
@@ -357,6 +358,51 @@
   </div>
 </div>
 
+<!-- MERCH -->
+<section class="shop" id="merch">
+  <div class="shop-head">
+    <span class="shop-title">Merch</span>
+  </div>
+  <div class="grid">
+    <div class="card merch-card" onclick="">
+      <div class="card-img" style="background:#f7f7f7">
+        <img src="https://kinto-usa.com/cdn/shop/files/20181_01.jpg" alt="Water Bottle" style="object-fit:contain;padding:16px" />
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-name">Water Bottle</div>
+          <div class="card-sub">Limited Edition · KINTO</div>
+        </div>
+        <div class="card-price">—</div>
+      </div>
+    </div>
+    <div class="card merch-card">
+      <div class="card-img" style="background:#f7f7f7;display:flex;align-items:center;justify-content:center">
+        <span style="font-size:10px;color:#bbb;letter-spacing:0.06em;text-transform:uppercase">Coming Soon</span>
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-name">RCA Car</div>
+          <div class="card-sub">Limited Edition</div>
+        </div>
+        <div class="card-price">—</div>
+      </div>
+    </div>
+    <div class="card merch-card">
+      <div class="card-img" style="background:#f7f7f7;display:flex;align-items:center;justify-content:center">
+        <span style="font-size:10px;color:#bbb;letter-spacing:0.06em;text-transform:uppercase">Coming Soon</span>
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-name">T-Shirt</div>
+          <div class="card-sub">Limited Edition</div>
+        </div>
+        <div class="card-price">—</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div>
@@ -370,6 +416,14 @@
     <div class="ft-h">Shop</div>
     <ul class="ft-links" id="footer-links">
       <li><a href="#">Coffee</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="ft-h">Merch</div>
+    <ul class="ft-links">
+      <li><a onclick="scrollToMerch()">Water Bottle</a></li>
+      <li><a onclick="scrollToMerch()">RCA Car</a></li>
+      <li><a onclick="scrollToMerch()">T-Shirt</a></li>
     </ul>
   </div>
   <div>
@@ -551,6 +605,10 @@
 
   window.goToCheckout = () => {
     if (cart?.checkoutUrl) window.location.href = cart.checkoutUrl;
+  };
+
+  window.scrollToMerch = () => {
+    document.getElementById('merch').scrollIntoView({ behavior: 'smooth' });
   };
 
   window.scrollToShop = () => {
