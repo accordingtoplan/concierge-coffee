@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concierge Coffee</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #fff;
+    color: #111;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .lbl {
+    padding: 80px 32px 0;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: #ccc;
+    text-transform: uppercase;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    height: 48px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-mark {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-mark svg {
+    width: 10px;
+    height: 10px;
+    fill: #fff;
+  }
+
+  .logo-text {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .nav-r {
+    display: flex;
+    gap: 32px;
+    font-size: 11px;
+    color: #111;
+  }
+
+  .nav-r a { transition: color 0.15s; }
+  .nav-r a:hover { color: #999; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 24px 32px 80px;
+  }
+
+  .hero-img {
+    width: 100%;
+    aspect-ratio: 16/7;
+    background: #f2f2f2;
+    overflow: hidden;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .hero-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .hero-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .hero-title {
+    font-size: clamp(48px, 7vw, 96px);
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    line-height: 0.92;
+  }
+
+  .hero-sub {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-bottom: 4px;
+  }
+
+  .hero-sub span {
+    display: block;
+    font-size: 11px;
+    color: #999;
+  }
+
+  .hero-sub a {
+    font-size: 11px;
+    color: #111;
+  }
+
+  /* ── SHOP ── */
+  .shop { padding: 0 32px 80px; }
+
+  .shop-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 48px;
+    margin-bottom: 2px;
+  }
+
+  .shop-title {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .filters {
+    display: flex;
+    gap: 24px;
+    font-size: 11px;
+    color: #bbb;
+  }
+
+  .filters span { cursor: pointer; transition: color 0.15s; }
+  .filters span.on { color: #111; }
+  .filters span:hover { color: #111; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+
+  .card { cursor: pointer; }
+
+  .card-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: #f7f7f7;
+    overflow: hidden;
+  }
+
+  .card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .card:hover .card-img img { transform: scale(1.04); }
+
+  .card-info {
+    padding: 10px 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .card-name { font-size: 11px; font-weight: 400; }
+
+  .card-origin {
+    font-size: 10px;
+    color: #bbb;
+    margin-top: 3px;
+  }
+
+  .card-price { font-size: 11px; color: #111; }
+
+  /* ── PDP ── */
+  .pdp {
+    padding: 0 32px 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    align-items: start;
+  }
+
+  .pdp-imgs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .pdp-main {
+    grid-column: 1 / -1;
+    aspect-ratio: 4/3;
+    background: #f7f7f7;
+    overflow: hidden;
+  }
+
+  .pdp-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .pdp-sm {
+    aspect-ratio: 1;
+    background: #f2f2f2;
+    overflow: hidden;
+  }
+
+  .pdp-sm img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  .pdp-r {
+    padding: 0 0 0 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .pdp-origin {
+    font-size: 10px;
+    color: #bbb;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .pdp-name {
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+
+  .pdp-price {
+    font-size: 11px;
+    color: #999;
+  }
+
+  .pdp-notes {
+    display: flex;
+    gap: 24px;
+  }
+
+  .pdp-note {
+    font-size: 10px;
+    color: #bbb;
+  }
+
+  .pdp-desc {
+    font-size: 11px;
+    line-height: 1.8;
+    color: #999;
+    max-width: 260px;
+  }
+
+  .grind-lbl {
+    font-size: 10px;
+    color: #bbb;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .grind-opts { display: flex; gap: 2px; }
+
+  .gb {
+    padding: 8px 12px;
+    background: #f5f5f5;
+    border: none;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    color: #999;
+    cursor: pointer;
+    transition: all 0.1s;
+  }
+
+  .gb:hover { color: #111; background: #eee; }
+  .gb.on { background: #111; color: #fff; }
+
+  .atc {
+    background: #111;
+    color: #fff;
+    border: none;
+    padding: 14px 16px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    width: 100%;
+    transition: opacity 0.15s;
+    text-align: center;
+  }
+
+  .atc:hover { opacity: 0.75; }
+
+  /* ── CART ── */
+  .cart-wrap {
+    padding: 0 32px 80px;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .cart-bg {
+    background: #f7f7f7;
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #ddd;
+  }
+
+  .cart { display: flex; flex-direction: column; gap: 24px; }
+
+  .cart-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .cart-count { color: #bbb; font-weight: 400; }
+
+  .ci {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: 14px;
+    align-items: start;
+  }
+
+  .ci-img {
+    aspect-ratio: 1;
+    background: #f2f2f2;
+    overflow: hidden;
+  }
+
+  .ci-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ci-name { font-size: 11px; }
+  .ci-sub { font-size: 10px; color: #bbb; margin-top: 4px; }
+  .ci-price { font-size: 11px; }
+
+  .cart-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    padding-top: 8px;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  .cart-total-lbl { color: #bbb; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 32px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 80px;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  .ft-logo {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  .ft-addr {
+    font-size: 11px;
+    line-height: 1.9;
+    color: #bbb;
+  }
+
+  .ft-h {
+    font-size: 10px;
+    color: #bbb;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  .ft-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+
+  .ft-links a {
+    font-size: 11px;
+    color: #bbb;
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .ft-links a:hover { color: #111; }
+
+  .ft-copy {
+    grid-column: 1 / -1;
+    padding-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #ccc;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <span class="logo-text">Concierge.</span>
+  </div>
+  <div class="nav-r">
+    <a href="#">Shop</a>
+    <a href="#">Visit</a>
+    <a href="#">Bag (0)</a>
+  </div>
+</nav>
+
+<!-- 01 HERO -->
+<div class="lbl">01 — Hero</div>
+<section class="hero">
+  <div class="hero-img">
+    <img src="https://raw.githubusercontent.com/accordingtoplan/frede-studio/main/concierge-coffee/images/hero.jpeg" alt="Concierge Coffee" />
+  </div>
+  <div class="hero-meta">
+    <div class="hero-title">Single<br>origin.</div>
+    <div class="hero-sub">
+      <span>Arts District, LA</span>
+      <span>821 Traction Ave</span>
+      <a href="#">Shop →</a>
+    </div>
+  </div>
+</section>
+
+<!-- 02 SHOP -->
+<div class="lbl">02 — Shop</div>
+<section class="shop">
+  <div class="shop-head">
+    <span class="shop-title">Coffee</span>
+    <div class="filters">
+      <span class="on">All</span>
+      <span>Espresso</span>
+      <span>Filter</span>
+      <span>Decaf</span>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-img">
+        <img src="https://raw.githubusercontent.com/accordingtoplan/frede-studio/main/concierge-coffee/images/espresso.jpeg" alt="Espresso Blend" />
+      </div>
+      <div class="card-info">
+        <div><div class="card-name">Espresso Blend</div><div class="card-origin">300g · Brasil & Ethiopia Natural</div></div>
+        <div class="card-price">$18</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-img">
+        <img src="https://raw.githubusercontent.com/accordingtoplan/frede-studio/main/concierge-coffee/images/ethiopia.jpeg" alt="Ethiopia" />
+      </div>
+      <div class="card-info">
+        <div><div class="card-name">Ethiopia</div><div class="card-origin">300g · Yirgacheffe · Washed</div></div>
+        <div class="card-price">$22</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-img">
+        <img src="https://raw.githubusercontent.com/accordingtoplan/frede-studio/main/concierge-coffee/images/nicaragua.jpeg" alt="Nicaragua" />
+      </div>
+      <div class="card-info">
+        <div><div class="card-name">Nicaragua</div><div class="card-origin">300g · Los Pinos · Washed</div></div>
+        <div class="card-price">$21</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-img">
+        <img src="https://raw.githubusercontent.com/accordingtoplan/frede-studio/main/concierge-coffee/images/espresso-2.jpeg" alt="Decaf" />
+      </div>
+      <div class="card-info">
+        <div><div class="card-name">Decaf Roast</div><div class="card-origin">300g · Mexico</div></div>
+        <div class="card-price">$20</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 PRODUCT -->
+<div class="lbl">03 — Product</div>
+<section class="pdp">
+  <div class="pdp-imgs">
+    <div class="pdp-main">
+      <img src="https://raw.githubusercontent.com/accordingtoplan/frede-studio/main/concierge-coffee/images/ethiopia.jpeg" alt="Ethiopia" />
+    </div>
+    <div class="pdp-sm">
+      <img src="https://raw.githubusercontent.com/accordingtoplan/frede-studio/main/concierge-coffee/images/nicaragua.jpeg" alt="" />
+    </div>
+    <div class="pdp-sm">
+      <img src="https://raw.githubusercontent.com/accordingtoplan/frede-studio/main/concierge-coffee/images/espresso.jpeg" alt="" />
+    </div>
+  </div>
+  <div class="pdp-r">
+    <div class="pdp-origin">Ethiopia · Filter · 300g</div>
+    <div class="pdp-name">Ethiopia</div>
+    <div class="pdp-price">$22.00</div>
+    <div class="pdp-notes">
+      <span class="pdp-note">Floral</span>
+      <span class="pdp-note">Citrus</span>
+      <span class="pdp-note">Stone Fruit</span>
+    </div>
+    <div class="pdp-desc">Single origin Ethiopian filter coffee. Clean, bright, and complex — best enjoyed as pour-over or batch brew.</div>
+    <div>
+      <div class="grind-lbl">Size</div>
+      <div class="grind-opts">
+        <button class="gb on">300g</button>
+        <button class="gb">1kg</button>
+      </div>
+    </div>
+    <div>
+      <div class="grind-lbl">Grind</div>
+      <div class="grind-opts">
+        <button class="gb on">Whole Bean</button>
+        <button class="gb">Espresso</button>
+        <button class="gb">Filter</button>
+      </div>
+    </div>
+    <button class="atc">Add to Bag</button>
+  </div>
+</section>
+
+<!-- 04 CART -->
+<div class="lbl">04 — Cart</div>
+<section class="cart-wrap">
+  <div class="cart-bg">Page content</div>
+  <div class="cart">
+    <div class="cart-top">
+      <span>Bag</span>
+      <span class="cart-count">2</span>
+    </div>
+    <div class="ci">
+      <div class="ci-img">
+        <img src="https://raw.githubusercontent.com/accordingtoplan/frede-studio/main/concierge-coffee/images/espresso.jpeg" alt="" />
+      </div>
+      <div><div class="ci-name">Ethiopia</div><div class="ci-sub">300g · Whole Bean</div></div>
+      <div class="ci-price">$22</div>
+    </div>
+    <div class="ci">
+      <div class="ci-img">
+        <img src="https://raw.githubusercontent.com/accordingtoplan/frede-studio/main/concierge-coffee/images/espresso.jpeg" alt="" />
+      </div>
+      <div><div class="ci-name">Espresso</div><div class="ci-sub">300g · Whole Bean</div></div>
+      <div class="ci-price">$18</div>
+    </div>
+    <div class="cart-total">
+      <span class="cart-total-lbl">Total</span>
+      <span>$40.00</span>
+    </div>
+    <button class="atc">Checkout</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="ft-logo">Concierge Coffee</div>
+    <div class="ft-addr">
+      821 Traction Ave<br>
+      Los Angeles, CA 90013
+    </div>
+  </div>
+  <div>
+    <div class="ft-h">Shop</div>
+    <ul class="ft-links">
+      <li><a href="#">Espresso</a></li>
+      <li><a href="#">Ethiopia</a></li>
+      <li><a href="#">Nicaragua</a></li>
+      <li><a href="#">Sumatra</a></li>
+      <li><a href="#">Decaf Mexico</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="ft-h">Info</div>
+    <ul class="ft-links">
+      <li><a href="#">Visit</a></li>
+      <li><a href="#">Wholesale</a></li>
+      <li><a href="#">Instagram</a></li>
+    </ul>
+  </div>
+  <div class="ft-copy">
+    <span>© 2026 Concierge Coffee LLC</span>
+    <span>conciergecoffee.com</span>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.grind-opts').forEach(group => {
+    group.querySelectorAll('.gb').forEach(b => {
+      b.addEventListener('click', () => {
+        group.querySelectorAll('.gb').forEach(x => x.classList.remove('on'));
+        b.classList.add('on');
+      });
+    });
+  });
+</script>
+</body>
+</html>
