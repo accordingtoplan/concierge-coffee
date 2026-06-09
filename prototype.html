@@ -332,6 +332,77 @@
       color: #888;
     }
 
+    /* ── MERCH ───────────────────────────────── */
+    .merch-row {
+      padding: 0 20px;
+      border-top: 1px solid #e8e8e8;
+    }
+
+    .merch-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 48px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .merch-header span {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .merch-header a {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #999;
+    }
+
+    .merch-header a:hover { color: #111; }
+
+    .merch-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding: 24px 0 32px;
+    }
+
+    .merch-item {}
+
+    .merch-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      background: #f3f1ee;
+      margin-bottom: 12px;
+    }
+
+    .merch-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .merch-item:hover .merch-img img { transform: scale(1.03); }
+
+    .merch-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .merch-name {
+      font-size: 11px;
+      letter-spacing: 0.02em;
+    }
+
+    .merch-price {
+      font-size: 11px;
+      color: #999;
+    }
+
     /* ── JOURNAL ROW ─────────────────────────── */
     .journal-bar {
       display: flex;
@@ -521,39 +592,37 @@
   </div>
   <div class="origin-img">
     <img src="images/espresso.jpeg" alt="Origin">
-    <div class="hotspot" style="top:32%;left:28%">1</div>
-    <div class="hotspot" style="top:50%;left:48%">2</div>
-    <div class="hotspot" style="top:28%;left:62%">3</div>
-    <div class="hotspot" style="top:62%;left:72%">4</div>
-    <div class="hotspot" style="top:44%;left:84%">5</div>
   </div>
 </section>
 
-<!-- 6-COL ATTRIBUTES -->
-<div class="attr-grid">
-  <div class="attr-col">
-    <div class="at-title"><span class="num">01</span> Direct Trade</div>
-    <p>Relationships built directly with producers who receive above fair-trade pricing.</p>
+<!-- MERCH -->
+<div class="merch-row">
+  <div class="merch-header">
+    <span>Merch</span>
+    <a href="#">Shop all →</a>
   </div>
-  <div class="attr-col">
-    <div class="at-title"><span class="num">02</span> Roasted to Order</div>
-    <p>We roast only after you buy. No sitting on warehouse shelves.</p>
-  </div>
-  <div class="attr-col">
-    <div class="at-title"><span class="num">03</span> Single Origin</div>
-    <p>Every coffee traceable to one farm. No blends to mask mediocrity.</p>
-  </div>
-  <div class="attr-col">
-    <div class="at-title"><span class="num">04</span> High Altitude</div>
-    <p>Sourced from farms above 1,600m where slow ripening builds complexity.</p>
-  </div>
-  <div class="attr-col">
-    <div class="at-title"><span class="num">05</span> Seasonal</div>
-    <p>Our offering rotates with harvest. When it's gone, it's gone.</p>
-  </div>
-  <div class="attr-col">
-    <div class="at-title"><span class="num">06</span> Arts District, LA</div>
-    <p>821 Traction Ave. Come in, taste something, ask questions.</p>
+  <div class="merch-grid">
+    <div class="merch-item">
+      <div class="merch-img"><img src="images/merch-rca-1.avif" alt="RCA Tee"></div>
+      <div class="merch-info">
+        <span class="merch-name">RCA Tee</span>
+        <span class="merch-price">$45.00</span>
+      </div>
+    </div>
+    <div class="merch-item">
+      <div class="merch-img"><img src="images/merch-rca-2.avif" alt="RCA Cap"></div>
+      <div class="merch-info">
+        <span class="merch-name">RCA Cap</span>
+        <span class="merch-price">$38.00</span>
+      </div>
+    </div>
+    <div class="merch-item">
+      <div class="merch-img"><img src="images/merch-waterbottle.jpg" alt="Water Bottle"></div>
+      <div class="merch-info">
+        <span class="merch-name">Water Bottle</span>
+        <span class="merch-price">$52.00</span>
+      </div>
+    </div>
   </div>
 </div>
 
