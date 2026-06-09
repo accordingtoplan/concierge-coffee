@@ -19,14 +19,6 @@
 
   a { color: inherit; text-decoration: none; }
 
-  .lbl {
-    padding: 80px 32px 0;
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    color: #ccc;
-    text-transform: uppercase;
-  }
-
   /* ── NAV ── */
   nav {
     position: sticky;
@@ -38,29 +30,6 @@
     align-items: center;
     padding: 0 32px;
     height: 48px;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .logo-mark {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #111;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .logo-mark svg {
-    width: 10px;
-    height: 10px;
-    fill: #fff;
   }
 
   .logo-text {
@@ -77,13 +46,11 @@
     color: #111;
   }
 
-  .nav-r a { transition: color 0.15s; }
+  .nav-r a { transition: color 0.15s; cursor: pointer; }
   .nav-r a:hover { color: #999; }
 
   /* ── HERO ── */
-  .hero {
-    padding: 24px 32px 80px;
-  }
+  .hero { padding: 24px 32px 80px; }
 
   .hero-img {
     width: 100%;
@@ -91,7 +58,6 @@
     background: #f2f2f2;
     overflow: hidden;
     margin-bottom: 16px;
-    position: relative;
   }
 
   .hero-img img {
@@ -123,16 +89,8 @@
     padding-bottom: 4px;
   }
 
-  .hero-sub span {
-    display: block;
-    font-size: 11px;
-    color: #999;
-  }
-
-  .hero-sub a {
-    font-size: 11px;
-    color: #111;
-  }
+  .hero-sub span { display: block; font-size: 11px; color: #999; }
+  .hero-sub a { font-size: 11px; color: #111; cursor: pointer; }
 
   /* ── SHOP ── */
   .shop { padding: 0 32px 80px; }
@@ -151,17 +109,6 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
-
-  .filters {
-    display: flex;
-    gap: 24px;
-    font-size: 11px;
-    color: #bbb;
-  }
-
-  .filters span { cursor: pointer; transition: color 0.15s; }
-  .filters span.on { color: #111; }
-  .filters span:hover { color: #111; }
 
   .grid {
     display: grid;
@@ -197,124 +144,87 @@
   }
 
   .card-name { font-size: 11px; font-weight: 400; }
-
-  .card-origin {
-    font-size: 10px;
-    color: #bbb;
-    margin-top: 3px;
-  }
-
+  .card-sub { font-size: 10px; color: #bbb; margin-top: 3px; }
   .card-price { font-size: 11px; color: #111; }
 
-  /* ── PDP ── */
-  .pdp {
-    padding: 0 32px 80px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    align-items: start;
+  /* ── CART DRAWER ── */
+  .cart-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.15);
+    z-index: 200;
   }
 
-  .pdp-imgs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-  }
+  .cart-overlay.open { display: block; }
 
-  .pdp-main {
-    grid-column: 1 / -1;
-    aspect-ratio: 4/3;
-    background: #f7f7f7;
-    overflow: hidden;
-  }
-
-  .pdp-main img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .pdp-sm {
-    aspect-ratio: 1;
-    background: #f2f2f2;
-    overflow: hidden;
-  }
-
-  .pdp-sm img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    display: block;
-  }
-
-  .pdp-r {
-    padding: 0 0 0 48px;
+  .cart-drawer {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 360px;
+    height: 100vh;
+    background: #fff;
+    z-index: 201;
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    transition: right 0.3s ease;
+    padding: 32px 24px;
   }
 
-  .pdp-origin {
-    font-size: 10px;
-    color: #bbb;
+  .cart-drawer.open { right: 0; }
+
+  .cart-drawer-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+
+  .cart-drawer-title {
+    font-size: 11px;
+    font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
 
-  .pdp-name {
-    font-size: clamp(28px, 3.5vw, 44px);
-    font-weight: 300;
-    letter-spacing: -0.02em;
-    line-height: 1.05;
-  }
-
-  .pdp-price {
-    font-size: 11px;
-    color: #999;
-  }
-
-  .pdp-notes {
-    display: flex;
-    gap: 24px;
-  }
-
-  .pdp-note {
-    font-size: 10px;
-    color: #bbb;
-  }
-
-  .pdp-desc {
-    font-size: 11px;
-    line-height: 1.8;
-    color: #999;
-    max-width: 260px;
-  }
-
-  .grind-lbl {
-    font-size: 10px;
-    color: #bbb;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  .grind-opts { display: flex; gap: 2px; }
-
-  .gb {
-    padding: 8px 12px;
-    background: #f5f5f5;
-    border: none;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 10px;
-    color: #999;
+  .cart-close {
+    font-size: 18px;
     cursor: pointer;
-    transition: all 0.1s;
+    color: #bbb;
+    background: none;
+    border: none;
+    line-height: 1;
   }
 
-  .gb:hover { color: #111; background: #eee; }
-  .gb.on { background: #111; color: #fff; }
+  .cart-close:hover { color: #111; }
+
+  .cart-items { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+
+  .cart-empty { color: #bbb; font-size: 11px; padding-top: 8px; }
+
+  .ci {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 14px;
+    align-items: start;
+  }
+
+  .ci-img { aspect-ratio: 1; background: #f2f2f2; overflow: hidden; }
+  .ci-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ci-name { font-size: 11px; }
+  .ci-sub { font-size: 10px; color: #bbb; margin-top: 4px; }
+  .ci-price { font-size: 11px; }
+
+  .cart-footer { border-top: 1px solid #f0f0f0; padding-top: 24px; margin-top: 24px; display: flex; flex-direction: column; gap: 16px; }
+
+  .cart-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+  }
+
+  .cart-total-lbl { color: #bbb; }
 
   .atc {
     background: #111;
@@ -331,74 +241,7 @@
   }
 
   .atc:hover { opacity: 0.75; }
-
-  /* ── CART ── */
-  .cart-wrap {
-    padding: 0 32px 80px;
-    display: grid;
-    grid-template-columns: 1fr 280px;
-    gap: 80px;
-    align-items: start;
-  }
-
-  .cart-bg {
-    background: #f7f7f7;
-    min-height: 320px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    color: #ddd;
-  }
-
-  .cart { display: flex; flex-direction: column; gap: 24px; }
-
-  .cart-top {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #f0f0f0;
-  }
-
-  .cart-count { color: #bbb; font-weight: 400; }
-
-  .ci {
-    display: grid;
-    grid-template-columns: 48px 1fr auto;
-    gap: 14px;
-    align-items: start;
-  }
-
-  .ci-img {
-    aspect-ratio: 1;
-    background: #f2f2f2;
-    overflow: hidden;
-  }
-
-  .ci-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .ci-name { font-size: 11px; }
-  .ci-sub { font-size: 10px; color: #bbb; margin-top: 4px; }
-  .ci-price { font-size: 11px; }
-
-  .cart-total {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    padding-top: 8px;
-    border-top: 1px solid #f0f0f0;
-  }
-
-  .cart-total-lbl { color: #bbb; }
+  .atc:disabled { opacity: 0.4; cursor: default; }
 
   /* ── FOOTER ── */
   footer {
@@ -417,11 +260,7 @@
     margin-bottom: 16px;
   }
 
-  .ft-addr {
-    font-size: 11px;
-    line-height: 1.9;
-    color: #bbb;
-  }
+  .ft-addr { font-size: 11px; line-height: 1.9; color: #bbb; }
 
   .ft-h {
     font-size: 10px;
@@ -433,13 +272,7 @@
 
   .ft-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
 
-  .ft-links a {
-    font-size: 11px;
-    color: #bbb;
-    text-decoration: none;
-    transition: color 0.15s;
-  }
-
+  .ft-links a { font-size: 11px; color: #bbb; transition: color 0.15s; }
   .ft-links a:hover { color: #111; }
 
   .ft-copy {
@@ -450,6 +283,16 @@
     font-size: 10px;
     color: #ccc;
   }
+
+  /* loading skeleton */
+  .skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s infinite;
+    border-radius: 2px;
+  }
+
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 </style>
 </head>
 <body>
@@ -460,14 +303,13 @@
     <span class="logo-text">Concierge.</span>
   </div>
   <div class="nav-r">
-    <a href="#">Shop</a>
+    <a onclick="scrollToShop()">Shop</a>
     <a href="#">Visit</a>
-    <a href="#">Bag (0)</a>
+    <a onclick="openCart()" id="bag-link">Bag (0)</a>
   </div>
 </nav>
 
-<!-- 01 HERO -->
-<div class="lbl">01 — Hero</div>
+<!-- HERO -->
 <section class="hero">
   <div class="hero-img">
     <img src="images/hero.jpeg" alt="Concierge Coffee" />
@@ -477,136 +319,43 @@
     <div class="hero-sub">
       <span>Arts District, LA</span>
       <span>821 Traction Ave</span>
-      <a href="#">Shop →</a>
+      <a onclick="scrollToShop()">Shop →</a>
     </div>
   </div>
 </section>
 
-<!-- 02 SHOP -->
-<div class="lbl">02 — Shop</div>
-<section class="shop">
+<!-- SHOP -->
+<section class="shop" id="shop">
   <div class="shop-head">
     <span class="shop-title">Coffee</span>
-    <div class="filters">
-      <span class="on">All</span>
-      <span>Espresso</span>
-      <span>Filter</span>
-      <span>Decaf</span>
-    </div>
   </div>
-  <div class="grid">
-    <div class="card">
-      <div class="card-img">
-        <img src="images/espresso.jpeg" alt="Espresso Blend" />
-      </div>
-      <div class="card-info">
-        <div><div class="card-name">Espresso Blend</div><div class="card-origin">300g · Brasil & Ethiopia Natural</div></div>
-        <div class="card-price">$18</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-img">
-        <img src="images/ethiopia.jpeg" alt="Ethiopia" />
-      </div>
-      <div class="card-info">
-        <div><div class="card-name">Ethiopia</div><div class="card-origin">300g · Yirgacheffe · Washed</div></div>
-        <div class="card-price">$22</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-img">
-        <img src="images/nicaragua.jpeg" alt="Nicaragua" />
-      </div>
-      <div class="card-info">
-        <div><div class="card-name">Nicaragua</div><div class="card-origin">300g · Los Pinos · Washed</div></div>
-        <div class="card-price">$21</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-img">
-        <img src="images/espresso-2.jpeg" alt="Decaf" />
-      </div>
-      <div class="card-info">
-        <div><div class="card-name">Decaf Roast</div><div class="card-origin">300g · Mexico</div></div>
-        <div class="card-price">$20</div>
-      </div>
-    </div>
+  <div class="grid" id="product-grid">
+    <!-- skeleton cards -->
+    <div class="card"><div class="card-img skeleton"></div><div class="card-info"><div><div class="card-name skeleton" style="width:80px;height:11px;margin-bottom:4px"></div><div class="card-sub skeleton" style="width:120px;height:10px"></div></div></div></div>
+    <div class="card"><div class="card-img skeleton"></div><div class="card-info"><div><div class="card-name skeleton" style="width:80px;height:11px;margin-bottom:4px"></div><div class="card-sub skeleton" style="width:120px;height:10px"></div></div></div></div>
+    <div class="card"><div class="card-img skeleton"></div><div class="card-info"><div><div class="card-name skeleton" style="width:80px;height:11px;margin-bottom:4px"></div><div class="card-sub skeleton" style="width:120px;height:10px"></div></div></div></div>
+    <div class="card"><div class="card-img skeleton"></div><div class="card-info"><div><div class="card-name skeleton" style="width:80px;height:11px;margin-bottom:4px"></div><div class="card-sub skeleton" style="width:120px;height:10px"></div></div></div></div>
   </div>
 </section>
 
-<!-- 03 PRODUCT -->
-<div class="lbl">03 — Product</div>
-<section class="pdp">
-  <div class="pdp-imgs">
-    <div class="pdp-main">
-      <img src="images/ethiopia.jpeg" alt="Ethiopia" />
-    </div>
-    <div class="pdp-sm">
-      <img src="images/nicaragua.jpeg" alt="" />
-    </div>
-    <div class="pdp-sm">
-      <img src="images/espresso.jpeg" alt="" />
-    </div>
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-drawer-head">
+    <span class="cart-drawer-title">Bag</span>
+    <button class="cart-close" onclick="closeCart()">×</button>
   </div>
-  <div class="pdp-r">
-    <div class="pdp-origin">Ethiopia · Filter · 300g</div>
-    <div class="pdp-name">Ethiopia</div>
-    <div class="pdp-price">$22.00</div>
-    <div class="pdp-notes">
-      <span class="pdp-note">Floral</span>
-      <span class="pdp-note">Citrus</span>
-      <span class="pdp-note">Stone Fruit</span>
-    </div>
-    <div class="pdp-desc">Single origin Ethiopian filter coffee. Clean, bright, and complex — best enjoyed as pour-over or batch brew.</div>
-    <div>
-      <div class="grind-lbl">Size</div>
-      <div class="grind-opts">
-        <button class="gb on">300g</button>
-        <button class="gb">1kg</button>
-      </div>
-    </div>
-    <div>
-      <div class="grind-lbl">Grind</div>
-      <div class="grind-opts">
-        <button class="gb on">Whole Bean</button>
-        <button class="gb">Espresso</button>
-        <button class="gb">Filter</button>
-      </div>
-    </div>
-    <button class="atc">Add to Bag</button>
+  <div class="cart-items" id="cart-items">
+    <div class="cart-empty">Your bag is empty.</div>
   </div>
-</section>
-
-<!-- 04 CART -->
-<div class="lbl">04 — Cart</div>
-<section class="cart-wrap">
-  <div class="cart-bg">Page content</div>
-  <div class="cart">
-    <div class="cart-top">
-      <span>Bag</span>
-      <span class="cart-count">2</span>
-    </div>
-    <div class="ci">
-      <div class="ci-img">
-        <img src="images/espresso.jpeg" alt="" />
-      </div>
-      <div><div class="ci-name">Ethiopia</div><div class="ci-sub">300g · Whole Bean</div></div>
-      <div class="ci-price">$22</div>
-    </div>
-    <div class="ci">
-      <div class="ci-img">
-        <img src="images/espresso.jpeg" alt="" />
-      </div>
-      <div><div class="ci-name">Espresso</div><div class="ci-sub">300g · Whole Bean</div></div>
-      <div class="ci-price">$18</div>
-    </div>
+  <div class="cart-footer">
     <div class="cart-total">
       <span class="cart-total-lbl">Total</span>
-      <span>$40.00</span>
+      <span id="cart-total">—</span>
     </div>
-    <button class="atc">Checkout</button>
+    <button class="atc" id="checkout-btn" onclick="goToCheckout()" disabled>Checkout</button>
   </div>
-</section>
+</div>
 
 <!-- FOOTER -->
 <footer>
@@ -619,12 +368,8 @@
   </div>
   <div>
     <div class="ft-h">Shop</div>
-    <ul class="ft-links">
-      <li><a href="#">Espresso</a></li>
-      <li><a href="#">Ethiopia</a></li>
-      <li><a href="#">Nicaragua</a></li>
-      <li><a href="#">Sumatra</a></li>
-      <li><a href="#">Decaf Mexico</a></li>
+    <ul class="ft-links" id="footer-links">
+      <li><a href="#">Coffee</a></li>
     </ul>
   </div>
   <div>
@@ -641,15 +386,181 @@
   </div>
 </footer>
 
-<script>
-  document.querySelectorAll('.grind-opts').forEach(group => {
-    group.querySelectorAll('.gb').forEach(b => {
-      b.addEventListener('click', () => {
-        group.querySelectorAll('.gb').forEach(x => x.classList.remove('on'));
-        b.classList.add('on');
-      });
+<script type="module">
+  const SHOPIFY_DOMAIN = 'concierge-coffee-2245.myshopify.com';
+  const STOREFRONT_TOKEN = '72c7d161eb6090308178da3ee5c88887';
+  const API_URL = `https://${SHOPIFY_DOMAIN}/api/2026-04/graphql.json`;
+
+  let cart = null; // Shopify cart object
+  let products = [];
+
+  async function shopifyFetch(query, variables = {}) {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': STOREFRONT_TOKEN,
+      },
+      body: JSON.stringify({ query, variables }),
     });
-  });
+    const json = await res.json();
+    if (json.errors) console.error('Shopify:', json.errors);
+    return json.data;
+  }
+
+  async function loadProducts() {
+    const data = await shopifyFetch(`{
+      products(first: 20) {
+        edges {
+          node {
+            id title handle description tags
+            priceRange { minVariantPrice { amount currencyCode } }
+            images(first: 1) { edges { node { url altText } } }
+            variants(first: 1) { edges { node { id title availableForSale } } }
+          }
+        }
+      }
+    }`);
+
+    products = data?.products?.edges?.map(e => e.node) ?? [];
+    renderProducts();
+    renderFooterLinks();
+  }
+
+  function formatPrice(amount, currency = 'USD') {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
+  }
+
+  function renderProducts() {
+    const grid = document.getElementById('product-grid');
+    if (!products.length) {
+      grid.innerHTML = '<p style="color:#bbb;font-size:11px;grid-column:1/-1;padding:24px 0">No products found. Add products in your Shopify admin.</p>';
+      return;
+    }
+
+    grid.innerHTML = products.map(p => {
+      const img = p.images.edges[0]?.node;
+      const price = formatPrice(p.priceRange.minVariantPrice.amount, p.priceRange.minVariantPrice.currencyCode);
+      const variantId = p.variants.edges[0]?.node?.id;
+      const available = p.variants.edges[0]?.node?.availableForSale;
+
+      return `
+        <div class="card" onclick="addToCartHandler('${variantId}', '${p.title}', '${p.priceRange.minVariantPrice.amount}', '${img?.url ?? ''}')">
+          <div class="card-img">
+            ${img ? `<img src="${img.url}" alt="${img.altText ?? p.title}" />` : `<div class="skeleton" style="width:100%;height:100%"></div>`}
+          </div>
+          <div class="card-info">
+            <div>
+              <div class="card-name">${p.title}</div>
+              <div class="card-sub">${p.description ? p.description.substring(0, 40) : ''}</div>
+            </div>
+            <div class="card-price">${price}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderFooterLinks() {
+    const ul = document.getElementById('footer-links');
+    ul.innerHTML = products.map(p => `<li><a href="#">${p.title}</a></li>`).join('');
+  }
+
+  async function addToCartHandler(variantId, title, price, imgUrl) {
+    if (!variantId) return;
+
+    updateBagLink('...');
+
+    if (!cart) {
+      const data = await shopifyFetch(`
+        mutation cartCreate($input: CartInput!) {
+          cartCreate(input: $input) {
+            cart {
+              id checkoutUrl
+              cost { totalAmount { amount currencyCode } }
+              lines(first: 20) { edges { node { id quantity merchandise { ... on ProductVariant { id title product { title } price { amount } image { url } } } } } }
+            }
+          }
+        }
+      `, { input: { lines: [{ merchandiseId: variantId, quantity: 1 }] } });
+      cart = data?.cartCreate?.cart;
+    } else {
+      const data = await shopifyFetch(`
+        mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+          cartLinesAdd(cartId: $cartId, lines: $lines) {
+            cart {
+              id checkoutUrl
+              cost { totalAmount { amount currencyCode } }
+              lines(first: 20) { edges { node { id quantity merchandise { ... on ProductVariant { id title product { title } price { amount } image { url } } } } } }
+            }
+          }
+        }
+      `, { cartId: cart.id, lines: [{ merchandiseId: variantId, quantity: 1 }] });
+      cart = data?.cartLinesAdd?.cart;
+    }
+
+    renderCart();
+    openCart();
+  }
+
+  function renderCart() {
+    if (!cart) return;
+    const lines = cart.lines.edges.map(e => e.node);
+    const total = cart.cost.totalAmount;
+    const count = lines.reduce((s, l) => s + l.quantity, 0);
+
+    updateBagLink(count);
+
+    const itemsEl = document.getElementById('cart-items');
+    if (!lines.length) {
+      itemsEl.innerHTML = '<div class="cart-empty">Your bag is empty.</div>';
+    } else {
+      itemsEl.innerHTML = lines.map(line => {
+        const m = line.merchandise;
+        const img = m.image?.url;
+        return `
+          <div class="ci">
+            <div class="ci-img">${img ? `<img src="${img}" alt="${m.product.title}">` : ''}</div>
+            <div>
+              <div class="ci-name">${m.product.title}</div>
+              <div class="ci-sub">${m.title !== 'Default Title' ? m.title : ''} × ${line.quantity}</div>
+            </div>
+            <div class="ci-price">${formatPrice(m.price.amount)}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    document.getElementById('cart-total').textContent = formatPrice(total.amount, total.currencyCode);
+    document.getElementById('checkout-btn').disabled = !lines.length;
+  }
+
+  function updateBagLink(count) {
+    document.getElementById('bag-link').textContent = `Bag (${count})`;
+  }
+
+  window.openCart = () => {
+    document.getElementById('cart-overlay').classList.add('open');
+    document.getElementById('cart-drawer').classList.add('open');
+  };
+
+  window.closeCart = () => {
+    document.getElementById('cart-overlay').classList.remove('open');
+    document.getElementById('cart-drawer').classList.remove('open');
+  };
+
+  window.goToCheckout = () => {
+    if (cart?.checkoutUrl) window.location.href = cart.checkoutUrl;
+  };
+
+  window.scrollToShop = () => {
+    document.getElementById('shop').scrollIntoView({ behavior: 'smooth' });
+  };
+
+  window.addToCartHandler = addToCartHandler;
+
+  // Init
+  loadProducts();
 </script>
 </body>
 </html>
