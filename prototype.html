@@ -11,25 +11,30 @@
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 11px;
       color: #111;
-      background: #fff;
+      background: #e8e6e2;
       -webkit-font-smoothing: antialiased;
     }
 
     a { color: inherit; text-decoration: none; }
-    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
     /* ── NAV ─────────────────────────────────── */
     nav {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: #fff;
+      background: #e8e6e2;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 20px;
+      padding: 0 16px;
       height: 44px;
-      border-bottom: 1px solid #e8e8e8;
     }
 
     nav .logo {
@@ -51,98 +56,73 @@
       font-size: 11px;
       letter-spacing: 0.02em;
       color: #111;
-      transition: color 0.15s;
-    }
-
-    nav a:hover { color: #999; }
-
-    /* ── SPLIT HERO ──────────────────────────── */
-    .split-hero {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .split-hero .sh-left {
-      height: 420px;
-      overflow: hidden;
-    }
-
-    .split-hero .sh-left img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      
-    }
-
-    .split-hero .sh-right {
-      background: #f3f1ee;
-      display: grid;
-      grid-template-rows: 1fr auto;
-      padding: 24px;
-      position: relative;
-    }
-
-    .sh-right .product-aside {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      justify-content: flex-end;
-    }
-
-    .sh-right .product-thumb {
-      width: 72px;
-      height: 96px;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-
-    .sh-right .product-thumb img {
-      object-fit: cover;
-    }
-
-    .sh-right .card-body {
-      align-self: flex-end;
-    }
-
-    .sh-right .card-body h2 {
-      font-size: 17px;
-      font-weight: 400;
-      letter-spacing: -0.02em;
-      line-height: 1.25;
-      margin-bottom: 8px;
-    }
-
-    .sh-right .card-body p {
-      font-size: 11px;
-      color: #888;
-      line-height: 1.6;
-      margin-bottom: 18px;
-      max-width: 240px;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 9px 18px;
-      background: #111;
-      color: #fff;
-      font-size: 10px;
-      font-family: inherit;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      border: none;
-      cursor: pointer;
       transition: opacity 0.15s;
     }
 
-    .btn:hover { opacity: 0.65; }
+    nav a:hover { opacity: 0.4; }
 
-    /* ── EDITORIAL ───────────────────────────── */
-    .editorial {
-      padding: 52px 20px 48px;
+    /* ── BENTO GRID ──────────────────────────── */
+    .bento {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+      gap: 8px;
+      padding: 8px 8px 0;
     }
 
-    .editorial .eyebrow {
+    .cell {
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── SPLIT HERO ──────────────────────────── */
+    .c-hero-img {
+      grid-column: 1;
+      height: 460px;
+    }
+
+    .c-hero-card {
+      grid-column: 2;
+      background: #f5f3ef;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px;
+    }
+
+    .c-hero-card .product-thumb {
+      width: 80px;
+      height: 108px;
+      border-radius: 6px;
+      overflow: hidden;
+      align-self: flex-end;
+    }
+
+    .c-hero-card .card-body h2 {
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .c-hero-card .card-body p {
+      font-size: 11px;
+      color: #888;
+      line-height: 1.7;
+      margin-bottom: 22px;
+      max-width: 220px;
+    }
+
+    /* ── EDITORIAL ───────────────────────────── */
+    .c-editorial {
+      grid-column: 1 / -1;
+      background: #f5f3ef;
+      padding: 48px 36px;
+    }
+
+    .c-editorial .eyebrow {
       font-size: 10px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
@@ -151,76 +131,60 @@
       display: block;
     }
 
-    .editorial h1 {
-      font-size: clamp(20px, 2.8vw, 36px);
+    .c-editorial h1 {
+      font-size: clamp(22px, 3vw, 40px);
       font-weight: 400;
-      letter-spacing: -0.02em;
-      line-height: 1.3;
-      max-width: 780px;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      max-width: 680px;
       margin-bottom: 28px;
     }
 
-    /* ── LIFESTYLE ROW ───────────────────────── */
-    .lifestyle-row {
-      display: grid;
-      grid-template-columns: 1.9fr 1fr;
+    /* ── LIFESTYLE + PRODUCT ─────────────────── */
+    .c-lifestyle {
+      grid-column: 1;
+      height: 540px;
     }
 
-    .lifestyle-row .lr-img {
-      height: 520px;
-      overflow: hidden;
-    }
-
-    .lifestyle-row .lr-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      
-    }
-
-    .lifestyle-row .lr-panel {
-      background: #f3f1ee;
+    .c-product-panel {
+      grid-column: 2;
+      background: #f5f3ef;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 24px;
+      padding: 28px;
     }
 
-    .lr-panel .badge {
+    .c-product-panel .badge {
       font-size: 9.5px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: #999;
     }
 
-    .lr-panel .product-img {
-      width: 100%;
-      max-width: 160px;
-      height: 200px;
+    .c-product-panel .product-img {
+      width: 140px;
+      height: 188px;
+      border-radius: 6px;
       overflow: hidden;
       margin: 0 auto;
     }
 
-    .lr-panel h3 {
-      font-size: 14px;
+    .c-product-panel h3 {
+      font-size: 15px;
       font-weight: 400;
       letter-spacing: -0.01em;
       line-height: 1.3;
       margin-bottom: 4px;
     }
 
-    .lr-panel .price {
+    .c-product-panel .price {
       font-size: 11px;
       color: #999;
       margin-bottom: 18px;
     }
 
-    .lr-panel .btn {
-      width: 100%;
-      text-align: center;
-    }
-
-    .lr-panel .captions {
+    .captions {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
@@ -228,7 +192,7 @@
       border-top: 1px solid #e4e0da;
     }
 
-    .lr-panel .cap-title {
+    .cap-title {
       font-size: 10px;
       font-weight: 500;
       letter-spacing: 0.08em;
@@ -236,114 +200,66 @@
       margin-bottom: 4px;
     }
 
-    .lr-panel .cap-body {
+    .cap-body {
       font-size: 10.5px;
       color: #888;
       line-height: 1.6;
     }
 
-    /* ── DARK ORIGIN SECTION ─────────────────── */
-    .origin-section {
-      display: grid;
-      grid-template-columns: 200px 1fr;
+    /* ── DARK SECTION ────────────────────────── */
+    .c-dark {
+      grid-column: 1 / -1;
       background: #111;
+      display: grid;
+      grid-template-columns: 220px 1fr;
       min-height: 460px;
     }
 
-    .origin-text {
-      padding: 32px 24px 32px 20px;
+    .dark-text {
+      padding: 36px 28px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
-    .origin-text .eyebrow {
+    .dark-text .eyebrow {
       font-size: 9.5px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: #f0c040;
+      color: #555;
       margin-bottom: 14px;
       display: block;
     }
 
-    .origin-text p {
+    .dark-text p {
       font-size: 11px;
-      line-height: 1.8;
-      color: rgba(255,255,255,0.4);
+      line-height: 1.9;
+      color: #444;
     }
 
-    .origin-img {
-      position: relative;
+    .dark-text .location {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #333;
+    }
+
+    .dark-img {
       overflow: hidden;
     }
 
-    .origin-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      
-    }
-
-    .hotspot {
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 9.5px;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    /* ── 6-COL ATTRIBUTES ────────────────────── */
-    .attr-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      border-top: 1px solid #e8e8e8;
-    }
-
-    .attr-col {
-      padding: 24px 18px;
-      border-right: 1px solid #e8e8e8;
-    }
-
-    .attr-col:last-child { border-right: none; }
-
-    .attr-col .at-title {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-      display: flex;
-      gap: 6px;
-      align-items: baseline;
-    }
-
-    .attr-col .at-title .num { color: #bbb; font-weight: 400; }
-
-    .attr-col p {
-      font-size: 10.5px;
-      line-height: 1.7;
-      color: #888;
-    }
-
     /* ── MERCH ───────────────────────────────── */
-    .merch-row {
-      padding: 0 20px;
-      border-top: 1px solid #e8e8e8;
+    .c-merch {
+      grid-column: 1 / -1;
+      background: #f5f3ef;
+      padding: 28px;
     }
 
     .merch-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 48px;
-      border-bottom: 1px solid #e8e8e8;
+      margin-bottom: 24px;
     }
 
     .merch-header span {
@@ -357,6 +273,7 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: #999;
+      transition: color 0.15s;
     }
 
     .merch-header a:hover { color: #111; }
@@ -364,87 +281,57 @@
     .merch-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      padding: 24px 0 32px;
+      gap: 12px;
     }
-
-    .merch-item {}
 
     .merch-img {
       width: 100%;
       aspect-ratio: 3/4;
       overflow: hidden;
-      background: #f3f1ee;
+      background: #ece9e4;
+      border-radius: 8px;
       margin-bottom: 12px;
     }
 
     .merch-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.4s ease;
+      transition: transform 0.5s ease;
     }
 
-    .merch-item:hover .merch-img img { transform: scale(1.03); }
+    .merch-item:hover .merch-img img { transform: scale(1.04); }
 
     .merch-info {
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
     }
 
-    .merch-name {
-      font-size: 11px;
-      letter-spacing: 0.02em;
+    .merch-name { font-size: 11px; }
+    .merch-price { font-size: 11px; color: #999; }
+
+    /* ── FOOTER BAND ─────────────────────────── */
+    .bento-footer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 8px;
     }
 
-    .merch-price {
-      font-size: 11px;
-      color: #999;
+    .c-newsletter {
+      background: #f5f3ef;
+      border-radius: 12px;
+      padding: 32px 28px;
     }
 
-    /* ── JOURNAL ROW ─────────────────────────── */
-    .journal-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 20px;
-      height: 48px;
-      border-top: 1px solid #e8e8e8;
-      border-bottom: 1px solid #e8e8e8;
-    }
-
-    .journal-bar span {
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .journal-bar a {
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #999;
-    }
-
-    .journal-bar a:hover { color: #111; }
-
-    /* ── NEWSLETTER ──────────────────────────── */
-    .newsletter {
-      padding: 48px 20px;
-    }
-
-    .newsletter p {
+    .c-newsletter p {
       font-size: 11px;
       color: #888;
       line-height: 1.7;
-      max-width: 320px;
+      max-width: 280px;
       margin-bottom: 20px;
     }
 
     .nl-row {
       display: flex;
-      max-width: 300px;
+      max-width: 280px;
     }
 
     .nl-row input {
@@ -454,59 +341,86 @@
       font-family: inherit;
       border: 1px solid #ddd;
       border-right: none;
+      border-radius: 4px 0 0 4px;
       outline: none;
       background: #fff;
     }
 
     .nl-row input:focus { border-color: #111; }
-    .nl-row input::placeholder { color: #bbb; }
+    .nl-row input::placeholder { color: #ccc; }
 
-    /* ── FOOTER ──────────────────────────────── */
-    footer {
-      border-top: 1px solid #e8e8e8;
+    .c-footer-info {
+      background: #111;
+      border-radius: 12px;
+      padding: 32px 28px;
       display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
-      gap: 0;
-      padding: 36px 20px 24px;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 20px;
     }
 
-    footer .ft-h {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    footer .ft-logo {
+    .ft-logo {
       font-size: 11px;
       font-weight: 500;
       letter-spacing: 0.12em;
       text-transform: uppercase;
+      color: #fff;
       margin-bottom: 10px;
     }
 
-    footer .ft-addr {
+    .ft-addr {
       font-size: 10.5px;
-      color: #888;
-      line-height: 1.8;
+      color: #444;
+      line-height: 1.9;
     }
 
-    footer ul { list-style: none; }
-    footer ul li { margin-bottom: 7px; }
-    footer ul a { font-size: 10.5px; color: #888; }
-    footer ul a:hover { color: #111; }
+    .ft-h {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 12px;
+    }
+
+    .c-footer-info ul { list-style: none; }
+    .c-footer-info ul li { margin-bottom: 8px; }
+    .c-footer-info ul a { font-size: 10.5px; color: #444; transition: color 0.15s; }
+    .c-footer-info ul a:hover { color: #fff; }
 
     .ft-copy {
       grid-column: 1 / -1;
-      padding-top: 28px;
-      border-top: 1px solid #e8e8e8;
-      margin-top: 24px;
+      padding: 0 8px 12px;
       display: flex;
       justify-content: space-between;
       font-size: 10px;
-      color: #bbb;
+      color: #888;
     }
+
+    /* ── BUTTONS ─────────────────────────────── */
+    .btn {
+      display: inline-block;
+      padding: 9px 18px;
+      background: #111;
+      color: #fff;
+      font-size: 10px;
+      font-family: inherit;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover { opacity: 0.65; }
+
+    .btn.outline {
+      background: transparent;
+      color: #111;
+      border: 1px solid #ccc;
+    }
+
+    .nl-row .btn { border-radius: 0 4px 4px 0; }
   </style>
 </head>
 <body>
@@ -516,7 +430,7 @@
   <div class="nav-left">
     <a href="#">Coffee</a>
     <a href="#">Merch</a>
-    <a href="visit.html">Visit</a>
+    <a href="#">Visit</a>
   </div>
   <a href="#" class="logo">Concierge.</a>
   <div class="nav-right">
@@ -525,155 +439,147 @@
   </div>
 </nav>
 
-<!-- SPLIT HERO -->
-<section class="split-hero">
-  <div class="sh-left">
+<!-- BENTO -->
+<div class="bento">
+
+  <!-- HERO IMAGE -->
+  <div class="cell c-hero-img">
     <img src="images/hero.jpeg" alt="Concierge Coffee">
   </div>
-  <div class="sh-right">
-    <div class="product-aside">
-      <div class="product-thumb">
-        <img src="images/product-filter-single.jpg" alt="Filter Coffee">
-      </div>
+
+  <!-- HERO CARD -->
+  <div class="cell c-hero-card">
+    <div class="product-thumb">
+      <img src="images/product-filter-single.jpg" alt="Filter">
     </div>
     <div class="card-body">
       <h2>Concierge Filter<br>Single Origin</h2>
-      <p>Single-origin beans, roasted to order and ready for every brew method.</p>
-      <a href="#" class="btn">Find out more</a>
+      <p>For the early morning drive. For the late night set. Coffee that keeps up.</p>
+      <a href="#" class="btn">Shop now</a>
     </div>
   </div>
-</section>
 
-<!-- EDITORIAL -->
-<section class="editorial">
-  <span class="eyebrow">Everything you need and nothing more</span>
-  <h1>Sourcing coffees we know personally — traceable, seasonal, and roasted only after you order.</h1>
-  <a href="#" class="btn">Shop coffee</a>
-</section>
+  <!-- EDITORIAL -->
+  <div class="cell c-editorial">
+    <span class="eyebrow">Arts District, Los Angeles</span>
+    <h1>Good coffee, no sermon. Just something worth drinking before you get where you're going.</h1>
+    <a href="#" class="btn outline">Find out more</a>
+  </div>
 
-<!-- LIFESTYLE ROW -->
-<section class="lifestyle-row">
-  <div class="lr-img">
+  <!-- LIFESTYLE IMAGE -->
+  <div class="cell c-lifestyle">
     <img src="images/nicaragua.jpeg" alt="Nicaragua">
   </div>
-  <div class="lr-panel">
-    <span class="badge">Current offering</span>
-    <div>
-      <div class="product-img">
-        <img src="images/product-espresso-blend.jpg" alt="Espresso Blend">
-      </div>
+
+  <!-- PRODUCT PANEL -->
+  <div class="cell c-product-panel">
+    <span class="badge">On now</span>
+    <div class="product-img">
+      <img src="images/product-espresso-blend.jpg" alt="Espresso Blend">
     </div>
     <div>
       <h3>Espresso Blend<br>250g</h3>
       <p class="price">From $22.00</p>
-      <a href="#" class="btn">Shop coffee</a>
+      <a href="#" class="btn" style="width:100%;text-align:center;display:block;">Add to bag</a>
       <div class="captions">
         <div>
-          <div class="cap-title">Single origin</div>
-          <p class="cap-body">Traceable to one farm, one harvest.</p>
+          <div class="cap-title">Roasted to order</div>
+          <p class="cap-body">Never sitting on a shelf waiting for you.</p>
         </div>
         <div>
-          <div class="cap-title">Roasted to order</div>
-          <p class="cap-body">We roast after you buy. Not before.</p>
+          <div class="cap-title">No blends</div>
+          <p class="cap-body">One farm. One harvest. That's it.</p>
         </div>
       </div>
     </div>
   </div>
-</section>
 
-<!-- DARK ORIGIN SECTION -->
-<section class="origin-section">
-  <div class="origin-text">
+  <!-- DARK SECTION -->
+  <div class="cell c-dark">
+    <div class="dark-text">
+      <div>
+        <span class="eyebrow">The space</span>
+        <p>821 Traction Ave.<br>Come in. Stay a while.<br>Or don't.</p>
+      </div>
+      <span class="location">Arts District · LA</span>
+    </div>
+    <div class="dark-img">
+      <img src="images/espresso.jpeg" alt="The space">
+    </div>
+  </div>
+
+  <!-- MERCH -->
+  <div class="cell c-merch">
+    <div class="merch-header">
+      <span>Merch</span>
+      <a href="#">Shop all →</a>
+    </div>
+    <div class="merch-grid">
+      <div class="merch-item">
+        <div class="merch-img"><img src="images/merch-rca-1.avif" alt="RCA Tee"></div>
+        <div class="merch-info">
+          <span class="merch-name">RCA Tee</span>
+          <span class="merch-price">$45.00</span>
+        </div>
+      </div>
+      <div class="merch-item">
+        <div class="merch-img"><img src="images/merch-rca-2.avif" alt="RCA Cap"></div>
+        <div class="merch-info">
+          <span class="merch-name">RCA Cap</span>
+          <span class="merch-price">$38.00</span>
+        </div>
+      </div>
+      <div class="merch-item">
+        <div class="merch-img"><img src="images/merch-waterbottle.jpg" alt="Water Bottle"></div>
+        <div class="merch-info">
+          <span class="merch-name">Water Bottle</span>
+          <span class="merch-price">$52.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER BAND -->
+<div class="bento-footer">
+
+  <div class="c-newsletter">
+    <p>No newsletters about harvest seasons. Just new drops, events, and the occasional playlist.</p>
+    <div class="nl-row">
+      <input type="email" placeholder="Email address">
+      <a href="#" class="btn">Sign up</a>
+    </div>
+  </div>
+
+  <div class="c-footer-info">
     <div>
-      <span class="eyebrow">Origin focus</span>
-      <p>We've built direct relationships with the farmers behind every coffee we offer. Altitude, microclimate, and careful processing — the provenance tells you everything.</p>
+      <div class="ft-logo">Concierge Coffee</div>
+      <div class="ft-addr">821 Traction Ave<br>Los Angeles, CA 90013</div>
     </div>
-    <p style="font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:0.08em;text-transform:uppercase;">Arts District, LA</p>
-  </div>
-  <div class="origin-img">
-    <img src="images/espresso.jpeg" alt="Origin">
-  </div>
-</section>
-
-<!-- MERCH -->
-<div class="merch-row">
-  <div class="merch-header">
-    <span>Merch</span>
-    <a href="#">Shop all →</a>
-  </div>
-  <div class="merch-grid">
-    <div class="merch-item">
-      <div class="merch-img"><img src="images/merch-rca-1.avif" alt="RCA Tee"></div>
-      <div class="merch-info">
-        <span class="merch-name">RCA Tee</span>
-        <span class="merch-price">$45.00</span>
-      </div>
+    <div>
+      <div class="ft-h">Shop</div>
+      <ul>
+        <li><a href="#">Coffee</a></li>
+        <li><a href="#">Merch</a></li>
+      </ul>
     </div>
-    <div class="merch-item">
-      <div class="merch-img"><img src="images/merch-rca-2.avif" alt="RCA Cap"></div>
-      <div class="merch-info">
-        <span class="merch-name">RCA Cap</span>
-        <span class="merch-price">$38.00</span>
-      </div>
-    </div>
-    <div class="merch-item">
-      <div class="merch-img"><img src="images/merch-waterbottle.jpg" alt="Water Bottle"></div>
-      <div class="merch-info">
-        <span class="merch-name">Water Bottle</span>
-        <span class="merch-price">$52.00</span>
-      </div>
+    <div>
+      <div class="ft-h">Info</div>
+      <ul>
+        <li><a href="#">Visit</a></li>
+        <li><a href="#">Wholesale</a></li>
+        <li><a href="https://www.instagram.com/conciergecoffee/" target="_blank">Instagram</a></li>
+      </ul>
     </div>
   </div>
-</div>
 
-<!-- JOURNAL BAR -->
-<div class="journal-bar">
-  <span>The Journal</span>
-  <a href="#">View all →</a>
-</div>
-
-<!-- NEWSLETTER -->
-<div class="newsletter">
-  <p>Join our list for brew guides, origin stories, and considered updates.</p>
-  <div class="nl-row">
-    <input type="email" placeholder="Email address">
-    <a href="#" class="btn">Sign up</a>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer>
-  <div>
-    <div class="ft-logo">Concierge Coffee</div>
-    <div class="ft-addr">821 Traction Ave<br>Los Angeles, CA 90013</div>
-  </div>
-  <div>
-    <div class="ft-h">Shop</div>
-    <ul>
-      <li><a href="#">Coffee</a></li>
-      <li><a href="#">Merch</a></li>
-    </ul>
-  </div>
-  <div>
-    <div class="ft-h">Info</div>
-    <ul>
-      <li><a href="visit.html">Visit</a></li>
-      <li><a href="#">Wholesale</a></li>
-      <li><a href="https://www.instagram.com/conciergecoffee/" target="_blank">Instagram</a></li>
-    </ul>
-  </div>
-  <div>
-    <div class="ft-h">Policies</div>
-    <ul>
-      <li><a href="#">Shipping</a></li>
-      <li><a href="#">Returns</a></li>
-    </ul>
-  </div>
   <div class="ft-copy">
     <span>© 2026 Concierge Coffee LLC</span>
     <span>conciergecoffee.com</span>
   </div>
-</footer>
+
+</div>
 
 </body>
 </html>
