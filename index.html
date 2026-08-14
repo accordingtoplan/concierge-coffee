@@ -103,6 +103,18 @@
 
   .hero-sub span { display: block; font-size: 11px; color: #999; }
   .hero-sub a { font-size: 11px; color: #111; cursor: pointer; }
+  .hero-sub a[target] { color: #999; }
+  .hero-sub a:hover { color: #111; }
+
+  .hero-hours {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: right;
+    padding-bottom: 4px;
+  }
+
+  .hero-hours span { font-size: 11px; color: #999; }
 
   /* ── SHOP ── */
   .shop { padding: 0 32px 80px; }
@@ -119,10 +131,10 @@
      a given px against Helvetica, so each of these goes up two. */
   .shop-title {
     font-family: var(--serif);
-    font-size: 13px;
+    font-size: clamp(16px, 1.4vw, 20px);
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.07em;
   }
 
   .grid {
@@ -575,13 +587,6 @@
     break-inside: avoid;
   }
 
-  .menu-foot {
-    padding-top: 32px;
-    font-size: 10px;
-    color: #bbb;
-    line-height: 2;
-  }
-
 
   .card-img--slide { position: relative; overflow: hidden; }
 
@@ -704,8 +709,12 @@
   <div class="hero-meta">
     <div class="hero-sub">
       <span>Arts District, Los Angeles</span>
-      <span>821 Traction Ave</span>
-      <a onclick="scrollToShop()">Shop →</a>
+      <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank" rel="noopener noreferrer">821 Traction Ave</a>
+      <a href="visit.html">Visit →</a>
+    </div>
+    <div class="hero-hours">
+      <span>Mon–Fri 7am – 5pm</span>
+      <span>Sat–Sun 8am – 5pm</span>
     </div>
   </div>
 </section>
@@ -844,10 +853,6 @@
     </a>
   </div>
 
-  <div class="menu-foot">
-    Extras: espresso shot, cream top, smoked sea salt, house vanilla.<br>
-    Milk alternatives: oat, almond, soy, pistachio.
-  </div>
 </section>
 
 <!-- MERCH -->
@@ -870,20 +875,20 @@
     </div>
     <div class="card merch-card">
       <div class="card-img card-img--slide">
-        <img class="slide-img slide-img--1" src="images/merch-rca-1.avif" alt="RCA Car" />
-        <img class="slide-img slide-img--2" src="images/merch-rca-2.avif" alt="RCA Car" />
+        <img class="slide-img slide-img--1" src="images/merch-rc-car-1.jpg" alt="RC-Car" />
+        <img class="slide-img slide-img--2" src="images/merch-rc-car-2.jpg" alt="RC-Car" />
       </div>
       <div class="card-info">
         <div>
-          <div class="card-name">RCA Car</div>
+          <div class="card-name">RC-Car</div>
           <div class="card-sub">Limited Edition · Custom Livery</div>
         </div>
         <div class="card-price">—</div>
       </div>
     </div>
     <div class="card merch-card">
-      <div class="card-img" style="background:#f7f7f7;display:flex;align-items:center;justify-content:center">
-        <span style="font-size:10px;color:#bbb;letter-spacing:0.06em;text-transform:uppercase">Coming Soon</span>
+      <div class="card-img" style="background:#f7f7f7">
+        <img src="images/merch-tshirt.jpg" alt="T-Shirt" loading="lazy" />
       </div>
       <div class="card-info">
         <div>
@@ -930,7 +935,7 @@
     <div class="ft-h">Merch</div>
     <ul class="ft-links">
       <li><a onclick="scrollToMerch()">Water Bottle</a></li>
-      <li><a onclick="scrollToMerch()">RCA Car</a></li>
+      <li><a onclick="scrollToMerch()">RC-Car</a></li>
       <li><a onclick="scrollToMerch()">T-Shirt</a></li>
       <li><a onclick="scrollToMerch()">Sweater</a></li>
     </ul>
