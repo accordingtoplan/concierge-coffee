@@ -101,6 +101,17 @@
     line-height: 0.94;
   }
 
+  .hero-claim {
+    font-family: var(--serif);
+    font-size: clamp(15px, 1.5vw, 20px);
+    font-weight: 300;
+    letter-spacing: -0.005em;
+    line-height: 1.45;
+    color: #111;
+    margin-top: 12px;
+    max-width: 28ch;
+  }
+
   .hero-sub {
     text-align: right;
     display: flex;
@@ -143,6 +154,7 @@
     aspect-ratio: 3/4;
     background: #f7f7f7;
     overflow: hidden;
+    position: relative;
   }
 
   .card-img img {
@@ -154,7 +166,57 @@
     transition: transform 0.5s ease;
   }
 
-  .card:hover .card-img img { transform: scale(1.04); }
+  .card:hover .card-img img { transform: scale(1.1); }
+
+  /* ── SHOP CARD ──
+     Rest: packshot, name and price below. Hover: the image swaps to the second
+     angle, pushes in, and the info rides up onto the picture.
+     The .card-alt layer is the slot for bean photography when it exists. */
+  .shop-card .card-alt {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  .shop-card:hover .card-base { opacity: 0; }
+  .shop-card:hover .card-alt { opacity: 1; }
+
+  .card-over {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 16px;
+    color: #fff;
+    background: linear-gradient(to top,
+      rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.14) 38%, rgba(0,0,0,0) 66%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  .shop-card:hover .card-over { opacity: 1; }
+
+  .card-over-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .card-over-name, .card-over-price { font-size: 11px; }
+
+  .card-over-size {
+    font-size: 10px;
+    color: rgba(255,255,255,0.72);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 5px;
+  }
+
+  .shop-card .card-info { transition: opacity 0.3s ease; }
+  .shop-card:hover .card-info { opacity: 0; }
 
   .card-info {
     padding: 10px 0 20px;
@@ -609,7 +671,10 @@
     <img src="images/hero.jpeg" alt="Concierge Coffee" />
   </div>
   <div class="hero-meta">
-    <div class="hero-title">Coffee.</div>
+    <div>
+      <div class="hero-title">Coffee.</div>
+      <p class="hero-claim">Coffee, cars and conversing.</p>
+    </div>
     <div class="hero-sub">
       <span>Arts District, LA</span>
       <span>821 Traction Ave</span>
@@ -684,10 +749,12 @@
       </div>
     </div>
     <div class="card menu-card">
-      <div class="card-img card-img--empty"><span>Photo pending</span></div>
+      <div class="card-img">
+        <img src="images/drink-flat-white.jpg" alt="Flat White" loading="lazy" />
+      </div>
       <div class="card-info">
-        <div class="card-name">Saffron Latte</div>
-        <div class="card-cat">Saffron, honey, cinnamon, cardamom, vanilla, double espresso, crushed pistachio, milk</div>
+        <div class="card-name">Flat White</div>
+        <div class="card-cat">Double espresso, steamed milk</div>
       </div>
     </div>
     <div class="card menu-card">
@@ -716,10 +783,12 @@
       </div>
     </div>
     <div class="card menu-card">
-      <div class="card-img card-img--empty"><span>Photo pending</span></div>
+      <div class="card-img">
+        <img src="images/drink-cardamom-rose-cream.jpg" alt="Cardamom-Rose Cream Top" loading="lazy" />
+      </div>
       <div class="card-info">
-        <div class="card-name">Espresso Tonic</div>
-        <div class="card-cat">Double espresso, yuzu, bergamot, allspice, citrus</div>
+        <div class="card-name">Cardamom-Rose Cream Top</div>
+        <div class="card-cat">Cardamom, rose, cream top</div>
       </div>
     </div>
     <div class="card menu-card">
@@ -898,6 +967,26 @@
     return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
   }
 
+  // Shopify carries the variants in grams and kilos. The shop is in Los Angeles,
+  // so every weight the site shows is converted. Under a pound reads in ounces.
+  function usWeight(label) {
+    return String(label ?? '').replace(
+      /(\d+(?:[.,]\d+)?)\s*(kg|kilogramme?s?|kilograms?|g|gramme?s?|grams?)\b/gi,
+      (_, n, unit) => {
+        const grams = parseFloat(n.replace(',', '.')) * (/^k/i.test(unit) ? 1000 : 1);
+        const oz = grams / 28.349523125;
+        return oz >= 16 ? `${(oz / 16).toFixed(1)} lb` : `${oz.toFixed(1)} oz`;
+      }
+    );
+  }
+
+  function variantSizes(p) {
+    return p.variants.edges
+      .map(e => e.node.selectedOptions?.find(o => o.name === 'Size')?.value ?? e.node.title)
+      .filter(s => s && s !== 'Default Title')
+      .map(usWeight);
+  }
+
   const FALLBACK_IMAGES = {
     'espresso roast': 'images/espresso.jpeg',
     'espresso blend 250g': 'images/product-espresso-blend.jpg',
@@ -913,6 +1002,15 @@
     return FALLBACK_IMAGES[key] || 'images/espresso.jpeg';
   }
 
+  // The hover layer. Second Shopify angle for now; point this at bean
+  // photography once it exists and the swap needs no other change.
+  const BEAN_IMAGE = null;
+
+  function getHoverImage(p) {
+    if (BEAN_IMAGE) return BEAN_IMAGE;
+    return p.images.edges[1]?.node?.url ?? null;
+  }
+
   function renderProducts() {
     const grid = document.getElementById('product-grid');
     if (!products.length) {
@@ -922,12 +1020,22 @@
 
     grid.innerHTML = products.map(p => {
       const imgUrl = getProductImage(p);
+      const hoverUrl = getHoverImage(p);
       const price = formatPrice(p.priceRange.minVariantPrice.amount, p.priceRange.minVariantPrice.currencyCode);
+      const sizes = variantSizes(p);
 
       return `
-        <div class="card" onclick="openProduct('${p.id}')">
+        <div class="card shop-card" onclick="openProduct('${p.id}')">
           <div class="card-img">
-            <img src="${imgUrl}" alt="${p.title}" />
+            <img class="card-base" src="${imgUrl}" alt="${p.title}" />
+            ${hoverUrl ? `<img class="card-alt" src="${hoverUrl}" alt="" aria-hidden="true" />` : ''}
+            <div class="card-over">
+              <div class="card-over-row">
+                <span class="card-over-name">${p.title}</span>
+                <span class="card-over-price">${price}</span>
+              </div>
+              ${sizes.length ? `<div class="card-over-size">${sizes.join(' / ')}</div>` : ''}
+            </div>
           </div>
           <div class="card-info">
             <div>
@@ -1003,7 +1111,7 @@
             <div class="ci-img">${img ? `<img src="${img}" alt="${m.product.title}">` : ''}</div>
             <div>
               <div class="ci-name">${m.product.title}</div>
-              <div class="ci-sub">${m.title !== 'Default Title' ? m.title : ''} × ${line.quantity}</div>
+              <div class="ci-sub">${m.title !== 'Default Title' ? usWeight(m.title) : ''} × ${line.quantity}</div>
             </div>
             <div class="ci-price">${formatPrice(m.price.amount)}</div>
           </div>
@@ -1060,7 +1168,7 @@
         <div class="pdp-variant-lbl">Size</div>
         <div class="pdp-variant-opts">
           ${variants.map(v => {
-            const size = v.selectedOptions?.find(o => o.name === 'Size')?.value ?? v.title;
+            const size = usWeight(v.selectedOptions?.find(o => o.name === 'Size')?.value ?? v.title);
             return `<button class="vbtn${v.id === selectedVariant?.id ? ' on' : ''}" 
               onclick="selectVariant('${v.id}')" 
               ${!v.availableForSale ? 'disabled' : ''}>
