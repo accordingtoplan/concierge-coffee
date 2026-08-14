@@ -17,7 +17,14 @@
     src: url('fonts/newsreader-var.woff2') format('woff2');
   }
 
-  :root { --serif: 'Newsreader', Georgia, 'Times New Roman', serif; }
+  :root {
+    --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+    /* Secondary type was #bbb (1.92:1) and #ccc (1.61:1) against white, which
+       is below the 4.5:1 floor by a wide margin -- unreadable rather than
+       quiet. One tone at 5.03:1 for everything subordinate, so it can be
+       tuned in one place. */
+    --muted: #6f6f6f;
+  }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -65,7 +72,7 @@
   }
 
   .nav-r a { transition: color 0.15s; }
-  .nav-r a:hover { color: #999; }
+  .nav-r a:hover { color: var(--muted); }
 
   /* ── COLLAPSED NAV ──
      Below 768 the links leave the bar and become a full-height sheet. One set
@@ -142,7 +149,7 @@
 
   .visit-info span {
     font-size: 11px;
-    color: #999;
+    color: var(--muted);
     display: block;
   }
 
@@ -152,7 +159,7 @@
     transition: color 0.15s;
   }
 
-  .visit-info a:hover { color: #999; }
+  .visit-info a:hover { color: var(--muted); }
 
   /* DETAILS STRIP */
   .details {
@@ -170,7 +177,7 @@
     font-size: 9px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: #ccc;
+    color: var(--muted);
   }
 
   .detail-val {
@@ -241,7 +248,7 @@
      coming from illegibility rather than from restraint. Headings take the
      black and the links take a mid grey at 5.03:1, so the hierarchy is
      carried by weight and case instead of by fading everything out. */
-  .ft-addr { font-size: 11px; line-height: 1.9; color: #6f6f6f; }
+  .ft-addr { font-size: 11px; line-height: 1.9; color: var(--muted); }
   .ft-addr a { color: inherit; transition: color 0.15s; }
   .ft-addr a:hover { color: #111; }
   .ft-tel { display: block; margin-top: 10px; }
@@ -255,7 +262,7 @@
   }
 
   .ft-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-  .ft-links a { font-size: 11px; color: #6f6f6f; cursor: pointer; transition: color 0.15s; }
+  .ft-links a { font-size: 11px; color: var(--muted); cursor: pointer; transition: color 0.15s; }
   .ft-links a:hover { color: #111; }
 
   .ft-copy {
@@ -264,7 +271,7 @@
     display: flex;
     justify-content: space-between;
     font-size: 10px;
-    color: #6f6f6f;
+    color: var(--muted);
   }
 
   /* ── RESPONSIVE ──
