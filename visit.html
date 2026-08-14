@@ -24,6 +24,12 @@
        quiet. One tone at 5.03:1 for everything subordinate, so it can be
        tuned in one place. */
     --muted: #6f6f6f;
+    /* Section rhythm. The page was running 80px between sections and 2px
+       between a section title and its content, which read as one continuous
+       block of grids rather than as parts. Two values, so the whole page
+       breathes or tightens together. */
+    --section-gap: 128px;
+    --head-gap: 26px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -163,7 +169,7 @@
 
   /* DETAILS STRIP */
   .details {
-    padding: 0 32px 64px;
+    padding: 0 32px var(--section-gap);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 2px;
@@ -191,7 +197,7 @@
 
   /* PHOTO GRID */
   .photo-grid {
-    padding: 0 32px 80px;
+    padding: 0 32px var(--section-gap);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2px;
@@ -279,12 +285,14 @@
      the nav collapses to a sheet. */
 
   @media (max-width: 1024px) {
+    :root { --section-gap: 104px; --head-gap: 22px; }
     nav, .visit-hero, .details, .photo-grid, footer { padding-left: 24px; padding-right: 24px; }
     .details { grid-template-columns: repeat(2, 1fr); row-gap: 28px; }
     footer { grid-template-columns: 1fr 1fr; gap: 36px; }
   }
 
   @media (max-width: 768px) {
+    :root { --section-gap: 76px; --head-gap: 18px; }
     nav, .visit-hero, .details, .photo-grid, footer { padding-left: 16px; padding-right: 16px; }
     /* the links leave the bar and become a sheet */
     .nav-toggle { display: flex; }
@@ -321,10 +329,10 @@
     .visit-hero-img { aspect-ratio: 3/2; }
     .visit-hero-meta { flex-direction: column; align-items: flex-start; gap: 14px; padding: 14px 0 36px; }
     .visit-info { text-align: left; }
-    .details { padding-bottom: 44px; }
+    .details { padding-bottom: var(--section-gap); }
     /* Two columns read cleaner as equal cells. The wide treatment leaves
        orphan gaps once the grid drops below three columns. */
-    .photo-grid { grid-template-columns: repeat(2, 1fr); padding-bottom: 48px; }
+    .photo-grid { grid-template-columns: repeat(2, 1fr); padding-bottom: var(--section-gap); }
     .photo-grid .wide { grid-column: span 1; }
     .photo-cell.wide img { aspect-ratio: 3/4; }
     footer { padding-top: 36px; gap: 28px; }
@@ -332,6 +340,7 @@
   }
 
   @media (max-width: 480px) {
+    :root { --section-gap: 64px; --head-gap: 16px; }
     nav, .visit-hero, .details, .photo-grid, footer { padding-left: 14px; padding-right: 14px; }
     .logo { gap: 7px; }
     .logo .lk { width: 20.1px; height: 16px; }

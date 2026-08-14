@@ -24,6 +24,12 @@
        quiet. One tone at 5.03:1 for everything subordinate, so it can be
        tuned in one place. */
     --muted: #6f6f6f;
+    /* Section rhythm. The page was running 80px between sections and 2px
+       between a section title and its content, which read as one continuous
+       block of grids rather than as parts. Two values, so the whole page
+       breathes or tightens together. */
+    --section-gap: 128px;
+    --head-gap: 26px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -107,7 +113,7 @@
 
 
   /* ── HERO ── */
-  .hero { padding: 24px 32px 80px; }
+  .hero { padding: 24px 32px var(--section-gap); }
 
   .hero-img {
     position: relative;
@@ -185,14 +191,13 @@
   .hero-hours span { font-size: 11px; color: var(--muted); }
 
   /* ── SHOP ── */
-  .shop { padding: 0 32px 80px; }
+  .shop { padding: 0 32px var(--section-gap); }
 
   .shop-head {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 48px;
-    margin-bottom: 2px;
+    padding-bottom: var(--head-gap);
   }
 
   /* Section and product headlines share the serif. Newsreader runs small at
@@ -594,17 +599,86 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    height: 48px;
-    margin-bottom: 2px;
+    padding-bottom: var(--head-gap);
   }
 
   .menu-note { font-size: 10px; color: var(--muted); }
+  /* the rail carries no scrollbar, so the note says which way it goes */
+  .menu-note::after { content: '   \2190 \2192'; letter-spacing: 0.2em; }
 
+  /* ── FEATURE BAND ──
+     One photograph across the width of the section with the type overlaid at
+     the foot. Shared by the Specialty of the Month and by the merch lead, so
+     the two read as the same device rather than as two inventions.
+
+     Every drink and merch photograph is portrait 3/4, so the band ratio is
+     the thing that has to give: 16/9 is the widest crop that still holds a
+     whole cup, and the car survives 2/1 because it is a landscape subject in
+     a portrait frame. The vertical anchor lives inline on each img, because
+     it belongs to that photograph and changes when the photograph does. */
+  .feature {
+    position: relative;
+    display: block;
+    color: inherit;
+    margin-bottom: 2px;
+    overflow: hidden;
+  }
+  .feature .card-img { aspect-ratio: 16/9; }
+  .feature--wide .card-img { aspect-ratio: 2/1; }
+  .feature .card-img img { transition: transform 0.9s cubic-bezier(0.22,1,0.36,1); }
+  .feature:hover .card-img img { transform: scale(1.03); }
+
+  .feature-face {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 32px;
+    color: #fff;
+    background: linear-gradient(to bottom,
+      rgba(0,0,0,0) 42%, rgba(0,0,0,0.30) 68%, rgba(0,0,0,0.74) 100%);
+  }
+  .feature-kicker {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .feature-name {
+    font-family: var(--serif);
+    font-size: clamp(26px, 3.4vw, 46px);
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+  }
+  .feature-cat { font-size: 12px; line-height: 1.6; margin-top: 10px; max-width: 42ch; }
+
+  /* ── DRINK RAIL ──
+     Eight drinks in a four-up grid read as a second shop. A rail scrolls
+     across instead of down, which is the one direction the rest of the page
+     does not use. The track is a fixed width rather than minmax(0, ...): a
+     track with a zero minimum is compressed back to fit the container and the
+     rail silently stops scrolling. */
   .menu-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 25vw;
     gap: 2px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    /* bleed into the gutter so a card is cut by the page edge and the rail
+       reads as scrollable without a scrollbar or an instruction */
+    margin-right: -32px;
+    padding-right: 32px;
   }
+  .menu-grid::-webkit-scrollbar { display: none; }
+  .menu-grid:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
+  .menu-card { scroll-snap-align: start; }
 
   .menu-sub {
     font-size: 9px;
@@ -707,12 +781,18 @@
      the size and price stack — not the column count. */
 
   @media (max-width: 1024px) {
+    :root { --section-gap: 104px; --head-gap: 22px; }
     nav, .hero, .shop, footer { padding-left: 24px; padding-right: 24px; }
-    .grid, .menu-grid { grid-template-columns: repeat(3, 1fr); }
+    .grid { grid-template-columns: repeat(3, 1fr); }
+    .menu-grid { grid-auto-columns: 34vw; margin-right: -24px; padding-right: 24px; }
+    .feature .card-img { aspect-ratio: 3/2; }
+    .feature--wide .card-img { aspect-ratio: 16/9; }
+    .feature-face { padding: 26px 24px; }
     footer { grid-template-columns: 1fr 1fr; gap: 36px; }
   }
 
   @media (max-width: 768px) {
+    :root { --section-gap: 76px; --head-gap: 18px; }
     nav, .hero, .shop, footer { padding-left: 16px; padding-right: 16px; }
     /* the links leave the bar and become a sheet */
     .nav-toggle { display: flex; }
@@ -746,14 +826,21 @@
 
     .nav-r a:last-child { border-bottom: 0; }
 
-    .hero { padding-bottom: 48px; }
+    .hero { padding-bottom: var(--section-gap); }
     .hero-img { aspect-ratio: 3/2; margin-bottom: 14px; }
     .hero-meta { flex-direction: column; align-items: flex-start; gap: 14px; }
     .hero-sub { text-align: left; padding-bottom: 0; }
     .hero-hours { text-align: left; align-self: flex-start; }
-    .shop { padding-bottom: 48px; }
-    .grid, .menu-grid { grid-template-columns: repeat(2, 1fr); }
-    .menu-head { height: auto; padding: 24px 0 12px; }
+    .shop { padding-bottom: var(--section-gap); }
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .menu-grid { grid-auto-columns: 62vw; margin-right: -16px; padding-right: 16px; }
+    /* a feature on a phone wants height, not width, and 4/5 is close to
+       the native crop so it barely crops at all */
+    .feature .card-img { aspect-ratio: 4/5; }
+    .feature--wide .card-img { aspect-ratio: 4/3; }
+    .feature-face { padding: 18px 16px; }
+    .feature-cat { max-width: none; }
+    .menu-head { padding-bottom: var(--head-gap); }
     .menu-note { display: none; }
     .pdp-overlay { padding: 0; }
     .pdp-modal { grid-template-columns: 1fr; max-width: none; }
@@ -764,11 +851,13 @@
   }
 
   @media (max-width: 480px) {
+    :root { --section-gap: 64px; --head-gap: 16px; }
     nav, .hero, .shop, footer { padding-left: 14px; padding-right: 14px; }
     .logo { gap: 7px; }
     .logo .lk { width: 20.1px; height: 16px; }
     .logo .lw { width: 60.7px; height: 13px; }
-    .shop-head { height: auto; padding: 22px 0 10px; }
+    .shop-head { padding-bottom: var(--head-gap); }
+    .menu-grid { grid-auto-columns: 68vw; margin-right: -14px; padding-right: 14px; }
 
     /* Shop card at two up. The face has to carry a name, a size, a price and
        a button in about 145px of usable width. */
@@ -803,6 +892,19 @@
     .ft-links { gap: 0; }
     .ft-links a { font-size: 13px; }
     .ft-copy { margin-top: 24px; padding-top: 20px; border-top: 1px solid #f0f0f0; }
+  }
+
+  /* Merch is a lead plus three accessories, so the grid is three across at
+     every width. #merch .grid outranks the .grid breakpoint rules on
+     specificity, so it holds without being repeated per query. */
+  #merch .grid { grid-template-columns: repeat(3, 1fr); }
+  #merch .card-name { font-size: 13px; }
+  #merch .card-info { display: block; }
+
+  @media (max-width: 480px) {
+    #merch .card-name { font-size: 11px; }
+    #merch .card-sub { display: none; }
+    #merch .card-info { padding: 8px 0 0; }
   }
 
   /* ── TOUCH ──
@@ -949,7 +1051,24 @@
     <span class="shop-title">Coffee Specialties</span>
     <span class="menu-note">Served at 821 Traction Ave</span>
   </div>
-  <div class="menu-grid">
+  <!-- Specialty of the Month. Swap the picture, the name and the line each
+       month; object-position is the vertical anchor for THIS photograph and
+       wants re-checking when the photograph changes. -->
+  <div class="feature">
+    <div class="card-img">
+      <img src="images/drink-yuzu-matcha-tonic.jpg" alt="Yuzu Matcha Tonic"
+           style="object-position: center 35%" />
+    </div>
+    <div class="feature-face">
+      <div class="feature-kicker">Specialty of the Month</div>
+      <div class="feature-name">Yuzu Matcha Tonic</div>
+      <div class="feature-cat">Matcha, yuzu, simple syrup, fresh lime</div>
+    </div>
+  </div>
+  <!-- tabindex and role so the rail is reachable and announced: four of the
+       seven cards are plain divs with nothing focusable inside, so without
+       this a keyboard could not scroll it. -->
+  <div class="menu-grid" tabindex="0" role="region" aria-label="Coffee specialties, scroll sideways">
     <div class="card menu-card">
       <div class="card-img">
         <img src="images/drink-einspanner.jpg" alt="Einspänner" loading="lazy" />
@@ -969,15 +1088,6 @@
         <div class="card-cat">Double espresso, steamed milk</div>
       </div>
     </a>
-    <div class="card menu-card">
-      <div class="card-img">
-        <img src="images/drink-yuzu-matcha-tonic.jpg" alt="Yuzu Matcha Tonic" loading="lazy" />
-      </div>
-      <div class="card-info">
-        <div class="card-name">Yuzu Matcha Tonic</div>
-        <div class="card-cat">Matcha, yuzu, simple syrup, fresh lime</div>
-      </div>
-    </div>
     <div class="card menu-card">
       <div class="card-img">
         <img src="images/drink-banana-cream-matcha.jpg" alt="Banana Cream Matcha" loading="lazy" />
@@ -1035,30 +1145,28 @@
   <div class="shop-head">
     <span class="shop-title">Merch</span>
   </div>
+  <div class="feature feature--wide">
+    <div class="card-img card-img--slide" style="background:#f7f7f7">
+      <img class="slide-img slide-img--1" src="images/merch-rc-car-1.jpg" alt="RC-Car"
+           style="object-position: center 45%" />
+      <img class="slide-img slide-img--2" src="images/merch-rc-car-2.jpg" alt="RC-Car"
+           style="object-position: center 45%" />
+    </div>
+    <div class="feature-face">
+      <div class="feature-name">RC-Car</div>
+      <div class="feature-cat">Limited Edition &middot; Custom Livery</div>
+    </div>
+  </div>
   <div class="grid">
-    <div class="card merch-card" onclick="">
+    <div class="card merch-card">
       <div class="card-img" style="background:#f7f7f7">
-        <img src="images/merch-waterbottle.webp" alt="Water Bottle" style="object-fit:cover" />
+        <img src="images/merch-waterbottle.webp" alt="Water Bottle" style="object-fit:cover" loading="lazy" />
       </div>
       <div class="card-info">
         <div>
           <div class="card-name">Water Bottle</div>
-          <div class="card-sub">Limited Edition · KINTO</div>
+          <div class="card-sub">Limited Edition &middot; KINTO</div>
         </div>
-        <div class="card-price">—</div>
-      </div>
-    </div>
-    <div class="card merch-card">
-      <div class="card-img card-img--slide">
-        <img class="slide-img slide-img--1" src="images/merch-rc-car-1.jpg" alt="RC-Car" />
-        <img class="slide-img slide-img--2" src="images/merch-rc-car-2.jpg" alt="RC-Car" />
-      </div>
-      <div class="card-info">
-        <div>
-          <div class="card-name">RC-Car</div>
-          <div class="card-sub">Limited Edition · Custom Livery</div>
-        </div>
-        <div class="card-price">—</div>
       </div>
     </div>
     <div class="card merch-card">
@@ -1070,7 +1178,6 @@
           <div class="card-name">T-Shirt</div>
           <div class="card-sub">Limited Edition</div>
         </div>
-        <div class="card-price">—</div>
       </div>
     </div>
     <div class="card merch-card">
@@ -1080,9 +1187,8 @@
       <div class="card-info">
         <div>
           <div class="card-name">Sweater</div>
-          <div class="card-sub">Limited Edition · Reverse Weave</div>
+          <div class="card-sub">Limited Edition &middot; Reverse Weave</div>
         </div>
-        <div class="card-price">—</div>
       </div>
     </div>
   </div>
