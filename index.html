@@ -131,6 +131,12 @@
 
   .hero-img .slide.on { opacity: 1; }
 
+  /* The new frames are portrait phone photographs, so their subjects sit low
+     in a 16/7 window. Raising the image 50px brings the room into the frame
+     and drops the empty wall above it. */
+  .hero-img img.shift-up,
+  .visit-hero-img img.shift-up { object-position: center calc(50% - 50px); }
+
   @media (prefers-reduced-motion: reduce) {
     .hero-img .slide { transition: none; }
   }
@@ -803,12 +809,11 @@
 <section class="hero">
   <div class="hero-img" id="hero-slides">
     <img class="slide on" src="images/hero.jpeg" alt="Concierge Coffee, the bar at 821 Traction Ave" />
-    <img class="slide" src="images/hero-room.jpg" alt="The room at Traction Ave" loading="lazy" />
-    <img class="slide" src="images/hero-street.jpg" alt="Traction Ave, Arts District" loading="lazy" />
-    <img class="slide" src="images/hero-courtyard.jpg" alt="The courtyard" loading="lazy" />
-    <img class="slide" src="images/hero-mirror.jpg" alt="The front room" loading="lazy" />
-    <img class="slide" src="images/hero-shelves.jpg" alt="Coffee on the shelf" loading="lazy" />
-    <img class="slide" src="images/hero-drink.jpg" alt="Served at the bar" loading="lazy" />
+    <img class="slide shift-up" src="images/hero-room.jpg" alt="The room at Traction Ave" loading="lazy" />
+    <img class="slide shift-up" src="images/hero-street.jpg" alt="Traction Ave, Arts District" loading="lazy" />
+    <img class="slide shift-up" src="images/hero-courtyard.jpg" alt="The courtyard" loading="lazy" />
+    <img class="slide shift-up" src="images/hero-mirror.jpg" alt="The front room" loading="lazy" />
+    <img class="slide shift-up" src="images/hero-shelves.jpg" alt="Coffee on the shelf" loading="lazy" />
   </div>
   <div class="hero-meta">
     <div class="hero-sub">

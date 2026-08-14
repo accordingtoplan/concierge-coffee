@@ -327,6 +327,10 @@
     .ft-logo { margin-bottom: 16px; }
   }
 
+  /* Portrait source in a 16/7 window, raised to match the homepage frames. */
+  .hero-img img.shift-up,
+  .visit-hero-img img.shift-up { object-position: center calc(50% - 50px); }
+
   /* ── ARRANGEMENTS ── */
   .arr-intro {
     padding: 0 32px 64px;
@@ -436,7 +440,7 @@
 <!-- HERO -->
 <section class="visit-hero">
   <div class="visit-hero-img">
-    <img src="images/hero-courtyard.jpg" alt="The courtyard at 821 Traction Ave" />
+    <img class="shift-up" src="images/hero-courtyard.jpg" alt="The courtyard at 821 Traction Ave" />
   </div>
   <div class="visit-hero-meta">
     <div class="visit-title">Arrangements.</div>
