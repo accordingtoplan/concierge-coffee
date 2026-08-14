@@ -103,6 +103,7 @@
   .hero { padding: 24px 32px 80px; }
 
   .hero-img {
+    position: relative;
     width: 100%;
     aspect-ratio: 16/7;
     background: #f2f2f2;
@@ -116,6 +117,22 @@
     object-fit: cover;
     object-position: center;
     display: block;
+  }
+
+  /* ── HERO SLIDES ──
+     Crossfade rather than slide. The frames share no composition, and a
+     horizontal move would fight that. */
+  .hero-img .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.1s ease;
+  }
+
+  .hero-img .slide.on { opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-img .slide { transition: none; }
   }
 
   .hero-meta {
@@ -771,6 +788,7 @@
     <a onclick="scrollToShop()">Shop</a>
     <a onclick="scrollToMenu()">Menu</a>
     <a onclick="scrollToMerch()">Merch</a>
+    <a href="arrangements.html">Arrangements</a>
     <a href="visit.html">Visit</a>
     <a onclick="openCart()" id="bag-link">Bag (0)</a>
   </div>
@@ -781,8 +799,14 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-img">
-    <img src="images/hero.jpeg" alt="Concierge Coffee" />
+  <div class="hero-img" id="hero-slides">
+    <img class="slide on" src="images/hero.jpeg" alt="Concierge Coffee, the bar at 821 Traction Ave" />
+    <img class="slide" src="images/hero-room.jpg" alt="The room at Traction Ave" loading="lazy" />
+    <img class="slide" src="images/hero-street.jpg" alt="Traction Ave, Arts District" loading="lazy" />
+    <img class="slide" src="images/hero-courtyard.jpg" alt="The courtyard" loading="lazy" />
+    <img class="slide" src="images/hero-mirror.jpg" alt="The front room" loading="lazy" />
+    <img class="slide" src="images/hero-shelves.jpg" alt="Coffee on the shelf" loading="lazy" />
+    <img class="slide" src="images/hero-drink.jpg" alt="Served at the bar" loading="lazy" />
   </div>
   <div class="hero-meta">
     <div class="hero-sub">
@@ -1023,7 +1047,7 @@
     <ul class="ft-links">
       <li><a onclick="scrollToMenu()">Menu</a></li>
       <li><a href="visit.html">Visit</a></li>
-      <li><a href="#">Wholesale</a></li>
+      <li><a href="arrangements.html#wholesale">Wholesale</a></li>
       <li><a href="https://www.instagram.com/conciergecoffee/" target="_blank">Instagram</a></li>
     </ul>
   </div>
@@ -1034,6 +1058,27 @@
 </footer>
 
 <script>
+
+  // Hero slideshow. Five seconds a frame, paused when the tab is in the
+  // background, and left alone entirely for anyone who has asked the system
+  // to reduce motion.
+  (function () {
+    const slides = [...document.querySelectorAll('#hero-slides .slide')];
+    if (slides.length < 2) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let i = 0, timer = null;
+    const step = () => {
+      slides[i].classList.remove('on');
+      i = (i + 1) % slides.length;
+      slides[i].classList.add('on');
+    };
+    const start = () => { if (!timer) timer = setInterval(step, 5000); };
+    const stop = () => { clearInterval(timer); timer = null; };
+
+    document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+    start();
+  })();
 
   // Nav sheet. Plain script rather than part of the Shopify module, so the
   // Visit page can use the same markup without carrying the storefront code.

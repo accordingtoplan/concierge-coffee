@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Visit — Concierge Coffee</title>
+<title>Arrangements — Concierge Coffee</title>
 <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="fonts/newsreader-var.woff2" as="font" type="font/woff2" crossorigin>
 <style>
@@ -326,6 +326,65 @@
     footer { grid-template-columns: 1fr; gap: 28px; }
     .ft-logo { margin-bottom: 16px; }
   }
+
+  /* ── ARRANGEMENTS ── */
+  .arr-intro {
+    padding: 0 32px 64px;
+    max-width: 46ch;
+    font-size: 13px;
+    line-height: 1.9;
+    color: #111;
+  }
+
+  .arr-block {
+    padding: 0 32px 56px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .arr-h {
+    font-family: var(--serif);
+    font-size: clamp(20px, 2.1vw, 28px);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+
+  .arr-body { max-width: 54ch; font-size: 13px; line-height: 1.9; color: #111; }
+  .arr-body p + p { margin-top: 14px; }
+  .arr-body .arr-note { color: #999; font-size: 11px; line-height: 1.8; }
+
+  .arr-rule { height: 1px; background: #f0f0f0; margin: 0 32px 56px; }
+
+  .arr-cta {
+    padding: 0 32px 96px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    align-items: baseline;
+    font-size: 13px;
+  }
+
+  .arr-cta a { border-bottom: 1px solid #eee; transition: border-color 0.15s; }
+  .arr-cta a:hover { border-color: #111; }
+
+  @media (max-width: 1024px) {
+    .arr-intro, .arr-block, .arr-cta { padding-left: 24px; padding-right: 24px; }
+    .arr-rule { margin-left: 24px; margin-right: 24px; }
+  }
+
+  @media (max-width: 768px) {
+    .arr-intro, .arr-block, .arr-cta { padding-left: 16px; padding-right: 16px; }
+    .arr-rule { margin-left: 16px; margin-right: 16px; }
+    .arr-block { grid-template-columns: 1fr; gap: 12px; }
+  }
+
+  @media (max-width: 480px) {
+    .arr-intro, .arr-block, .arr-cta { padding-left: 14px; padding-right: 14px; }
+    .arr-rule { margin-left: 14px; margin-right: 14px; }
+  }
 </style>
 </head>
 <body>
@@ -377,82 +436,93 @@
 <!-- HERO -->
 <section class="visit-hero">
   <div class="visit-hero-img">
-    <img src="https://framerusercontent.com/images/xIblc0x2gusTCI8TiIRobgvsJRY.jpeg" alt="Concierge Coffee — Arts District" />
+    <img src="images/hero-courtyard.jpg" alt="The courtyard at 821 Traction Ave" />
   </div>
   <div class="visit-hero-meta">
-    <div class="visit-title">Arts District.<br>Los Angeles.</div>
+    <div class="visit-title">Arrangements.</div>
     <div class="visit-info">
-      <span>821 Traction Ave</span>
-      <span>Los Angeles, CA 90013</span>
-      <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank">Get directions →</a>
+      <span>Events, catering</span>
+      <span>and wholesale</span>
+      <a href="#wholesale">Wholesale →</a>
     </div>
   </div>
 </section>
 
-<!-- DETAILS -->
-<div class="details">
-  <div class="detail-block">
-    <div class="detail-lbl">Address</div>
-    <div class="detail-val">
-      <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank">
-        821 Traction Ave<br>Los Angeles, CA 90013
-      </a>
-    </div>
+<p class="arr-intro">
+  A concierge arranges things. Coffee for a room that is not this one, a bar
+  built somewhere else for an evening, beans by the kilo for a kitchen across
+  town. Los Angeles and Berlin.
+</p>
+
+<div class="arr-rule"></div>
+
+<section class="arr-block" id="events">
+  <h2 class="arr-h">Events</h2>
+  <div class="arr-body">
+    <p>
+      Openings, screenings, launches, dinners. A bar built for the room and run
+      by the same people who run the one on Traction Ave. Espresso, filter and
+      the signature drinks, or a short menu written for the night.
+    </p>
+    <p>
+      Bring the room, the date and the number of people.
+    </p>
   </div>
-  <div class="detail-block">
-    <div class="detail-lbl">Hours</div>
-    <div class="detail-val">
-      Mon–Fri 7am – 5pm<br>
-      Sat–Sun 8am – 5pm
-    </div>
+</section>
+
+<section class="arr-block" id="catering">
+  <h2 class="arr-h">Catering</h2>
+  <div class="arr-body">
+    <p>
+      Coffee service for studios, offices and kitchens that would rather not run
+      a bar of their own. Equipment, staff and beans together, or beans alone
+      with the machine already in place.
+    </p>
+    <p>
+      Standing arrangements as well as single days.
+    </p>
   </div>
-  <div class="detail-block">
-    <div class="detail-lbl">Contact</div>
-    <div class="detail-val">
-      <a href="tel:+13107287915">(310) 728-7915</a><br>
-      <a href="https://www.instagram.com/conciergecoffee/" target="_blank">@conciergecoffee</a>
-    </div>
+</section>
+
+<section class="arr-block" id="wholesale">
+  <h2 class="arr-h">Wholesale</h2>
+  <div class="arr-body">
+    <p>
+      Beans by the kilo for cafés, restaurants and hotels. Espresso and filter,
+      single origin and house roasts, in bags or in bulk.
+    </p>
+    <p>
+      Roasted in Los Angeles every second Tuesday and in Berlin every week, so
+      what arrives is close to the roast date rather than close to the shelf
+      life.
+    </p>
   </div>
-  <div class="detail-block">
-    <div class="detail-lbl">The Space</div>
-    <div class="detail-val">
-      Arts District, Los Angeles<br>
-      Next to Departamento<br>
-      Courtyard · Wifi · Dogs OK
-    </div>
+</section>
+
+<div class="arr-rule"></div>
+
+<section class="arr-block" id="abrazo">
+  <h2 class="arr-h">Abrazo</h2>
+  <div class="arr-body">
+    <p>
+      Abrazo is the evening. Wine, desserts, records, chess, and whoever is
+      showing work that month. The same room under different light, run with
+      people from the neighbourhood rather than for them.
+    </p>
+    <p class="arr-note">
+      Nights are announced on Instagram. Proposals for a night are read.
+    </p>
   </div>
+</section>
+
+<div class="arr-rule"></div>
+
+<div class="arr-cta">
+  <span>Start with an email.</span>
+  <a href="mailto:wholesale@conciergecoffee.de">wholesale@conciergecoffee.de</a>
+  <a href="tel:+13107287915">(310) 728-7915</a>
+  <a href="https://www.instagram.com/conciergecoffee/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
 </div>
-
-<!-- PHOTO GRID -->
-<section class="photo-grid">
-  <div class="photo-cell wide">
-    <img src="https://framerusercontent.com/images/yaR0OiePMk0SGlJWd8nwFizr9OQ.jpeg" alt="Concierge Coffee interior" />
-  </div>
-  <div class="photo-cell">
-    <img src="https://framerusercontent.com/images/ijheHusZVJ3Qxzo5aV8RwPmdIs.jpeg" alt="Concierge Coffee" />
-  </div>
-  <div class="photo-cell">
-    <img src="https://framerusercontent.com/images/eDOD75mU6aJ3Pj5C1V1HgecDs.jpeg" alt="Concierge Coffee" />
-  </div>
-  <div class="photo-cell">
-    <img src="https://framerusercontent.com/images/79502LO2JriPOUMdHpKj1PaA34.jpeg" alt="Concierge Coffee" />
-  </div>
-  <div class="photo-cell wide">
-    <img src="https://framerusercontent.com/images/xIblc0x2gusTCI8TiIRobgvsJRY.jpeg" alt="Concierge Coffee space" />
-  </div>
-  <div class="photo-cell">
-    <img src="https://framerusercontent.com/images/HFFSXJqyHB2jl9dRP7PFIeC9w.jpeg" alt="Concierge Coffee" />
-  </div>
-  <div class="photo-cell">
-    <img src="https://framerusercontent.com/images/JZyqpVI0XkdqEgEFphMufmZF3k.jpeg" alt="Concierge Coffee" />
-  </div>
-  <div class="photo-cell wide">
-    <img src="https://framerusercontent.com/images/uAmYKdgFwe0Jqf0ES3Lc7hL9bI.jpeg" alt="Concierge Coffee" />
-  </div>
-  <div class="photo-cell">
-    <img src="https://framerusercontent.com/images/JndbxQ0fFLuBP1M3MdVnhuCFEQ.jpeg" alt="Concierge Coffee" />
-  </div>
-</section>
 
 <!-- FOOTER -->
 <footer>
