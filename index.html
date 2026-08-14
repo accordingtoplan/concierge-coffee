@@ -153,50 +153,72 @@
   .card:hover .card-img img { transform: scale(1.1); }
 
   /* ── SHOP CARD ──
-     Rest: packshot, name and price below. Hover: the product's own shot pushes
-     in and the info rides up onto the picture. No image swap: a second angle
-     reads as a glitch rather than a reveal. */
-  .card-over {
+     The blend is named at the top of the packshot, the size and price sit at
+     the foot. Hover crossfades to the roasted bean and raises a buy button.
+     Scrims at both ends because the packshots are pale at the top and the
+     bean shots are dark: white has to hold on either. */
+  .shop-card .card-alt {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  .shop-card:hover .card-base { opacity: 0; }
+  .shop-card:hover .card-alt { opacity: 1; }
+
+  .card-face {
     position: absolute;
     inset: 0;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: space-between;
     padding: 16px;
     color: #fff;
-    /* The packshots are pale, so the name needs a deeper band under it than
-       the eye suggests: measured 3.80:1 with a lighter scrim, under the 4.5:1
-       floor for 13px text. */
-    background: linear-gradient(to top,
-      rgba(0,0,0,0.64) 0%, rgba(0,0,0,0.44) 22%,
-      rgba(0,0,0,0.12) 56%, rgba(0,0,0,0) 78%);
-    opacity: 0;
-    transition: opacity 0.35s ease;
+    background: linear-gradient(to bottom,
+      rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.22) 20%, rgba(0,0,0,0) 42%,
+      rgba(0,0,0,0) 52%, rgba(0,0,0,0.34) 76%, rgba(0,0,0,0.72) 100%);
     pointer-events: none;
   }
 
-  .shop-card:hover .card-over { opacity: 1; }
+  .card-blend {
+    font-family: var(--serif);
+    font-size: clamp(17px, 1.5vw, 22px);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
 
-  .card-over-row {
+  .card-meta {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     gap: 12px;
-  }
-
-  .card-over-name { font-family: var(--serif); font-size: 13px; }
-  .card-over-price { font-size: 11px; }
-
-  .card-over-size {
     font-size: 10px;
-    color: rgba(255,255,255,0.72);
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    margin-top: 5px;
+    transition: opacity 0.3s ease;
   }
 
-  .shop-card .card-info { transition: opacity 0.3s ease; }
-  .shop-card:hover .card-info { opacity: 0; }
+  .card-cta {
+    margin-top: 10px;
+    width: 100%;
+    padding: 11px 12px;
+    border: 0;
+    background: #fff;
+    color: #111;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease, background 0.15s;
+    pointer-events: none;
+  }
+
+  .shop-card:hover .card-cta { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .card-cta:hover { background: #f0f0f0; }
+  .card-cta:disabled { background: rgba(255,255,255,0.35); color: rgba(255,255,255,0.8); cursor: default; }
 
   .card-info {
     padding: 10px 0 20px;
@@ -490,14 +512,43 @@
 
   .menu-sub:first-of-type { padding-top: 0; }
 
+
+  /* ── MENU CARD ──
+     The drink photography is other people's. Hover credits the photographer
+     and links the post it came from, where that post is known. */
   .menu-card { cursor: default; }
-  .menu-card:hover .card-img img { transform: none; }
   .menu-card .card-info { display: block; padding: 10px 0 20px; }
   .menu-card .card-cat {
     font-size: 10px;
     color: #bbb;
     line-height: 1.7;
     margin-top: 3px;
+  }
+
+  .menu-card .card-img img { transition: transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+  .menu-card:hover .card-img img { transform: scale(1.06); }
+
+  a.menu-card { cursor: pointer; display: block; color: inherit; }
+
+  .menu-credit {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 14px;
+    background: linear-gradient(to top,
+      rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.16) 34%, rgba(0,0,0,0) 62%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  .menu-card:hover .menu-credit { opacity: 1; }
+
+  .menu-credit span {
+    font-size: 10px;
+    color: #fff;
+    letter-spacing: 0.06em;
   }
 
   .card-img--empty {
@@ -637,7 +688,7 @@
     <svg class="lw" viewBox="0 0 415.33 88.96" aria-hidden="true"><use href="#cc-word"/></svg>
   </a>
   <div class="nav-r">
-    <a onclick="scrollToShop()">Coffee</a>
+    <a onclick="scrollToShop()">Shop</a>
     <a onclick="scrollToMenu()">Menu</a>
     <a onclick="scrollToMerch()">Merch</a>
     <a href="visit.html">Visit</a>
@@ -666,10 +717,10 @@
   </div>
   <div class="grid" id="product-grid">
     <!-- skeleton cards -->
-    <div class="card"><div class="card-img skeleton"></div><div class="card-info"><div><div class="card-name skeleton" style="width:80px;height:11px;margin-bottom:4px"></div><div class="card-sub skeleton" style="width:120px;height:10px"></div></div></div></div>
-    <div class="card"><div class="card-img skeleton"></div><div class="card-info"><div><div class="card-name skeleton" style="width:80px;height:11px;margin-bottom:4px"></div><div class="card-sub skeleton" style="width:120px;height:10px"></div></div></div></div>
-    <div class="card"><div class="card-img skeleton"></div><div class="card-info"><div><div class="card-name skeleton" style="width:80px;height:11px;margin-bottom:4px"></div><div class="card-sub skeleton" style="width:120px;height:10px"></div></div></div></div>
-    <div class="card"><div class="card-img skeleton"></div><div class="card-info"><div><div class="card-name skeleton" style="width:80px;height:11px;margin-bottom:4px"></div><div class="card-sub skeleton" style="width:120px;height:10px"></div></div></div></div>
+    <div class="card"><div class="card-img skeleton"></div></div>
+    <div class="card"><div class="card-img skeleton"></div></div>
+    <div class="card"><div class="card-img skeleton"></div></div>
+    <div class="card"><div class="card-img skeleton"></div></div>
   </div>
 </section>
 
@@ -711,7 +762,7 @@
 <!-- MENU -->
 <section class="shop" id="menu">
   <div class="menu-head">
-    <span class="shop-title">Menu in store</span>
+    <span class="shop-title">Coffee Specialities</span>
     <span class="menu-note">Served at 821 Traction Ave</span>
   </div>
   <div class="menu-grid">
@@ -724,15 +775,16 @@
         <div class="card-cat">Cold brew, double espresso, chocolate, smoked salt, cream top</div>
       </div>
     </div>
-    <div class="card menu-card">
+    <a class="card menu-card" href="https://www.instagram.com/cafe.planes/p/DV6UxqekjoI/" target="_blank" rel="noopener noreferrer">
       <div class="card-img">
         <img src="images/drink-flat-white.jpg" alt="Flat White" loading="lazy" />
+        <div class="menu-credit"><span>Photograph @cafe.planes ↗</span></div>
       </div>
       <div class="card-info">
         <div class="card-name">Flat White</div>
         <div class="card-cat">Double espresso, steamed milk</div>
       </div>
-    </div>
+    </a>
     <div class="card menu-card">
       <div class="card-img">
         <img src="images/drink-yuzu-matcha-tonic.jpg" alt="Yuzu Matcha Tonic" loading="lazy" />
@@ -743,7 +795,10 @@
       </div>
     </div>
     <div class="card menu-card">
-      <div class="card-img card-img--empty"><span>Photo pending</span></div>
+      <div class="card-img">
+        <img src="images/drink-banana-cream-matcha.jpg" alt="Banana Cream Matcha" loading="lazy" />
+        <div class="menu-credit"><span>Photograph @conciergecoffee</span></div>
+      </div>
       <div class="card-info">
         <div class="card-name">Banana Cream Matcha</div>
         <div class="card-cat">Matcha, banana cream, nutmeg, milk of choice</div>
@@ -758,15 +813,16 @@
         <div class="card-cat">Vanilla ice cream with espresso, matcha or hojicha</div>
       </div>
     </div>
-    <div class="card menu-card">
+    <a class="card menu-card" href="https://www.instagram.com/conciergecoffee/p/DMOyYk9Jrmt/" target="_blank" rel="noopener noreferrer">
       <div class="card-img">
         <img src="images/drink-cardamom-rose-cream.jpg" alt="Cardamom-Rose Cream Top" loading="lazy" />
+        <div class="menu-credit"><span>Photograph @conciergecoffee ↗</span></div>
       </div>
       <div class="card-info">
         <div class="card-name">Cardamom-Rose Cream Top</div>
         <div class="card-cat">Cardamom, rose, cream top</div>
       </div>
-    </div>
+    </a>
     <div class="card menu-card">
       <div class="card-img">
         <img src="images/drink-iced-filter.jpg" alt="Iced filter" loading="lazy" />
@@ -776,35 +832,18 @@
         <div class="card-cat">Batch brew over ice</div>
       </div>
     </div>
-    <div class="card menu-card">
+    <a class="card menu-card" href="https://www.instagram.com/conciergecoffee/p/C3ohqQTL0vT/" target="_blank" rel="noopener noreferrer">
       <div class="card-img">
         <img src="images/drink-hojicha.jpg" alt="Hojicha Latte" loading="lazy" />
+        <div class="menu-credit"><span>Photograph @conciergecoffee ↗</span></div>
       </div>
       <div class="card-info">
         <div class="card-name">Hojicha Latte</div>
         <div class="card-cat">Roasted green tea, milk</div>
       </div>
-    </div>
+    </a>
   </div>
 
-  <div class="menu-sub">Hot / Iced</div>
-  <div class="menu-list">
-    <div>Espresso</div>
-    <div>Americano</div>
-    <div>Filter, batch brew</div>
-    <div>Cold Brew</div>
-    <div>Cortado</div>
-    <div>Flat White</div>
-    <div>Cappuccino</div>
-    <div>Latte</div>
-    <div>Vanilla Latte</div>
-    <div>Mocha</div>
-    <div>Chai Latte</div>
-    <div>Dirty Chai Latte</div>
-    <div>Matcha Latte</div>
-    <div>Hojicha Latte</div>
-    <div>Loose Leaf Tea</div>
-  </div>
   <div class="menu-foot">
     Extras: espresso shot, cream top, smoked sea salt, house vanilla.<br>
     Milk alternatives: oat, almond, soy, pistachio.
@@ -854,6 +893,18 @@
         <div class="card-price">—</div>
       </div>
     </div>
+    <div class="card merch-card">
+      <div class="card-img" style="background:#f7f7f7">
+        <img src="images/merch-sweater.jpg" alt="Sweater" loading="lazy" />
+      </div>
+      <div class="card-info">
+        <div>
+          <div class="card-name">Sweater</div>
+          <div class="card-sub">Limited Edition · Reverse Weave</div>
+        </div>
+        <div class="card-price">—</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -872,7 +923,7 @@
   <div>
     <div class="ft-h">Shop</div>
     <ul class="ft-links" id="footer-links">
-      <li><a href="#">Coffee</a></li>
+      <li><a onclick="scrollToShop()">Shop</a></li>
     </ul>
   </div>
   <div>
@@ -881,6 +932,7 @@
       <li><a onclick="scrollToMerch()">Water Bottle</a></li>
       <li><a onclick="scrollToMerch()">RCA Car</a></li>
       <li><a onclick="scrollToMerch()">T-Shirt</a></li>
+      <li><a onclick="scrollToMerch()">Sweater</a></li>
     </ul>
   </div>
   <div>
@@ -937,6 +989,13 @@
     products = data?.products?.edges?.map(e => e.node) ?? [];
     renderProducts();
     renderFooterLinks();
+  }
+
+  // Product titles and copy come from Shopify and land inside attributes and
+  // markup, so escape before interpolating.
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
   function formatPrice(amount, currency = 'USD') {
@@ -1003,6 +1062,20 @@
   }
 
 
+  // Hover layer: the roasted bean, darker for the espresso roasts and lighter
+  // for the filters, so the swap says something about the coffee.
+  const BEANS = {
+    'espresso-blend-250g': 'images/beans-dark.jpg',
+    'espresso-roast': 'images/beans-dark.jpg',
+    'filter-single-origin-250g': 'images/beans-medium.jpg',
+    'decaf-roast': 'images/beans-medium.jpg',
+    'seasonal-limited': 'images/beans-medium.jpg',
+  };
+
+  function getBeanImage(p) {
+    return BEANS[p.handle] || 'images/beans-dark.jpg';
+  }
+
   function renderProducts() {
     const grid = document.getElementById('product-grid');
     if (!products.length) {
@@ -1016,24 +1089,32 @@
       const sizes = productSizes(p);
       const name = productName(p);
 
+      const variants = p.variants.edges.map(e => e.node);
+      const only = variants.length === 1 ? variants[0] : null;
+      const sellable = only ? only.availableForSale : variants.some(v => v.availableForSale);
+      // One size adds straight to the bag. More than one has to be chosen, so
+      // the button opens the product instead of guessing.
+      const cta = !sellable ? 'Sold out'
+                : only ? `Buy ${esc(name)} — ${price}`
+                : `Choose size — from ${price}`;
+      const action = only ? `addToCartHandler('${only.id}')` : `openProduct('${p.id}')`;
+
       return `
         <div class="card shop-card" onclick="openProduct('${p.id}')">
           <div class="card-img">
-            <img class="card-base" src="${imgUrl}" alt="${p.title}" />
-            <div class="card-over">
-              <div class="card-over-row">
-                <span class="card-over-name">${name}</span>
-                <span class="card-over-price">${price}</span>
+            <img class="card-base" src="${imgUrl}" alt="${esc(p.title)}" />
+            <img class="card-alt" src="${getBeanImage(p)}" alt="" aria-hidden="true" loading="lazy" />
+            <div class="card-face">
+              <div class="card-blend">${esc(name)}</div>
+              <div>
+                <div class="card-meta">
+                  <span>${esc(sizes.join(' / '))}</span>
+                  <span>${price}</span>
+                </div>
+                <button class="card-cta" ${sellable ? '' : 'disabled'}
+                  onclick="event.stopPropagation(); ${sellable ? action : ''}">${cta}</button>
               </div>
-              ${sizes.length ? `<div class="card-over-size">${sizes.join(' / ')}</div>` : ''}
             </div>
-          </div>
-          <div class="card-info">
-            <div>
-              <div class="card-name">${name}</div>
-              <div class="card-sub">${p.description ? usWeight(p.description.substring(0, 40)) : ''}</div>
-            </div>
-            <div class="card-price">${price}</div>
           </div>
         </div>
       `;
@@ -1042,10 +1123,10 @@
 
   function renderFooterLinks() {
     const ul = document.getElementById('footer-links');
-    ul.innerHTML = products.map(p => `<li><a href="#">${productName(p)}</a></li>`).join('');
+    ul.innerHTML = products.map(p => `<li><a href="#">${esc(productName(p))}</a></li>`).join('');
   }
 
-  async function addToCartHandler(variantId, title, price, imgUrl) {
+  async function addToCartHandler(variantId) {
     if (!variantId) return;
 
     updateBagLink('...');
@@ -1101,7 +1182,7 @@
           <div class="ci">
             <div class="ci-img">${img ? `<img src="${img}" alt="${m.product.title}">` : ''}</div>
             <div>
-              <div class="ci-name">${titleToUS(m.product.title)}</div>
+              <div class="ci-name">${esc(titleToUS(m.product.title))}</div>
               <div class="ci-sub">${m.title !== 'Default Title' ? usWeight(m.title) : ''} × ${line.quantity}</div>
             </div>
             <div class="ci-price">${formatPrice(m.price.amount)}</div>
@@ -1210,7 +1291,7 @@
     const btn = document.getElementById('pdp-atc');
     btn.disabled = true;
     btn.textContent = '...';
-    await addToCartHandler(selectedVariant.id, currentProduct.title, selectedVariant.price.amount, '');
+    await addToCartHandler(selectedVariant.id);
     btn.disabled = false;
     btn.textContent = 'Add to Bag';
     closePdp();
