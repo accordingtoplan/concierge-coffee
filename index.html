@@ -93,27 +93,8 @@
     align-items: flex-end;
   }
 
-  .hero-title {
-    font-family: var(--serif);
-    font-size: clamp(38px, 5.4vw, 76px);
-    font-weight: 400;
-    letter-spacing: -0.015em;
-    line-height: 0.94;
-  }
-
-  .hero-claim {
-    font-family: var(--serif);
-    font-size: clamp(15px, 1.5vw, 20px);
-    font-weight: 300;
-    letter-spacing: -0.005em;
-    line-height: 1.45;
-    color: #111;
-    margin-top: 12px;
-    max-width: 28ch;
-  }
-
   .hero-sub {
-    text-align: right;
+    text-align: left;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -134,8 +115,11 @@
     margin-bottom: 2px;
   }
 
+  /* Section and product headlines share the serif. Newsreader runs small at
+     a given px against Helvetica, so each of these goes up two. */
   .shop-title {
-    font-size: 11px;
+    font-family: var(--serif);
+    font-size: 13px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -169,18 +153,9 @@
   .card:hover .card-img img { transform: scale(1.1); }
 
   /* ── SHOP CARD ──
-     Rest: packshot, name and price below. Hover: the image swaps to the second
-     angle, pushes in, and the info rides up onto the picture.
-     The .card-alt layer is the slot for bean photography when it exists. */
-  .shop-card .card-alt {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-  }
-
-  .shop-card:hover .card-base { opacity: 0; }
-  .shop-card:hover .card-alt { opacity: 1; }
-
+     Rest: packshot, name and price below. Hover: the product's own shot pushes
+     in and the info rides up onto the picture. No image swap: a second angle
+     reads as a glitch rather than a reveal. */
   .card-over {
     position: absolute;
     inset: 0;
@@ -189,8 +164,12 @@
     justify-content: flex-end;
     padding: 16px;
     color: #fff;
+    /* The packshots are pale, so the name needs a deeper band under it than
+       the eye suggests: measured 3.80:1 with a lighter scrim, under the 4.5:1
+       floor for 13px text. */
     background: linear-gradient(to top,
-      rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.14) 38%, rgba(0,0,0,0) 66%);
+      rgba(0,0,0,0.64) 0%, rgba(0,0,0,0.44) 22%,
+      rgba(0,0,0,0.12) 56%, rgba(0,0,0,0) 78%);
     opacity: 0;
     transition: opacity 0.35s ease;
     pointer-events: none;
@@ -205,7 +184,8 @@
     gap: 12px;
   }
 
-  .card-over-name, .card-over-price { font-size: 11px; }
+  .card-over-name { font-family: var(--serif); font-size: 13px; }
+  .card-over-price { font-size: 11px; }
 
   .card-over-size {
     font-size: 10px;
@@ -225,7 +205,7 @@
     align-items: baseline;
   }
 
-  .card-name { font-size: 11px; font-weight: 400; }
+  .card-name { font-family: var(--serif); font-size: 13px; font-weight: 400; }
   .card-sub { font-size: 10px; color: #bbb; margin-top: 3px; }
   .card-price { font-size: 11px; color: #111; }
 
@@ -311,7 +291,7 @@
   }
 
   .pdp-meta { font-size: 10px; color: #bbb; text-transform: uppercase; letter-spacing: 0.08em; }
-  .pdp-name { font-size: clamp(24px, 2.5vw, 36px); font-weight: 300; letter-spacing: -0.02em; line-height: 1.1; }
+  .pdp-name { font-family: var(--serif); font-size: clamp(26px, 2.7vw, 38px); font-weight: 400; letter-spacing: -0.015em; line-height: 1.12; }
   .pdp-price { font-size: 11px; color: #999; }
   .pdp-desc { font-size: 11px; line-height: 1.9; color: #999; }
 
@@ -406,7 +386,7 @@
 
   .ci-img { aspect-ratio: 1; background: #f2f2f2; overflow: hidden; }
   .ci-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .ci-name { font-size: 11px; }
+  .ci-name { font-family: var(--serif); font-size: 12px; }
   .ci-sub { font-size: 10px; color: #bbb; margin-top: 4px; }
   .ci-price { font-size: 11px; }
 
@@ -671,12 +651,8 @@
     <img src="images/hero.jpeg" alt="Concierge Coffee" />
   </div>
   <div class="hero-meta">
-    <div>
-      <div class="hero-title">Coffee.</div>
-      <p class="hero-claim">Coffee, cars and conversing.</p>
-    </div>
     <div class="hero-sub">
-      <span>Arts District, LA</span>
+      <span>Arts District, Los Angeles</span>
       <span>821 Traction Ave</span>
       <a onclick="scrollToShop()">Shop →</a>
     </div>
@@ -686,7 +662,7 @@
 <!-- SHOP -->
 <section class="shop" id="shop">
   <div class="shop-head">
-    <span class="shop-title">Coffee</span>
+    <span class="shop-title">Buy Coffee</span>
   </div>
   <div class="grid" id="product-grid">
     <!-- skeleton cards -->
@@ -735,7 +711,7 @@
 <!-- MENU -->
 <section class="shop" id="menu">
   <div class="menu-head">
-    <span class="shop-title">Menu</span>
+    <span class="shop-title">Menu in store</span>
     <span class="menu-note">Served at 821 Traction Ave</span>
   </div>
   <div class="menu-grid">
@@ -996,6 +972,13 @@
     return p.title.replace(TITLE_WEIGHT, '').trim() || p.title;
   }
 
+  // Same treatment for a title we only have as a string, e.g. a bag line.
+  function titleToUS(title) {
+    const s = String(title ?? '');
+    const m = s.match(TITLE_WEIGHT);
+    return m ? `${s.replace(TITLE_WEIGHT, '').trim()} ${usWeight(m[1])}` : usWeight(s);
+  }
+
   // Weight to show on a card. Variant sizes win when the product has real
   // ones; otherwise fall back to the weight named in the title.
   function productSizes(p) {
@@ -1019,14 +1002,6 @@
     return FALLBACK_IMAGES[p.handle] || 'images/espresso.jpeg';
   }
 
-  // The hover layer. Second Shopify angle for now; point this at bean
-  // photography once it exists and the swap needs no other change.
-  const BEAN_IMAGE = null;
-
-  function getHoverImage(p) {
-    if (BEAN_IMAGE) return BEAN_IMAGE;
-    return p.images.edges[1]?.node?.url ?? null;
-  }
 
   function renderProducts() {
     const grid = document.getElementById('product-grid');
@@ -1037,7 +1012,6 @@
 
     grid.innerHTML = products.map(p => {
       const imgUrl = getProductImage(p);
-      const hoverUrl = getHoverImage(p);
       const price = formatPrice(p.priceRange.minVariantPrice.amount, p.priceRange.minVariantPrice.currencyCode);
       const sizes = productSizes(p);
       const name = productName(p);
@@ -1046,7 +1020,6 @@
         <div class="card shop-card" onclick="openProduct('${p.id}')">
           <div class="card-img">
             <img class="card-base" src="${imgUrl}" alt="${p.title}" />
-            ${hoverUrl ? `<img class="card-alt" src="${hoverUrl}" alt="" aria-hidden="true" />` : ''}
             <div class="card-over">
               <div class="card-over-row">
                 <span class="card-over-name">${name}</span>
@@ -1058,7 +1031,7 @@
           <div class="card-info">
             <div>
               <div class="card-name">${name}</div>
-              <div class="card-sub">${p.description ? p.description.substring(0, 40) : ''}</div>
+              <div class="card-sub">${p.description ? usWeight(p.description.substring(0, 40)) : ''}</div>
             </div>
             <div class="card-price">${price}</div>
           </div>
@@ -1128,7 +1101,7 @@
           <div class="ci">
             <div class="ci-img">${img ? `<img src="${img}" alt="${m.product.title}">` : ''}</div>
             <div>
-              <div class="ci-name">${m.product.title}</div>
+              <div class="ci-name">${titleToUS(m.product.title)}</div>
               <div class="ci-sub">${m.title !== 'Default Title' ? usWeight(m.title) : ''} × ${line.quantity}</div>
             </div>
             <div class="ci-price">${formatPrice(m.price.amount)}</div>
@@ -1177,7 +1150,7 @@
     // Details
     document.getElementById('pdp-meta').textContent = p.tags?.join(' · ') || '';
     document.getElementById('pdp-name').textContent = productName(p);
-    document.getElementById('pdp-desc').textContent = p.description || '';
+    document.getElementById('pdp-desc').textContent = usWeight(p.description || '');
 
     // Group variants by option name
     const sizeOption = variants[0]?.selectedOptions?.find(o => o.name === 'Size');
