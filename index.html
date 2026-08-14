@@ -987,19 +987,36 @@
       .map(usWeight);
   }
 
+  // Most products in the shop carry the pack weight in the title, e.g.
+  // "Espresso Blend 300g". Split it off so the name reads as a name and the
+  // weight goes through the same conversion as everything else.
+  const TITLE_WEIGHT = /\s+(\d+(?:[.,]\d+)?\s*(?:kg|kilogramme?s?|kilograms?|g|gramme?s?|grams?))\s*$/i;
+
+  function productName(p) {
+    return p.title.replace(TITLE_WEIGHT, '').trim() || p.title;
+  }
+
+  // Weight to show on a card. Variant sizes win when the product has real
+  // ones; otherwise fall back to the weight named in the title.
+  function productSizes(p) {
+    const fromVariants = variantSizes(p);
+    if (fromVariants.length) return fromVariants;
+    const m = p.title.match(TITLE_WEIGHT);
+    return m ? [usWeight(m[1])] : [];
+  }
+
   const FALLBACK_IMAGES = {
-    'espresso roast': 'images/espresso.jpeg',
-    'espresso blend 250g': 'images/product-espresso-blend.jpg',
-    'filter roast': 'images/product-filter-single.jpg',
-    'decaf roast': 'images/espresso-2.jpeg',
-    'seasonal limited': 'images/nicaragua.jpeg',
+    'espresso-roast': 'images/espresso.jpeg',
+    'espresso-blend-250g': 'images/product-espresso-blend.jpg',
+    'filter-single-origin-250g': 'images/product-filter-single.jpg',
+    'decaf-roast': 'images/espresso-2.jpeg',
+    'seasonal-limited': 'images/nicaragua.jpeg',
   };
 
   function getProductImage(p) {
     const img = p.images.edges[0]?.node;
     if (img) return img.url;
-    const key = p.title.toLowerCase();
-    return FALLBACK_IMAGES[key] || 'images/espresso.jpeg';
+    return FALLBACK_IMAGES[p.handle] || 'images/espresso.jpeg';
   }
 
   // The hover layer. Second Shopify angle for now; point this at bean
@@ -1022,7 +1039,8 @@
       const imgUrl = getProductImage(p);
       const hoverUrl = getHoverImage(p);
       const price = formatPrice(p.priceRange.minVariantPrice.amount, p.priceRange.minVariantPrice.currencyCode);
-      const sizes = variantSizes(p);
+      const sizes = productSizes(p);
+      const name = productName(p);
 
       return `
         <div class="card shop-card" onclick="openProduct('${p.id}')">
@@ -1031,7 +1049,7 @@
             ${hoverUrl ? `<img class="card-alt" src="${hoverUrl}" alt="" aria-hidden="true" />` : ''}
             <div class="card-over">
               <div class="card-over-row">
-                <span class="card-over-name">${p.title}</span>
+                <span class="card-over-name">${name}</span>
                 <span class="card-over-price">${price}</span>
               </div>
               ${sizes.length ? `<div class="card-over-size">${sizes.join(' / ')}</div>` : ''}
@@ -1039,7 +1057,7 @@
           </div>
           <div class="card-info">
             <div>
-              <div class="card-name">${p.title}</div>
+              <div class="card-name">${name}</div>
               <div class="card-sub">${p.description ? p.description.substring(0, 40) : ''}</div>
             </div>
             <div class="card-price">${price}</div>
@@ -1051,7 +1069,7 @@
 
   function renderFooterLinks() {
     const ul = document.getElementById('footer-links');
-    ul.innerHTML = products.map(p => `<li><a href="#">${p.title}</a></li>`).join('');
+    ul.innerHTML = products.map(p => `<li><a href="#">${productName(p)}</a></li>`).join('');
   }
 
   async function addToCartHandler(variantId, title, price, imgUrl) {
@@ -1158,7 +1176,7 @@
 
     // Details
     document.getElementById('pdp-meta').textContent = p.tags?.join(' · ') || '';
-    document.getElementById('pdp-name').textContent = p.title;
+    document.getElementById('pdp-name').textContent = productName(p);
     document.getElementById('pdp-desc').textContent = p.description || '';
 
     // Group variants by option name
@@ -1178,7 +1196,11 @@
         </div>
       `;
     } else {
-      document.getElementById('pdp-variants').innerHTML = '';
+      const only = productSizes(p);
+      document.getElementById('pdp-variants').innerHTML = only.length
+        ? `<div class="pdp-variant-lbl">Size</div>
+           <div class="pdp-variant-opts"><button class="vbtn on" disabled>${only[0]}</button></div>`
+        : '';
     }
 
     updatePdpPrice();
