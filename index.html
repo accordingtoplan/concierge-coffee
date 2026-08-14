@@ -223,8 +223,10 @@
     opacity: 0;
   }
 
-  .shop-card:hover .card-base { opacity: 0; }
-  .shop-card:hover .card-alt { opacity: 1; }
+  /* Scoped away from the proposals: they carry no bean layer, so fading the
+     packshot out on hover left an empty grey frame. */
+  .shop-card:not(.concept-card):hover .card-base { opacity: 0; }
+  .shop-card:not(.concept-card):hover .card-alt { opacity: 1; }
 
   .card-face {
     position: absolute;
@@ -283,7 +285,7 @@
      before the label does, and nothing about the card invites a click:
      no zoom, no swap, no button, no price. */
   .concept-card { cursor: default; }
-  .concept-card:hover .card-img img { transform: none; }
+  .concept-card:hover .card-img img { transform: none; opacity: 1; }
   .concept-card .card-status { letter-spacing: 0.08em; }
   .card-cta:hover { background: #f0f0f0; }
   .card-cta:disabled { background: rgba(255,255,255,0.35); color: rgba(255,255,255,0.8); cursor: default; }
