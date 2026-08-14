@@ -30,6 +30,10 @@
        breathes or tightens together. */
     --section-gap: 128px;
     --head-gap: 26px;
+    /* Cards sat on a 2px hairline gap, which read as one sheet cut into
+       pieces rather than as a set of cards. One token so every grid on the
+       site opens up together. */
+    --card-gap: 16px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -213,7 +217,7 @@
   .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
+    gap: var(--card-gap);
   }
 
   .card { cursor: pointer; }
@@ -620,7 +624,7 @@
     position: relative;
     display: block;
     color: inherit;
-    margin-bottom: 2px;
+    margin-bottom: var(--card-gap);
     overflow: hidden;
   }
   .feature .card-img { aspect-ratio: 16/9; }
@@ -655,6 +659,38 @@
   }
   .feature-cat { font-size: 12px; line-height: 1.6; margin-top: 10px; max-width: 42ch; }
 
+  /* ── SPLIT FEATURE ──
+     The Specialty of the Month reads across two columns rather than as a full
+     width band: the picture keeps close to its native portrait crop instead of
+     being cut to 16/9, and at half the page width the 900px source is no
+     longer being upscaled. The merch lead stays full width, so the two
+     sections still open differently. */
+  .feature--split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+    column-gap: var(--card-gap);
+  }
+  .feature--split .card-img { aspect-ratio: 1/1; }
+
+  .feature--split .feature-face {
+    position: static;
+    inset: auto;
+    background: none;
+    color: #111;
+    justify-content: center;
+    padding: 0 clamp(18px, 3.5vw, 64px);
+  }
+  .feature--split .feature-kicker { color: var(--muted); }
+  .feature--split .feature-name { font-size: clamp(28px, 3.6vw, 52px); }
+  .feature--split .feature-cat { color: var(--muted); font-size: 13px; line-height: 1.75; max-width: 40ch; }
+  .feature--split .feature-note {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 26px;
+  }
+
   /* ── DRINK RAIL ──
      Eight drinks in a four-up grid read as a second shop. A rail scrolls
      across instead of down, which is the one direction the rest of the page
@@ -666,7 +702,7 @@
     grid-template-columns: none;
     grid-auto-flow: column;
     grid-auto-columns: 25vw;
-    gap: 2px;
+    gap: var(--card-gap);
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x proximity;
@@ -781,18 +817,20 @@
      the size and price stack — not the column count. */
 
   @media (max-width: 1024px) {
-    :root { --section-gap: 104px; --head-gap: 22px; }
+    :root { --section-gap: 104px; --head-gap: 22px; --card-gap: 14px; }
     nav, .hero, .shop, footer { padding-left: 24px; padding-right: 24px; }
     .grid { grid-template-columns: repeat(3, 1fr); }
     .menu-grid { grid-auto-columns: 34vw; margin-right: -24px; padding-right: 24px; }
     .feature .card-img { aspect-ratio: 3/2; }
     .feature--wide .card-img { aspect-ratio: 16/9; }
+    .feature--split .card-img { aspect-ratio: 4/5; }
     .feature-face { padding: 26px 24px; }
+    .feature--split .feature-face { padding: 0 24px; }
     footer { grid-template-columns: 1fr 1fr; gap: 36px; }
   }
 
   @media (max-width: 768px) {
-    :root { --section-gap: 76px; --head-gap: 18px; }
+    :root { --section-gap: 76px; --head-gap: 18px; --card-gap: 10px; }
     nav, .hero, .shop, footer { padding-left: 16px; padding-right: 16px; }
     /* the links leave the bar and become a sheet */
     .nav-toggle { display: flex; }
@@ -840,6 +878,11 @@
     .feature--wide .card-img { aspect-ratio: 4/3; }
     .feature-face { padding: 18px 16px; }
     .feature-cat { max-width: none; }
+    /* the split stacks: picture, then type under it on white */
+    .feature--split { grid-template-columns: 1fr; }
+    .feature--split .feature-face { padding: 16px 0 0; }
+    .feature--split .feature-cat { max-width: none; margin-top: 8px; }
+    .feature--split .feature-note { margin-top: 14px; }
     .menu-head { padding-bottom: var(--head-gap); }
     .menu-note { display: none; }
     .pdp-overlay { padding: 0; }
@@ -851,7 +894,7 @@
   }
 
   @media (max-width: 480px) {
-    :root { --section-gap: 64px; --head-gap: 16px; }
+    :root { --section-gap: 64px; --head-gap: 16px; --card-gap: 8px; }
     nav, .hero, .shop, footer { padding-left: 14px; padding-right: 14px; }
     .logo { gap: 7px; }
     .logo .lk { width: 20.1px; height: 16px; }
@@ -1052,17 +1095,17 @@
     <span class="menu-note">Served at 821 Traction Ave</span>
   </div>
   <!-- Specialty of the Month. Swap the picture, the name and the line each
-       month; object-position is the vertical anchor for THIS photograph and
-       wants re-checking when the photograph changes. -->
-  <div class="feature">
+       month. At 4/5 the crop is close to the 3/4 source, so no vertical
+       anchor is needed here -- a wider band would want one. -->
+  <div class="feature feature--split">
     <div class="card-img">
-      <img src="images/drink-yuzu-matcha-tonic.jpg" alt="Yuzu Matcha Tonic"
-           style="object-position: center 35%" />
+      <img src="images/drink-yuzu-matcha-tonic.jpg" alt="Yuzu Matcha Tonic" />
     </div>
     <div class="feature-face">
       <div class="feature-kicker">Specialty of the Month</div>
       <div class="feature-name">Yuzu Matcha Tonic</div>
       <div class="feature-cat">Matcha, yuzu, simple syrup, fresh lime</div>
+      <div class="feature-note">Served at 821 Traction Ave</div>
     </div>
   </div>
   <!-- tabindex and role so the rail is reachable and announced: four of the

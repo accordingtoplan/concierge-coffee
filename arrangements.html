@@ -30,6 +30,10 @@
        breathes or tightens together. */
     --section-gap: 128px;
     --head-gap: 26px;
+    /* Cards sat on a 2px hairline gap, which read as one sheet cut into
+       pieces rather than as a set of cards. One token so every grid on the
+       site opens up together. */
+    --card-gap: 16px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -172,7 +176,7 @@
     padding: 0 32px var(--section-gap);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
+    gap: var(--card-gap);
     border-top: 1px solid #f0f0f0;
     padding-top: 32px;
   }
@@ -200,7 +204,7 @@
     padding: 0 32px var(--section-gap);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
+    gap: var(--card-gap);
   }
 
   .photo-grid .wide {
@@ -285,14 +289,14 @@
      the nav collapses to a sheet. */
 
   @media (max-width: 1024px) {
-    :root { --section-gap: 104px; --head-gap: 22px; }
+    :root { --section-gap: 104px; --head-gap: 22px; --card-gap: 14px; }
     nav, .visit-hero, .details, .photo-grid, footer { padding-left: 24px; padding-right: 24px; }
     .details { grid-template-columns: repeat(2, 1fr); row-gap: 28px; }
     footer { grid-template-columns: 1fr 1fr; gap: 36px; }
   }
 
   @media (max-width: 768px) {
-    :root { --section-gap: 76px; --head-gap: 18px; }
+    :root { --section-gap: 76px; --head-gap: 18px; --card-gap: 10px; }
     nav, .visit-hero, .details, .photo-grid, footer { padding-left: 16px; padding-right: 16px; }
     /* the links leave the bar and become a sheet */
     .nav-toggle { display: flex; }
@@ -340,7 +344,7 @@
   }
 
   @media (max-width: 480px) {
-    :root { --section-gap: 64px; --head-gap: 16px; }
+    :root { --section-gap: 64px; --head-gap: 16px; --card-gap: 8px; }
     nav, .visit-hero, .details, .photo-grid, footer { padding-left: 14px; padding-right: 14px; }
     .logo { gap: 7px; }
     .logo .lk { width: 20.1px; height: 16px; }
