@@ -396,6 +396,75 @@
     color: #ccc;
   }
 
+  /* ── MENU ── */
+  .menu-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    height: 48px;
+    margin-bottom: 2px;
+  }
+
+  .menu-note { font-size: 10px; color: #bbb; }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+
+  .menu-sub {
+    font-size: 9px;
+    color: #ccc;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 40px 0 12px;
+  }
+
+  .menu-sub:first-of-type { padding-top: 0; }
+
+  .menu-card { cursor: default; }
+  .menu-card:hover .card-img img { transform: none; }
+  .menu-card .card-info { display: block; padding: 10px 0 20px; }
+  .menu-card .card-cat {
+    font-size: 10px;
+    color: #bbb;
+    line-height: 1.7;
+    margin-top: 3px;
+  }
+
+  .card-img--empty {
+    display: flex;
+    align-items: flex-end;
+    padding: 12px;
+  }
+
+  .card-img--empty span {
+    font-size: 9px;
+    color: #ddd;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .menu-list {
+    columns: 4;
+    column-gap: 2px;
+  }
+
+  .menu-list div {
+    font-size: 11px;
+    line-height: 2.4;
+    break-inside: avoid;
+  }
+
+  .menu-foot {
+    padding-top: 32px;
+    font-size: 10px;
+    color: #bbb;
+    line-height: 2;
+  }
+
+
   .card-img--slide { position: relative; overflow: hidden; }
 
   .slide-img {
@@ -424,6 +493,44 @@
   }
 
   @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  /* ── RESPONSIVE ──
+     Breakpoints: 1024 tablet, 768 phone landscape, 480 phone.
+     Gutters step 32 → 24 → 16. Grids step 4 → 3 → 2 columns. */
+
+  @media (max-width: 1024px) {
+    nav, .hero, .shop, footer { padding-left: 24px; padding-right: 24px; }
+    .grid, .menu-grid { grid-template-columns: repeat(3, 1fr); }
+    .menu-list { columns: 3; }
+    footer { grid-template-columns: 1fr 1fr; gap: 36px; }
+  }
+
+  @media (max-width: 768px) {
+    nav, .hero, .shop, footer { padding-left: 16px; padding-right: 16px; }
+    .nav-r { gap: 18px; }
+    .hero { padding-bottom: 48px; }
+    .hero-img { aspect-ratio: 3/2; margin-bottom: 14px; }
+    .hero-meta { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .hero-sub { text-align: left; padding-bottom: 0; }
+    .shop { padding-bottom: 48px; }
+    .grid, .menu-grid { grid-template-columns: repeat(2, 1fr); }
+    .menu-list { columns: 2; }
+    .menu-head { height: auto; padding: 24px 0 12px; }
+    .menu-note { display: none; }
+    .pdp-overlay { padding: 0; }
+    .pdp-modal { grid-template-columns: 1fr; max-width: none; }
+    .pdp-detail { padding: 24px 16px 40px; gap: 16px; }
+    .cart-drawer { width: 100%; right: -100%; padding: 24px 16px; }
+    footer { padding-top: 36px; gap: 28px; }
+    .ft-copy { flex-direction: column; gap: 8px; padding-top: 24px; }
+  }
+
+  @media (max-width: 480px) {
+    nav { padding-left: 14px; padding-right: 14px; }
+    .logo-text { font-size: 10px; letter-spacing: 0.08em; }
+    .nav-r { gap: 13px; font-size: 10px; }
+    .menu-list { columns: 1; }
+  }
 </style>
 </head>
 <body>
@@ -435,6 +542,7 @@
   </div>
   <div class="nav-r">
     <a onclick="scrollToShop()">Coffee</a>
+    <a onclick="scrollToMenu()">Menu</a>
     <a onclick="scrollToMerch()">Merch</a>
     <a href="visit.html">Visit</a>
     <a onclick="openCart()" id="bag-link">Bag (0)</a>
@@ -504,6 +612,105 @@
     <button class="atc" id="checkout-btn" onclick="goToCheckout()" disabled>Checkout</button>
   </div>
 </div>
+
+<!-- MENU -->
+<section class="shop" id="menu">
+  <div class="menu-head">
+    <span class="shop-title">Menu</span>
+    <span class="menu-note">Served at 821 Traction Ave</span>
+  </div>
+  <div class="menu-grid">
+    <div class="card menu-card">
+      <div class="card-img">
+        <img src="images/drink-einspanner.jpg" alt="Einspänner" loading="lazy" />
+      </div>
+      <div class="card-info">
+        <div class="card-name">Einspänner</div>
+        <div class="card-cat">Cold brew, double espresso, chocolate, smoked salt, cream top</div>
+      </div>
+    </div>
+    <div class="card menu-card">
+      <div class="card-img card-img--empty"><span>Photo pending</span></div>
+      <div class="card-info">
+        <div class="card-name">Saffron Latte</div>
+        <div class="card-cat">Saffron, honey, cinnamon, cardamom, vanilla, double espresso, crushed pistachio, milk</div>
+      </div>
+    </div>
+    <div class="card menu-card">
+      <div class="card-img">
+        <img src="images/drink-yuzu-matcha-tonic.jpg" alt="Yuzu Matcha Tonic" loading="lazy" />
+      </div>
+      <div class="card-info">
+        <div class="card-name">Yuzu Matcha Tonic</div>
+        <div class="card-cat">Matcha, yuzu, simple syrup, fresh lime</div>
+      </div>
+    </div>
+    <div class="card menu-card">
+      <div class="card-img card-img--empty"><span>Photo pending</span></div>
+      <div class="card-info">
+        <div class="card-name">Banana Cream Matcha</div>
+        <div class="card-cat">Matcha, banana cream, nutmeg, milk of choice</div>
+      </div>
+    </div>
+    <div class="card menu-card">
+      <div class="card-img">
+        <img src="images/drink-matcha-affogato.jpg" alt="Affogato" loading="lazy" />
+      </div>
+      <div class="card-info">
+        <div class="card-name">Affogato</div>
+        <div class="card-cat">Vanilla ice cream with espresso, matcha or hojicha</div>
+      </div>
+    </div>
+    <div class="card menu-card">
+      <div class="card-img card-img--empty"><span>Photo pending</span></div>
+      <div class="card-info">
+        <div class="card-name">Espresso Tonic</div>
+        <div class="card-cat">Double espresso, yuzu, bergamot, allspice, citrus</div>
+      </div>
+    </div>
+    <div class="card menu-card">
+      <div class="card-img">
+        <img src="images/drink-iced-filter.jpg" alt="Iced filter" loading="lazy" />
+      </div>
+      <div class="card-info">
+        <div class="card-name">Filter, iced</div>
+        <div class="card-cat">Batch brew over ice</div>
+      </div>
+    </div>
+    <div class="card menu-card">
+      <div class="card-img">
+        <img src="images/drink-hojicha.jpg" alt="Hojicha Latte" loading="lazy" />
+      </div>
+      <div class="card-info">
+        <div class="card-name">Hojicha Latte</div>
+        <div class="card-cat">Roasted green tea, milk</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-sub">Hot / Iced</div>
+  <div class="menu-list">
+    <div>Espresso</div>
+    <div>Americano</div>
+    <div>Filter, batch brew</div>
+    <div>Cold Brew</div>
+    <div>Cortado</div>
+    <div>Flat White</div>
+    <div>Cappuccino</div>
+    <div>Latte</div>
+    <div>Vanilla Latte</div>
+    <div>Mocha</div>
+    <div>Chai Latte</div>
+    <div>Dirty Chai Latte</div>
+    <div>Matcha Latte</div>
+    <div>Hojicha Latte</div>
+    <div>Loose Leaf Tea</div>
+  </div>
+  <div class="menu-foot">
+    Extras: espresso shot, cream top, smoked sea salt, house vanilla.<br>
+    Milk alternatives: oat, almond, soy, pistachio.
+  </div>
+</section>
 
 <!-- MERCH -->
 <section class="shop" id="merch">
@@ -577,6 +784,7 @@
   <div>
     <div class="ft-h">Info</div>
     <ul class="ft-links">
+      <li><a onclick="scrollToMenu()">Menu</a></li>
       <li><a href="visit.html">Visit</a></li>
       <li><a href="#">Wholesale</a></li>
       <li><a href="https://www.instagram.com/conciergecoffee/" target="_blank">Instagram</a></li>
@@ -869,6 +1077,10 @@
 
   window.scrollToShop = () => {
     document.getElementById('shop').scrollIntoView({ behavior: 'smooth' });
+  };
+
+  window.scrollToMenu = () => {
+    document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
   };
 
   window.addToCartHandler = addToCartHandler;

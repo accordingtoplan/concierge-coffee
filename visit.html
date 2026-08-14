@@ -203,6 +203,39 @@
     font-size: 10px;
     color: #ccc;
   }
+
+  /* ── RESPONSIVE ──
+     Matches index.html: 1024 tablet, 768 phone landscape, 480 phone. */
+
+  @media (max-width: 1024px) {
+    nav, .visit-hero, .details, .photo-grid, footer { padding-left: 24px; padding-right: 24px; }
+    .details { grid-template-columns: repeat(2, 1fr); row-gap: 28px; }
+    footer { grid-template-columns: 1fr 1fr; gap: 36px; }
+  }
+
+  @media (max-width: 768px) {
+    nav, .visit-hero, .details, .photo-grid, footer { padding-left: 16px; padding-right: 16px; }
+    .nav-r { gap: 18px; }
+    .visit-hero-img { aspect-ratio: 3/2; }
+    .visit-hero-meta { flex-direction: column; align-items: flex-start; gap: 14px; padding: 14px 0 36px; }
+    .visit-info { text-align: left; }
+    .details { padding-bottom: 44px; }
+    /* Two columns read cleaner as equal cells. The wide treatment leaves
+       orphan gaps once the grid drops below three columns. */
+    .photo-grid { grid-template-columns: repeat(2, 1fr); padding-bottom: 48px; }
+    .photo-grid .wide { grid-column: span 1; }
+    .photo-cell.wide img { aspect-ratio: 3/4; }
+    footer { padding-top: 36px; gap: 28px; }
+    .ft-copy { flex-direction: column; gap: 8px; padding-top: 24px; }
+  }
+
+  @media (max-width: 480px) {
+    nav { padding-left: 14px; padding-right: 14px; }
+    .logo-text { font-size: 10px; letter-spacing: 0.08em; }
+    .nav-r { gap: 13px; font-size: 10px; }
+    .nav-r a[href*="instagram"] { display: none; }
+    .details { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -211,6 +244,7 @@
   <a href="index.html" class="logo-text">Concierge.</a>
   <div class="nav-r">
     <a href="index.html#shop">Coffee</a>
+    <a href="index.html#menu">Menu</a>
     <a href="index.html#merch">Merch</a>
     <a href="visit.html">Visit</a>
     <a href="https://www.instagram.com/conciergecoffee/" target="_blank">Instagram</a>
@@ -320,6 +354,7 @@
   <div>
     <div class="ft-h">Info</div>
     <ul class="ft-links">
+      <li><a href="index.html#menu">Menu</a></li>
       <li><a href="visit.html">Visit</a></li>
       <li><a href="#">Wholesale</a></li>
       <li><a href="https://www.instagram.com/conciergecoffee/" target="_blank">Instagram</a></li>
