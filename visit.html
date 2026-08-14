@@ -67,6 +67,37 @@
   .nav-r a { transition: color 0.15s; }
   .nav-r a:hover { color: #999; }
 
+  /* ── COLLAPSED NAV ──
+     Below 768 the links leave the bar and become a full-height sheet. One set
+     of links, restyled, rather than a second copy: the bag count is written to
+     a single element and duplicating it would need two. */
+  .nav-toggle {
+    display: none;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 5px;
+    margin-right: -4px;
+  }
+
+  .nav-toggle span {
+    display: block;
+    width: 20px;
+    height: 1px;
+    background: #111;
+    transition: transform 0.28s ease, opacity 0.2s ease;
+  }
+
+  nav.open .nav-toggle span:first-child { transform: translateY(3px) rotate(45deg); }
+  nav.open .nav-toggle span:last-child  { transform: translateY(-3px) rotate(-45deg); }
+
+
   /* HERO */
   .visit-hero {
     padding: 24px 32px 0;
@@ -230,7 +261,8 @@
   }
 
   /* ── RESPONSIVE ──
-     Matches index.html: 1024 tablet, 768 phone landscape, 480 phone. */
+     Matches index.html: 1024 tablet, 768 phone landscape, 480 phone. Below 768
+     the nav collapses to a sheet. */
 
   @media (max-width: 1024px) {
     nav, .visit-hero, .details, .photo-grid, footer { padding-left: 24px; padding-right: 24px; }
@@ -240,7 +272,38 @@
 
   @media (max-width: 768px) {
     nav, .visit-hero, .details, .photo-grid, footer { padding-left: 16px; padding-right: 16px; }
-    .nav-r { gap: 18px; }
+    /* the links leave the bar and become a sheet */
+    .nav-toggle { display: flex; }
+
+    .nav-r {
+      position: fixed;
+      left: 0; right: 0; top: 48px; bottom: 0;
+      background: #fff;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+      gap: 0;
+      padding: 4px 16px 40px;
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px);
+      transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+      z-index: 95;
+    }
+
+    nav.open .nav-r { opacity: 1; visibility: visible; transform: none; }
+
+    .nav-r a {
+      font-family: var(--serif);
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      padding: 18px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .nav-r a:last-child { border-bottom: 0; }
+
     .visit-hero-img { aspect-ratio: 3/2; }
     .visit-hero-meta { flex-direction: column; align-items: flex-start; gap: 14px; padding: 14px 0 36px; }
     .visit-info { text-align: left; }
@@ -255,13 +318,13 @@
   }
 
   @media (max-width: 480px) {
-    nav { padding-left: 14px; padding-right: 14px; }
+    nav, .visit-hero, .details, .photo-grid, footer { padding-left: 14px; padding-right: 14px; }
     .logo { gap: 7px; }
     .logo .lk { width: 20.1px; height: 16px; }
     .logo .lw { width: 60.7px; height: 13px; }
-    .nav-r { gap: 13px; font-size: 10px; }
-    .nav-r a[href*="instagram"] { display: none; }
     .details { grid-template-columns: 1fr; }
+    footer { grid-template-columns: 1fr; gap: 28px; }
+    .ft-logo { margin-bottom: 16px; }
   }
 </style>
 </head>
@@ -305,6 +368,9 @@
     <a href="visit.html">Visit</a>
     <a href="https://www.instagram.com/conciergecoffee/" target="_blank">Instagram</a>
   </div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" onclick="toggleNav()">
+    <span></span><span></span>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -424,6 +490,27 @@
     <span>conciergecoffee.com</span>
   </div>
 </footer>
+
+<script>
+
+  // Nav sheet. Plain script rather than part of the Shopify module, so the
+  // Visit page can use the same markup without carrying the storefront code.
+  function toggleNav(force) {
+    const nav = document.querySelector('nav');
+    const open = force === undefined ? !nav.classList.contains('open') : force;
+    nav.classList.toggle('open', open);
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  document.querySelectorAll('.nav-r a').forEach(a =>
+    a.addEventListener('click', () => toggleNav(false)));
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleNav(false); });
+
+  // Leaving the breakpoint with the sheet open would strand the scroll lock.
+  matchMedia('(min-width: 769px)').addEventListener('change', e => { if (e.matches) toggleNav(false); });
+</script>
 
 </body>
 </html>
