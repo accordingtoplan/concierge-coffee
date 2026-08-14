@@ -260,6 +260,14 @@
   }
 
   .shop-card:hover .card-cta { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+  /* ── CONCEPT CARD ──
+     Blends put up for consideration, not products. Greyscale says unmade
+     before the label does, and nothing about the card invites a click:
+     no zoom, no swap, no button, no price. */
+  .concept-card { cursor: default; }
+  .concept-card:hover .card-img img { transform: none; }
+  .concept-card .card-status { letter-spacing: 0.08em; }
   .card-cta:hover { background: #f0f0f0; }
   .card-cta:disabled { background: rgba(255,255,255,0.35); color: rgba(255,255,255,0.8); cursor: default; }
 
@@ -1158,6 +1166,34 @@
   }
 
 
+  // Blends put to Benjamin and Namy rather than products. Named from the hotel
+  // world the crossed keys already point at, which extends: valet, porter,
+  // doorman, maître d'. No "blend" in any name, per the naming note.
+  const CONCEPTS = [
+    { name: 'Doorman',     note: 'Everyday filter',            status: 'Coming soon', img: 'images/concept-doorman.jpg' },
+    { name: 'Valet',       note: 'Limited release, co-ferment', status: 'Sold out',    img: 'images/concept-valet.jpg' },
+    { name: 'Night Porter', note: 'Decaf, sugarcane process',   status: 'Sold out',    img: 'images/concept-night-porter.jpg' },
+  ];
+
+  function renderConcepts() {
+    return CONCEPTS.map(c => `
+        <div class="card shop-card concept-card">
+          <div class="card-img">
+            <img class="card-base" src="${c.img}" alt="${esc(c.name)}" loading="lazy" />
+            <div class="card-face">
+              <div class="card-blend">${esc(c.name)}</div>
+              <div>
+                <div class="card-meta">
+                  <span>${esc(c.note)}</span>
+                  <span class="card-status">${esc(c.status)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+  }
+
   // Hover layer: the roasted bean, darker for the espresso roasts and lighter
   // for the filters, so the swap says something about the coffee.
   const BEANS = {
@@ -1175,7 +1211,8 @@
   function renderProducts() {
     const grid = document.getElementById('product-grid');
     if (!products.length) {
-      grid.innerHTML = '<p style="color:#bbb;font-size:11px;grid-column:1/-1;padding:24px 0">No products found.</p>';
+      grid.innerHTML = '<p style="color:#bbb;font-size:11px;grid-column:1/-1;padding:24px 0">No products found.</p>'
+                     + renderConcepts();
       return;
     }
 
@@ -1214,7 +1251,7 @@
           </div>
         </div>
       `;
-    }).join('');
+    }).join('') + renderConcepts();
   }
 
   function renderFooterLinks() {
