@@ -237,18 +237,25 @@
   .ft-logo .lk { width: 35.2px; height: 28px; }
   .ft-logo .lw { width: 112px; height: 24px; }
 
-  .ft-addr { font-size: 11px; line-height: 1.9; color: #bbb; }
+  /* Footer type was #bbb on white, which measures 1.92:1 -- the quiet was
+     coming from illegibility rather than from restraint. Headings take the
+     black and the links take a mid grey at 5.03:1, so the hierarchy is
+     carried by weight and case instead of by fading everything out. */
+  .ft-addr { font-size: 11px; line-height: 1.9; color: #6f6f6f; }
+  .ft-addr a { color: inherit; transition: color 0.15s; }
+  .ft-addr a:hover { color: #111; }
+  .ft-tel { display: block; margin-top: 10px; }
 
   .ft-h {
     font-size: 10px;
-    color: #bbb;
+    color: #111;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-bottom: 16px;
   }
 
   .ft-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-  .ft-links a { font-size: 11px; color: #bbb; transition: color 0.15s; }
+  .ft-links a { font-size: 11px; color: #6f6f6f; cursor: pointer; transition: color 0.15s; }
   .ft-links a:hover { color: #111; }
 
   .ft-copy {
@@ -257,7 +264,7 @@
     display: flex;
     justify-content: space-between;
     font-size: 10px;
-    color: #ccc;
+    color: #6f6f6f;
   }
 
   /* ── RESPONSIVE ──
@@ -323,8 +330,40 @@
     .logo .lk { width: 20.1px; height: 16px; }
     .logo .lw { width: 60.7px; height: 13px; }
     .details { grid-template-columns: 1fr; }
-    footer { grid-template-columns: 1fr; gap: 28px; }
+    /* ── FOOTER ON A PHONE ──
+       Three stacked lists of 11px grey ran the better part of a screen with
+       nothing to hold the eye and no target a thumb could hit. Same links,
+       given a shape: brand band, then Shop across the full width, then Merch
+       and Info side by side. Hairlines between the bands rather than gaps, so
+       it reads as sections rather than drift. */
+    footer { grid-template-columns: 1fr 1fr; column-gap: 18px; row-gap: 0; padding-top: 40px; padding-bottom: 40px; }
+
+    .ft-brand { grid-column: 1 / -1; padding-bottom: 26px; border-bottom: 1px solid #f0f0f0; }
     .ft-logo { margin-bottom: 16px; }
+
+    .ft-col--shop { grid-column: 1 / -1; padding: 22px 0; border-bottom: 1px solid #f0f0f0; }
+    /* Multicol rather than a two-column grid: it runs down the first column
+       and then across, which is how a list is read, and it balances itself as
+       the catalogue grows or shrinks. */
+    .ft-col--shop .ft-links { display: block; columns: 2; column-gap: 18px; }
+    .ft-col--shop .ft-links li { break-inside: avoid; }
+    .ft-col--merch, .ft-col--info { padding-top: 22px; }
+
+    .ft-h { margin-bottom: 2px; }
+    .ft-links { gap: 0; }
+    .ft-links a { font-size: 13px; }
+    .ft-copy { margin-top: 24px; padding-top: 20px; border-top: 1px solid #f0f0f0; }
+  }
+  /* ── TOUCH ──
+     A footer link was a 24x12 target. A thumb needs 44px, and that is a fact
+     about fingers rather than about viewport width, so it hangs off the touch
+     query rather than off a breakpoint. */
+  @media (hover: none) {
+    .ft-links a { display: flex; align-items: center; min-height: 44px; }
+    /* block, not inline-block: inline-block let the phone number ride up onto
+       the end of the address line. width:max-content keeps the tap box on the
+       text rather than spanning the column. */
+    .ft-addr a { display: block; width: max-content; max-width: 100%; padding: 6px 0; }
   }
 </style>
 </head>
@@ -456,20 +495,23 @@
 
 <!-- FOOTER -->
 <footer>
-  <div>
+  <div class="ft-brand">
     <div class="ft-logo">
       <svg class="lk" viewBox="0 0 151.07 120.06" aria-hidden="true"><use href="#cc-keys"/></svg>
       <svg class="lw" viewBox="0 0 415.33 88.96" role="img" aria-label="Concierge Coffee"><use href="#cc-word"/></svg>
     </div>
-    <div class="ft-addr">821 Traction Ave<br>Los Angeles, CA 90013</div>
+    <div class="ft-addr">
+      <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank" rel="noopener">821 Traction Ave<br>Los Angeles, CA 90013</a>
+      <a class="ft-tel" href="tel:+13107287915">(310) 728-7915</a>
+    </div>
   </div>
-  <div>
+  <div class="ft-col ft-col--shop">
     <div class="ft-h">Shop</div>
     <ul class="ft-links">
       <li><a href="index.html#shop">Shop</a></li>
     </ul>
   </div>
-  <div>
+  <div class="ft-col ft-col--merch">
     <div class="ft-h">Merch</div>
     <ul class="ft-links">
       <li><a href="index.html#merch">Water Bottle</a></li>
@@ -478,7 +520,7 @@
       <li><a href="index.html#merch">Sweater</a></li>
     </ul>
   </div>
-  <div>
+  <div class="ft-col ft-col--info">
     <div class="ft-h">Info</div>
     <ul class="ft-links">
       <li><a href="index.html#menu">Menu</a></li>

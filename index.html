@@ -267,6 +267,13 @@
     transition: opacity 0.3s ease;
   }
 
+  /* Two labels, one button. At two-up phone width a card is about 170px wide
+     and the full label measures 334px, so the short form is swapped in by
+     media query rather than by a resize listener. aria-label carries the full
+     sentence either way, and both spans are hidden from the accessibility
+     tree so the button is never announced twice. */
+  .cta-tight { display: none; }
+
   .card-cta {
     margin-top: 10px;
     width: 100%;
@@ -537,11 +544,18 @@
   .ft-logo .lk { width: 35.2px; height: 28px; }
   .ft-logo .lw { width: 112px; height: 24px; }
 
-  .ft-addr { font-size: 11px; line-height: 1.9; color: #bbb; }
+  /* Footer type was #bbb on white, which measures 1.92:1 — the quiet was
+     coming from illegibility rather than from restraint. Headings take the
+     black and the links take a mid grey at 5.03:1, so the hierarchy is
+     carried by weight and case instead of by fading everything out. */
+  .ft-addr { font-size: 11px; line-height: 1.9; color: #6f6f6f; }
+  .ft-addr a { color: inherit; transition: color 0.15s; }
+  .ft-addr a:hover { color: #111; }
+  .ft-tel { display: block; margin-top: 10px; }
 
   .ft-h {
     font-size: 10px;
-    color: #bbb;
+    color: #111;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-bottom: 16px;
@@ -549,7 +563,7 @@
 
   .ft-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
 
-  .ft-links a { font-size: 11px; color: #bbb; transition: color 0.15s; }
+  .ft-links a { font-size: 11px; color: #6f6f6f; cursor: pointer; transition: color 0.15s; }
   .ft-links a:hover { color: #111; }
 
   .ft-copy {
@@ -558,7 +572,7 @@
     display: flex;
     justify-content: space-between;
     font-size: 10px;
-    color: #ccc;
+    color: #6f6f6f;
   }
 
   /* ── MENU ── */
@@ -672,10 +686,11 @@
 
   /* ── RESPONSIVE ──
      1024 tablet, 768 phone landscape, 480 phone. Gutters step 32 → 24 → 16.
-     Below 768 the nav collapses to a sheet. At 480 the shop goes single
-     column, because a product card carries a name, a size, a price and a buy
-     button, and none of that fits at half a phone's width. Merch and the drink
-     grid stay two up: they are browsed, not bought. */
+     Below 768 the nav collapses to a sheet, and every grid on the page runs
+     two up: shop, merch and drinks alike. Eight products stacked one to a row
+     is 3,000px of scrolling and no overview at all; two up you can see the
+     range. The card contents are what had to give — the buy label shortens,
+     the size and price stack — not the column count. */
 
   @media (max-width: 1024px) {
     nav, .hero, .shop, footer { padding-left: 24px; padding-right: 24px; }
@@ -739,11 +754,41 @@
     .logo { gap: 7px; }
     .logo .lk { width: 20.1px; height: 16px; }
     .logo .lw { width: 60.7px; height: 13px; }
-    #shop .grid { grid-template-columns: 1fr; }
     .shop-head { height: auto; padding: 22px 0 10px; }
-    .card-face { padding: 14px; }
-    footer { grid-template-columns: 1fr; gap: 28px; }
+
+    /* Shop card at two up. The face has to carry a name, a size, a price and
+       a button in about 145px of usable width. */
+    .card-face { padding: 11px; }
+    .card-blend { font-size: 16px; }
+    .card-meta { flex-direction: column; align-items: flex-start; gap: 2px; }
+    .card-cta { font-size: 11px; padding: 12px 8px; margin-top: 9px; }
+    .cta-full { display: none; }
+    .cta-tight { display: inline; }
+
+    /* ── FOOTER ON A PHONE ──
+       Three stacked lists of 11px grey ran 728px, most of a screen, with
+       nothing to hold the eye and no target a thumb could hit. Same links,
+       given a shape: brand band, then Shop across the full width with its
+       products two up, then Merch and Info side by side. Hairlines between
+       the bands rather than gaps, so it reads as sections rather than drift. */
+    footer { grid-template-columns: 1fr 1fr; column-gap: 18px; row-gap: 0; padding-top: 40px; padding-bottom: 40px; }
+
+    .ft-brand { grid-column: 1 / -1; padding-bottom: 26px; border-bottom: 1px solid #f0f0f0; }
     .ft-logo { margin-bottom: 16px; }
+
+    .ft-col--shop { grid-column: 1 / -1; padding: 22px 0; border-bottom: 1px solid #f0f0f0; }
+    /* Multicol rather than a two-column grid: it runs down the first column
+       and then across, which is how a list is read, and it balances itself as
+       the catalogue grows or shrinks. A grid would go across-then-down and
+       would need the product count hard-coded. */
+    .ft-col--shop .ft-links { display: block; columns: 2; column-gap: 18px; }
+    .ft-col--shop .ft-links li { break-inside: avoid; }
+    .ft-col--merch, .ft-col--info { padding-top: 22px; }
+
+    .ft-h { margin-bottom: 2px; }
+    .ft-links { gap: 0; }
+    .ft-links a { font-size: 13px; }
+    .ft-copy { margin-top: 24px; padding-top: 20px; border-top: 1px solid #f0f0f0; }
   }
 
   /* ── TOUCH ──
@@ -752,9 +797,18 @@
      outright, and the bean layer is dropped rather than downloaded to sit
      invisible behind the packshot. */
   @media (hover: none) {
-    .card-cta { opacity: 1; transform: none; pointer-events: auto; }
+    .card-cta { opacity: 1; transform: none; pointer-events: auto; min-height: 44px; }
     .menu-credit { opacity: 1; }
     .shop-card .card-alt { display: none; }
+
+    /* A footer link was a 24x12 target. A thumb needs 44px, and that is a
+       fact about fingers rather than about viewport width, so it hangs off
+       the touch query rather than off a breakpoint. */
+    .ft-links a { display: flex; align-items: center; min-height: 44px; }
+    /* block, not inline-block: inline-block let the phone number ride up onto
+       the end of the address line. width:max-content keeps the tap box on the
+       text rather than spanning the column. */
+    .ft-addr a { display: block; width: max-content; max-width: 100%; padding: 6px 0; }
   }
 </style>
 </head>
@@ -1024,23 +1078,23 @@
 
 <!-- FOOTER -->
 <footer>
-  <div>
+  <div class="ft-brand">
     <div class="ft-logo">
       <svg class="lk" viewBox="0 0 151.07 120.06" aria-hidden="true"><use href="#cc-keys"/></svg>
       <svg class="lw" viewBox="0 0 415.33 88.96" role="img" aria-label="Concierge Coffee"><use href="#cc-word"/></svg>
     </div>
     <div class="ft-addr">
-      821 Traction Ave<br>
-      Los Angeles, CA 90013
+      <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank" rel="noopener">821 Traction Ave<br>Los Angeles, CA 90013</a>
+      <a class="ft-tel" href="tel:+13107287915">(310) 728-7915</a>
     </div>
   </div>
-  <div>
+  <div class="ft-col ft-col--shop">
     <div class="ft-h">Shop</div>
     <ul class="ft-links" id="footer-links">
       <li><a onclick="scrollToShop()">Shop</a></li>
     </ul>
   </div>
-  <div>
+  <div class="ft-col ft-col--merch">
     <div class="ft-h">Merch</div>
     <ul class="ft-links">
       <li><a onclick="scrollToMerch()">Water Bottle</a></li>
@@ -1049,7 +1103,7 @@
       <li><a onclick="scrollToMerch()">Sweater</a></li>
     </ul>
   </div>
-  <div>
+  <div class="ft-col ft-col--info">
     <div class="ft-h">Info</div>
     <ul class="ft-links">
       <li><a onclick="scrollToMenu()">Menu</a></li>
@@ -1282,6 +1336,11 @@
       const cta = !sellable ? 'Sold out'
                 : only ? `Buy ${esc(name)} — ${price}`
                 : `Choose size — from ${price}`;
+      // The short form for a two-up phone card. Same meaning, no product name:
+      // the name is already set across the top of the same card.
+      const ctaTight = !sellable ? 'Sold out'
+                     : only ? `Buy · ${price}`
+                     : 'Choose size';
       const action = only ? `addToCartHandler('${only.id}')` : `openProduct('${p.id}')`;
 
       return `
@@ -1296,8 +1355,8 @@
                   <span>${esc(sizes.join(' / '))}</span>
                   <span>${price}</span>
                 </div>
-                <button class="card-cta" ${sellable ? '' : 'disabled'}
-                  onclick="event.stopPropagation(); ${sellable ? action : ''}">${cta}</button>
+                <button class="card-cta" ${sellable ? '' : 'disabled'} aria-label="${cta}"
+                  onclick="event.stopPropagation(); ${sellable ? action : ''}"><span class="cta-full" aria-hidden="true">${cta}</span><span class="cta-tight" aria-hidden="true">${ctaTight}</span></button>
               </div>
             </div>
           </div>
@@ -1308,7 +1367,9 @@
 
   function renderFooterLinks() {
     const ul = document.getElementById('footer-links');
-    ul.innerHTML = products.map(p => `<li><a href="#">${esc(productName(p))}</a></li>`).join('');
+    // These were href="#", which jumped to the top of the page. They open the
+    // product now, same as the card does.
+    ul.innerHTML = products.map(p => `<li><a onclick="openProduct('${p.id}')">${esc(productName(p))}</a></li>`).join('');
   }
 
   async function addToCartHandler(variantId) {
