@@ -813,6 +813,17 @@
 
   @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
+  /* ── STORY ──
+     Facts left, one square picture right. The two founder frames that were
+     here moved to the About page: on the homepage this block is a summary
+     with a way in, not a gallery. */
+  .story-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--card-gap);
+    align-items: center;
+  }
+
   /* ── RESPONSIVE ──
      1024 tablet, 768 phone landscape, 480 phone. Gutters step 32 → 24 → 16.
      Below 768 the nav collapses to a sheet, and every grid on the page runs
@@ -893,6 +904,10 @@
        wide an uncropped 4/5 picture is 920 tall -- a whole screen for one
        drink. The cap sizes it without cropping anything back off. */
     .feature--split { grid-template-columns: 1fr; }
+    /* stacked, picture first: the section should open with an image like the
+       ones above it, and the facts read better under it than over it */
+    .story-split { grid-template-columns: 1fr; gap: 18px; }
+    .story-img { order: -1; }
     .feature--split .card-img { max-width: 640px; }
     .feature--split .feature-face { padding: 16px 0 0; }
     .feature--split .feature-cat { max-width: none; margin-top: 8px; }
@@ -960,36 +975,34 @@
 
   @media (max-width: 480px) {
     #merch .card-name { font-size: 11px; }
-    #story .story-line { flex-direction: column; gap: 6px; }
     #merch .card-sub { display: none; }
     #merch .card-info { padding: 8px 0 0; }
   }
 
-  /* ── STORY PAIR ──
-     Two square frames after merch, and one line pointing at the About page.
-     Square because the two photographs are 1/1 and 4/5 and only a square makes
-     them read as a pair rather than as two loose pictures. */
-  #story .grid--pair { grid-template-columns: repeat(2, 1fr); }
-  #story .card-img { aspect-ratio: 1/1; }
-  #story .story-card { cursor: default; }
-  #story .story-card:hover .card-img img { transform: none; }
-  /* Black and white, as a filter rather than as a second set of files:
-     the colour originals stay in the repo and this is one line to undo.
-     The concept packshots are the other case, where greyscale carries
-     meaning and is baked into the image. */
-  #story .card-img img { filter: grayscale(1); }
 
-  .story-line {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 16px;
-    padding-top: 14px;
-    font-size: 11px;
-    color: var(--muted);
+  .story-facts { display: flex; flex-direction: column; gap: 26px; }
+  .story-fact-h {
+    font-family: var(--serif);
+    font-size: 15px;
+    margin-bottom: 6px;
   }
-  .story-line a { color: #111; border-bottom: 1px solid #eee; transition: border-color 0.15s; }
-  .story-line a:hover { border-color: #111; }
+  .story-fact p { font-size: 12px; line-height: 1.85; color: var(--muted); max-width: 42ch; }
+  .story-more {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-bottom: 1px solid #eee;
+    align-self: flex-start;
+    transition: border-color 0.15s;
+  }
+  .story-more:hover { border-color: #111; }
+
+  .story-img { aspect-ratio: 1/1; overflow: hidden; background: #f7f7f7; }
+  .story-img img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    /* black and white, as a filter: the colour original stays in the repo */
+    filter: grayscale(1);
+  }
 
   /* A studio render on white cannot carry white type over a scrim, so this
      variant drops the overlay and sets the name beneath the picture. */
@@ -1281,17 +1294,25 @@
   <div class="shop-head">
     <span class="shop-title">About</span>
   </div>
-  <div class="grid grid--pair">
-    <div class="card story-card">
-      <div class="card-img"><img src="images/founders-roastery.jpg" alt="At the roaster" loading="lazy" /></div>
+  <div class="story-split">
+    <div class="story-facts">
+      <div class="story-fact">
+        <div class="story-fact-h">Berlin</div>
+        <p>A neighborhood place with underground roots. Roasts once a week, delivers on Thursdays.</p>
+      </div>
+      <div class="story-fact">
+        <div class="story-fact-h">Los Angeles</div>
+        <p>821 Traction Ave, in the Arts District. Roasts every second Tuesday morning, in larger batches.</p>
+      </div>
+      <div class="story-fact">
+        <div class="story-fact-h">Roasting</div>
+        <p>Espresso and a single origin filter in both cities. Green is bought by Benjamin and arrives every four to five weeks, which is availability rather than schedule.</p>
+      </div>
+      <a class="story-more" href="about.html">About &rarr;</a>
     </div>
-    <div class="card story-card">
-      <div class="card-img"><img src="images/founders-door.jpg" alt="At the door in Berlin" loading="lazy" /></div>
+    <div class="story-img">
+      <img src="images/about-espresso-bar.jpg" alt="An espresso bar, mid century" loading="lazy" />
     </div>
-  </div>
-  <div class="story-line">
-    <span>Los Angeles and Berlin, est. 2013.</span>
-    <a href="about.html">About &rarr;</a>
   </div>
 </section>
 
