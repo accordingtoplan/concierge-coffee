@@ -183,6 +183,20 @@
 
   .detail-block { display: flex; flex-direction: column; gap: 8px; }
 
+  /* Two cities on one page, so each block of details says which one it is.
+     Same treatment as a section headline on the homepage. */
+  .city {
+    grid-column: 1 / -1;
+    font-family: var(--serif);
+    font-size: clamp(16px, 1.4vw, 20px);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 10px;
+  }
+  /* the second block sits under the first without a second rule between them */
+  .details + .details { border-top: 0; padding-top: 0; }
+
   .detail-lbl {
     font-size: 9px;
     letter-spacing: 0.15em;
@@ -397,6 +411,215 @@
        text rather than spanning the column. */
     .ft-addr a { display: block; width: max-content; max-width: 100%; padding: 6px 0; }
   }
+
+
+  /* ── THE BAG, ON EVERY PAGE ──
+     The bar and the footer are the same on every page now, which means
+     the bag is too: these pages sell nothing but they carry the same
+     drawer and the same quick add panel, injected by shopify.js. */
+  /* ── QUICK ADD ──
+     One picture, the size, the count, one dark button. It replaces a half
+     page product sheet that opened over the grid and still could not carry a
+     tasting note: this is the buy step, and everything else about the coffee
+     is a click away on its own page.
+
+     The markup is injected by shopify.js rather than written into each page,
+     so the panel on the shop cannot drift from the panel on the homepage. */
+  .pdp-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 300;
+    overflow-y: auto;
+    padding: 32px 16px;
+  }
+
+  .pdp-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+
+  .qa-modal {
+    background: #fff;
+    width: 100%;
+    max-width: 420px;
+    margin: auto;
+    position: relative;
+  }
+
+  .qa-x {
+    position: absolute;
+    top: 8px; right: 8px;
+    z-index: 2;
+    width: 34px; height: 34px;
+    border: 0;
+    background: rgba(255,255,255,0.86);
+    font-size: 17px;
+    line-height: 1;
+    color: #111;
+    cursor: pointer;
+  }
+  .qa-x:hover { background: #fff; }
+
+  .qa-img { aspect-ratio: 1/1; background: #f7f7f7; overflow: hidden; }
+  .qa-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .qa-panel { padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+
+  .qa-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .qa-back {
+    border: 0; background: none; padding: 0;
+    font-family: inherit; font-size: 10px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); cursor: pointer;
+  }
+  .qa-back:hover { color: #111; }
+
+  .qa-details { color: #111; border-bottom: 1px solid #ddd; padding-bottom: 2px; transition: border-color 0.15s; }
+  .qa-details:hover { border-color: #111; }
+
+  .qa-name { font-family: var(--serif); font-size: 26px; font-weight: 400; line-height: 1.1; letter-spacing: -0.01em; }
+  .qa-price { font-size: 11px; color: var(--muted); margin-top: -8px; }
+
+  .qa-field { display: flex; flex-direction: column; gap: 7px; }
+
+  .qa-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* Native selects, restyled rather than rebuilt: a listbox written in
+     JavaScript is a keyboard and screen reader problem for no gain, and on a
+     phone the system picker is better than anything drawn here. */
+  .qa-sel {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    padding: 13px 34px 13px 12px;
+    border: 1px solid #e4e4e4;
+    border-radius: 0;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6'%3E%3Cpath d='M1 1l3.5 3.5L8 1' fill='none' stroke='%23111'/%3E%3C/svg%3E") no-repeat right 13px center;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: #111;
+    cursor: pointer;
+  }
+  .qa-sel:focus { outline: none; border-color: #111; }
+  .qa-sel:disabled { color: var(--muted); background-image: none; cursor: default; }
+
+  /* ── CART DRAWER ── */
+  .cart-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.15);
+    z-index: 200;
+  }
+
+  .cart-overlay.open { display: block; }
+
+  .cart-drawer {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 360px;
+    height: 100vh;
+    background: #fff;
+    z-index: 201;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.3s ease;
+    padding: 32px 24px;
+  }
+
+  .cart-drawer.open { right: 0; }
+
+  .cart-drawer-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+
+  .cart-drawer-title {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .cart-close {
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--muted);
+    background: none;
+    border: none;
+    line-height: 1;
+  }
+
+  .cart-close:hover { color: #111; }
+
+  .cart-items { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+
+  .cart-empty { color: var(--muted); font-size: 11px; padding-top: 8px; }
+
+  .ci {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 14px;
+    align-items: start;
+  }
+
+  .ci-img { aspect-ratio: 1; background: #f2f2f2; overflow: hidden; }
+  .ci-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ci-name { font-family: var(--serif); font-size: 12px; }
+  .ci-sub { font-size: 10px; color: var(--muted); margin-top: 4px; }
+  .ci-price { font-size: 11px; }
+
+  .cart-footer { border-top: 1px solid #f0f0f0; padding-top: 24px; margin-top: 24px; display: flex; flex-direction: column; gap: 16px; }
+
+  .cart-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+  }
+
+  .cart-total-lbl { color: var(--muted); }
+
+  .atc {
+    background: #111;
+    color: #fff;
+    border: none;
+    padding: 14px 16px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    width: 100%;
+    transition: opacity 0.15s;
+    text-align: center;
+  }
+
+  .atc:hover { opacity: 0.75; }
+  .atc:disabled { opacity: 0.4; cursor: default; }
+
+  @media (max-width: 768px) {
+    .pdp-overlay { padding: 12px; }
+    .qa-modal { max-width: 460px; }
+    .cart-drawer { width: 100%; right: -100%; padding: 24px 16px; }
+  }
+
+  @media (max-width: 480px) {
+    .pdp-overlay { padding: 10px; }
+    .qa-modal { max-width: none; }
+    .qa-panel { padding: 16px 16px 20px; gap: 12px; }
+    .qa-name { font-size: 23px; }
+  }
 </style>
 </head>
 <body>
@@ -428,16 +651,17 @@
 </svg>
 
 <nav>
-  <a href="index.html" class="logo" aria-label="Concierge Coffee — home">
+  <a href="index.html" class="logo" aria-label="Concierge Coffee &mdash; home">
     <svg class="lk" viewBox="0 0 151.07 120.06" aria-hidden="true"><use href="#cc-keys"/></svg>
     <svg class="lw" viewBox="0 0 415.33 88.96" aria-hidden="true"><use href="#cc-word"/></svg>
   </a>
   <div class="nav-r">
+    <a href="index.html">Home</a>
     <a href="shop.html">Shop</a>
     <a href="arrangements.html">Arrangements</a>
     <a href="about.html">About</a>
-    <a href="visit.html">Visit</a>
-    <a href="https://www.instagram.com/conciergecoffee/" target="_blank">Instagram</a>
+    <a href="visit.html" aria-current="page">Visit</a>
+    <a onclick="openCart()" id="bag-link">Bag (0)</a>
   </div>
   <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" onclick="toggleNav()">
     <span></span><span></span>
@@ -461,6 +685,7 @@
 
 <!-- DETAILS -->
 <div class="details">
+  <div class="city">Los Angeles</div>
   <div class="detail-block">
     <div class="detail-lbl">Address</div>
     <div class="detail-val">
@@ -489,6 +714,40 @@
       Arts District, Los Angeles<br>
       Next to Departamento<br>
       Courtyard · Wifi · Dogs OK
+    </div>
+  </div>
+</div>
+
+<!-- BERLIN -->
+<div class="details">
+  <div class="city">Berlin</div>
+  <div class="detail-block">
+    <div class="detail-lbl">Address</div>
+    <div class="detail-val">
+      <a href="https://www.google.com/maps/search/?api=1&amp;query=Concierge+Coffee+L%C3%BCtzowstra%C3%9Fe+92+Berlin" target="_blank" rel="noopener">
+        L&uuml;tzowstra&szlig;e 92<br>10785 Berlin
+      </a>
+    </div>
+  </div>
+  <div class="detail-block">
+    <div class="detail-lbl">Hours</div>
+    <div class="detail-val">
+      Mon&ndash;Fri 8am &ndash; 5pm<br>
+      Sat&ndash;Sun 9am &ndash; 5pm
+    </div>
+  </div>
+  <div class="detail-block">
+    <div class="detail-lbl">Contact</div>
+    <div class="detail-val">
+      <a href="https://www.instagram.com/conciergecoffee/" target="_blank" rel="noopener">@conciergecoffee</a><br>
+      <a href="https://www.conciergecoffee.de/" target="_blank" rel="noopener">conciergecoffee.de</a>
+    </div>
+  </div>
+  <div class="detail-block">
+    <div class="detail-lbl">Roasting</div>
+    <div class="detail-val">
+      Roasts once a week<br>
+      Delivers on Thursdays
     </div>
   </div>
 </div>
@@ -538,31 +797,30 @@
   </div>
   <div class="ft-col ft-col--shop">
     <div class="ft-h">Shop</div>
-    <ul class="ft-links">
+    <ul class="ft-links" id="footer-links">
       <li><a href="shop.html">Shop</a></li>
     </ul>
   </div>
   <div class="ft-col ft-col--merch">
     <div class="ft-h">Merch</div>
     <ul class="ft-links">
-      <li><a href="index.html#merch">Water Bottle</a></li>
-      <li><a href="index.html#merch">RC-Car</a></li>
-      <li><a href="index.html#merch">T-Shirt</a></li>
-      <li><a href="index.html#merch">Sweater</a></li>
+      <li><a href="shop.html#merch">Water Bottle</a></li>
+      <li><a href="shop.html#merch">Porsche 911 RSR</a></li>
+      <li><a href="shop.html#merch">T-Shirt</a></li>
+      <li><a href="shop.html#merch">Sweater</a></li>
     </ul>
   </div>
   <div class="ft-col ft-col--info">
     <div class="ft-h">Info</div>
     <ul class="ft-links">
-      <li><a href="index.html#menu">Menu</a></li>
       <li><a href="visit.html">Visit</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="arrangements.html#wholesale">Wholesale</a></li>
+      <li><a href="arrangements.html">Arrangements</a></li>
       <li><a href="https://www.instagram.com/conciergecoffee/" target="_blank">Instagram</a></li>
     </ul>
   </div>
   <div class="ft-copy">
-    <span>© 2026 Concierge Coffee LLC</span>
+    <span>&copy; 2026 Concierge Coffee LLC</span>
     <span>conciergecoffee.com</span>
   </div>
 </footer>
@@ -586,6 +844,15 @@
 
   // Leaving the breakpoint with the sheet open would strand the scroll lock.
   matchMedia('(min-width: 769px)').addEventListener('change', e => { if (e.matches) toggleNav(false); });
+</script>
+
+
+<script type="module">
+  /* Nothing on this page is for sale, and it still carries the bag: the bar
+     and the footer are the same on every page, so the shop links in the footer
+     and the drawer behind Bag have to work here too. */
+  import { initStore } from './shopify.js';
+  initStore();
 </script>
 
 </body>

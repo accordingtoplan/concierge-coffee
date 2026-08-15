@@ -1065,11 +1065,12 @@
 
 <!-- NAV -->
 <nav>
-  <a href="index.html" class="logo" aria-label="Concierge Coffee — home">
+  <a href="index.html" class="logo" aria-label="Concierge Coffee &mdash; home">
     <svg class="lk" viewBox="0 0 151.07 120.06" aria-hidden="true"><use href="#cc-keys"/></svg>
     <svg class="lw" viewBox="0 0 415.33 88.96" aria-hidden="true"><use href="#cc-word"/></svg>
   </a>
   <div class="nav-r">
+    <a href="index.html" aria-current="page">Home</a>
     <a href="shop.html">Shop</a>
     <a href="arrangements.html">Arrangements</a>
     <a href="about.html">About</a>
@@ -1333,15 +1334,14 @@
   <div class="ft-col ft-col--info">
     <div class="ft-h">Info</div>
     <ul class="ft-links">
-      <li><a onclick="scrollToMenu()">Menu</a></li>
       <li><a href="visit.html">Visit</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="arrangements.html#wholesale">Wholesale</a></li>
+      <li><a href="arrangements.html">Arrangements</a></li>
       <li><a href="https://www.instagram.com/conciergecoffee/" target="_blank">Instagram</a></li>
     </ul>
   </div>
   <div class="ft-copy">
-    <span>© 2026 Concierge Coffee LLC</span>
+    <span>&copy; 2026 Concierge Coffee LLC</span>
     <span>conciergecoffee.com</span>
   </div>
 </footer>
@@ -1393,7 +1393,7 @@
      bag and the quick add panel live in shopify.js, which the shop page and
      the product pages load as well. */
   import {
-    initStore, esc, formatPrice, productName, productSizes, productHref,
+    initStore, esc, formatPrice, productName, productSizes,
     getProductImage, getBeanImage, variants, CONCEPTS,
   } from './shopify.js';
 
@@ -1466,21 +1466,7 @@
     }).join('') + renderConcepts();
   }
 
-  function renderFooterLinks(products) {
-    // These were href="#", which jumped to the top of the page, and then an
-    // overlay. They are links to the product's own page now.
-    document.getElementById('footer-links').innerHTML = products
-      .map(p => `<li><a href="${productHref(p)}">${esc(productName(p))}</a></li>`).join('');
-  }
-
-  window.scrollToMenu = () => document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
-
-  initStore({
-    render(products) {
-      renderProducts(products);
-      renderFooterLinks(products);
-    },
-  });
+  initStore({ render: renderProducts });
 </script>
 </body>
 </html>

@@ -244,7 +244,7 @@ const CHROME = `
   <div class="cart-footer">
     <div class="cart-total">
       <span class="cart-total-lbl">Total</span>
-      <span id="cart-total">&mdash;</span>
+      <span id="cart-total">$0.00</span>
     </div>
     <button class="atc" id="checkout-btn" onclick="goToCheckout()" disabled>Checkout</button>
   </div>
@@ -338,6 +338,16 @@ export function renderCart() {
 export function updateBagLink(count) {
   const el = document.getElementById('bag-link');
   if (el) el.textContent = `Bag (${count})`;
+}
+
+/* The Shop column of the footer is the catalogue, on every page that has a
+   footer, which is every page. Written here rather than in each page's module
+   because the footer is now the same everywhere and should stay that way. */
+function renderFooterLinks() {
+  const ul = document.getElementById('footer-links');
+  if (!ul || !products.length) return;
+  ul.innerHTML = products
+    .map(p => `<li><a href="${productHref(p)}">${esc(productName(p))}</a></li>`).join('');
 }
 
 export function openCart() {
@@ -448,6 +458,7 @@ export async function initStore({ render } = {}) {
 
   await loadProducts();
   render?.(products);
+  renderFooterLinks();
   await restoreCart();
   return products;
 }
