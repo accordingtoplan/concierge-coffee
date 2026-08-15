@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Concierge Coffee</title>
+<title>Coffee — Concierge Coffee</title>
+<meta name="description" content="A single coffee from Concierge, roasted in Los Angeles and Berlin.">
 <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="fonts/newsreader-var.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+
   /* Newsreader — self-hosted latin subset, optical size pinned to display.
      Georgia is the fallback: it is the face the wordmark is drawn from. */
   @font-face {
@@ -1033,6 +1035,137 @@
        text rather than spanning the column. */
     .ft-addr a { display: block; width: max-content; max-width: 100%; padding: 6px 0; }
   }
+
+  /* ── SHOP PAGE ──
+     The homepage sells a selection from a grid that has to sit between a hero
+     and a drink menu. This page has nothing else to do, so the cards get their
+     type beneath the picture instead of over it: on a page that is only
+     shopping, the name, the price and the button have to be readable at a
+     glance, and white type on a scrim is a mood rather than a price tag. */
+  .sp-top { padding-top: 44px; padding-bottom: 52px; }
+  .sp-title {
+    font-family: var(--serif);
+    font-size: clamp(40px, 6vw, 86px);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.025em;
+  }
+  .sp-intro { font-size: 12px; line-height: 1.85; color: var(--muted); max-width: 46ch; margin-top: 18px; }
+
+  /* Sections rather than filters: five coffees do not need faceting, and a
+     filter bar over a catalogue this size is furniture. */
+  .sp-index { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 30px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .sp-index a { color: var(--muted); border-bottom: 1px solid #eee; padding-bottom: 3px; transition: color 0.15s, border-color 0.15s; }
+  .sp-index a:hover { color: #111; border-color: #111; }
+
+  /* Four up, like the grid on the homepage: five coffees and four merch
+     items is a catalogue, and a catalogue wants to be seen at once. The
+     sections that hold three cards run three up so neither ends on an orphan. */
+  .sp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--card-gap); }
+  #proposal-grid, #merch-grid { grid-template-columns: repeat(3, 1fr); }
+
+  .sp-card { display: flex; flex-direction: column; cursor: default; }
+  .sp-hit { display: block; color: inherit; }
+  /* 4/5 against sources that are 3/4 and 4/5: a square would cut a
+     quarter off a standing bag, and 3/4 towers at this width. */
+  .sp-card .card-img { aspect-ratio: 4/5; }
+  .sp-card .card-alt { position: absolute; inset: 0; opacity: 0; transition: opacity 0.4s ease; }
+  .sp-card:hover .card-alt { opacity: 1; }
+  .sp-card:hover .card-base { opacity: 0; }
+  .sp-name { font-family: var(--serif); font-size: 18px; line-height: 1.2; margin-top: 14px; }
+  .sp-sub { font-size: 11px; line-height: 1.7; color: var(--muted); margin-top: 6px; max-width: 36ch; }
+  .sp-foot {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    margin-top: 12px; padding-top: 11px; border-top: 1px solid #f0f0f0;
+  }
+  .sp-foot .sp-lead { color: #111; }
+  /* Shopify carries a line for two of the five coffees and nothing for the
+     rest, so the copy above the rule is ragged by nature. The rule and the
+     button are pushed to the foot instead, and a row ends on two straight
+     lines rather than on five different ones. */
+  .sp-card .sp-foot { margin-top: auto; }
+  .sp-add {
+    margin-top: 12px; width: 100%; padding: 13px;
+    border: 1px solid #111; background: #fff; color: #111;
+    font-family: inherit; font-size: 11px; letter-spacing: 0.05em;
+    cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .sp-add:hover { background: #111; color: #fff; }
+  .sp-add:disabled { border-color: #ececec; color: var(--muted); background: #fff; cursor: default; }
+
+  /* Not for sale: the proposals are not products yet and none of the merch is
+     in the shop, so those cards carry a state where the button would be
+     rather than a button that cannot do anything. */
+  .sp-state {
+    margin-top: 12px; padding: 13px 0 0;
+    border-top: 1px solid #f0f0f0;
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+  .sp-card--static { cursor: default; }
+  .sp-card--static:hover .card-img img { transform: none; }
+
+  /* The Porsche is a landscape render on white and the lead of the section, so
+     it takes two columns at its own ratio instead of being cropped into a
+     portrait card. */
+  .sp-card--lead { grid-column: 1 / -1; }
+  .sp-card--lead .card-img { aspect-ratio: 16/9; }
+  .sp-card--fit .card-img { background: #fff; }
+  .sp-card--fit .card-img img { object-fit: contain; }
+
+  .sp-note { font-size: 11px; line-height: 1.8; color: var(--muted); max-width: 46ch; padding-bottom: var(--head-gap); }
+
+  @media (max-width: 1024px) {
+    .sp-grid, #proposal-grid, #merch-grid { grid-template-columns: repeat(3, 1fr); }
+    .sp-name { font-size: 16px; }
+  }
+
+  @media (max-width: 768px) {
+    .sp-top { padding-top: 28px; padding-bottom: 36px; }
+    .sp-grid, #proposal-grid, #merch-grid { grid-template-columns: repeat(2, 1fr); }
+    .sp-sub { display: none; }
+    .sp-name { font-size: 15px; margin-top: 10px; }
+    .sp-foot { flex-direction: column; gap: 3px; margin-top: 9px; padding-top: 9px; }
+  }
+
+  @media (max-width: 480px) {
+    .sp-index { gap: 16px; }
+    .sp-name { font-size: 13px; }
+    .sp-add { padding: 12px 8px; }
+  }
+
+  /* ── PRODUCT PAGE ──
+     Where See Full Details goes. The buy controls are the same two selects and
+     the same dark button as the quick add panel, deliberately: the panel is a
+     shortcut to this page, so it should not be a different transaction. */
+  .pd-wrap { padding-top: 26px; padding-bottom: var(--section-gap); }
+  .pd-crumb { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 24px; }
+  .pd-crumb a { transition: color 0.15s; }
+  .pd-crumb a:hover { color: #111; }
+
+  .pd-split { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+  .pd-main { aspect-ratio: 1/1; background: #f7f7f7; overflow: hidden; }
+  .pd-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pd-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--card-gap); margin-top: var(--card-gap); }
+  .pd-thumb { aspect-ratio: 1/1; overflow: hidden; background: #f7f7f7; border: 0; padding: 0; cursor: pointer; }
+  .pd-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity 0.2s; }
+  .pd-thumb:hover img { opacity: 0.78; }
+
+  .pd-detail { display: flex; flex-direction: column; gap: 16px; max-width: 440px; }
+  .pd-name { font-family: var(--serif); font-size: clamp(32px, 4vw, 54px); font-weight: 400; line-height: 1.04; letter-spacing: -0.02em; }
+  .pd-price { font-size: 12px; }
+  .pd-desc { font-size: 12px; line-height: 1.9; color: var(--muted); }
+  .pd-sizes { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .pd-missing { padding: 60px 0 100px; }
+  /* three coffees under the one being read, so the row fills */
+  #more-grid { grid-template-columns: repeat(3, 1fr); }
+  .pd-missing .pd-name { margin-bottom: 16px; }
+
+  @media (max-width: 768px) {
+    .pd-split { grid-template-columns: 1fr; gap: 24px; }
+    .pd-detail { max-width: none; }
+    .pd-thumbs { grid-template-columns: repeat(4, 1fr); }
+  }
 </style>
 </head>
 <body>
@@ -1062,16 +1195,15 @@
 <path d="M 412.73 66.84 C 412.69 66.79 412.64 66.77 412.59 66.77 C 412.53 66.75 412.49 66.78 412.45 66.82 C 412.07 67.18 411.65 67.35 411.18 67.35 C 410.18 67.35 409.58 66.5 409.58 65.68 C 409.58 64.73 410.27 63.98 411.15 63.98 C 411.54 63.98 411.82 64.11 411.98 64.23 C 411.92 64.31 411.88 64.41 411.88 64.52 C 411.88 64.83 412.13 65.07 412.45 65.07 C 412.78 65.07 413.04 64.79 413.04 64.43 C 413.04 63.74 412.16 63.13 411.16 63.13 C 409.77 63.13 408.68 64.25 408.68 65.68 C 408.68 67.11 409.75 68.2 411.18 68.2 C 411.88 68.2 412.54 67.93 413.02 67.45 C 413.09 67.38 413.09 67.27 413.03 67.2 Z M 412.73 66.84 "/>
 </symbol>
 </svg>
-
 <!-- NAV -->
 <nav>
-  <a href="index.html" class="logo" aria-label="Concierge Coffee — home">
+  <a href="index.html" class="logo" aria-label="Concierge Coffee &mdash; home">
     <svg class="lk" viewBox="0 0 151.07 120.06" aria-hidden="true"><use href="#cc-keys"/></svg>
     <svg class="lw" viewBox="0 0 415.33 88.96" aria-hidden="true"><use href="#cc-word"/></svg>
   </a>
   <div class="nav-r">
     <a href="shop.html">Shop</a>
-    <a onclick="scrollToMenu()">Menu</a>
+    <a href="index.html#menu">Menu</a>
     <a href="shop.html#merch">Merch</a>
     <a href="arrangements.html">Arrangements</a>
     <a href="about.html">About</a>
@@ -1083,206 +1215,22 @@
   </button>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-img" id="hero-slides">
-    <img class="slide on" src="images/hero.jpeg" alt="Concierge Coffee, the bar at 821 Traction Ave" />
-    <img class="slide shift-up" src="images/hero-courtyard.jpg" alt="The courtyard" loading="lazy" />
-    <img class="slide shift-up" src="images/hero-mirror.jpg" alt="The front room" loading="lazy" />
-  </div>
-  <div class="hero-meta">
-    <div class="hero-sub">
-      <span>Arts District, Los Angeles</span>
-      <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank" rel="noopener noreferrer">821 Traction Ave</a>
-      <a href="visit.html">Visit →</a>
-    </div>
-    <div class="hero-hours">
-      <span>Mon–Fri 7am – 5pm</span>
-      <span>Sat–Sun 8am – 5pm</span>
+<section class="shop pd-wrap" id="product">
+  <div class="pd-crumb"><a href="shop.html">&larr; Shop</a></div>
+  <div id="pd-body">
+    <div class="pd-split">
+      <div><div class="pd-main skeleton"></div></div>
+      <div class="pd-detail"></div>
     </div>
   </div>
 </section>
 
-<!-- SHOP -->
-<section class="shop" id="shop">
+<section class="shop" id="more" hidden>
   <div class="shop-head">
-    <span class="shop-title">Buy Coffee</span>
+    <span class="shop-title">More coffee</span>
     <a class="head-link" href="shop.html">Shop all &rarr;</a>
   </div>
-  <div class="grid" id="product-grid">
-    <!-- skeleton cards -->
-    <div class="card"><div class="card-img skeleton"></div></div>
-    <div class="card"><div class="card-img skeleton"></div></div>
-    <div class="card"><div class="card-img skeleton"></div></div>
-    <div class="card"><div class="card-img skeleton"></div></div>
-  </div>
-</section>
-
-<!-- The quick add panel and the bag are injected by shopify.js, so every page
-     that sells carries the same two. -->
-
-<!-- MENU -->
-<section class="shop" id="menu">
-  <div class="menu-head">
-    <span class="shop-title">Coffee Specialties</span>
-    <span class="menu-note">Served at 821 Traction Ave</span>
-  </div>
-  <!-- Specialty of the Month. Swap the picture, the name and the line each
-       month. At 4/5 the crop is close to the 3/4 source, so no vertical
-       anchor is needed here -- a wider band would want one. -->
-  <div class="feature feature--split">
-    <div class="card-img">
-      <img src="images/drink-yuzu-matcha-tonic.jpg" alt="Yuzu Matcha Tonic" />
-    </div>
-    <div class="feature-face">
-      <div class="feature-kicker">Specialty of the Month</div>
-      <div class="feature-name">Yuzu Matcha Tonic</div>
-      <div class="feature-cat">Matcha, yuzu, simple syrup, fresh lime</div>
-      <div class="feature-note">Served at 821 Traction Ave</div>
-    </div>
-  </div>
-  <div class="menu-grid">
-    <div class="card menu-card">
-      <div class="card-img">
-        <img src="images/drink-einspanner.jpg" alt="Einspänner" loading="lazy" />
-      </div>
-      <div class="card-info">
-        <div class="card-name">Einspänner</div>
-        <div class="card-cat">Cold brew, double espresso, chocolate, smoked salt, cream top</div>
-      </div>
-    </div>
-    <div class="card menu-card">
-      <div class="card-img">
-        <img src="images/drink-matcha-affogato.jpg" alt="Affogato" loading="lazy" />
-      </div>
-      <div class="card-info">
-        <div class="card-name">Affogato</div>
-        <div class="card-cat">Vanilla ice cream with espresso, matcha or hojicha</div>
-      </div>
-    </div>
-    <a class="card menu-card" href="https://www.instagram.com/conciergecoffee/p/DMOyYk9Jrmt/" target="_blank" rel="noopener noreferrer">
-      <div class="card-img">
-        <img src="images/drink-cardamom-rose-cream.jpg" alt="Cardamom-Rose Cream Top" loading="lazy" />
-        <div class="menu-credit"><span>Photograph @conciergecoffee ↗</span></div>
-      </div>
-      <div class="card-info">
-        <div class="card-name">Cardamom-Rose Cream Top</div>
-        <div class="card-cat">Cardamom, rose, cream top</div>
-      </div>
-    </a>
-    <div class="card menu-card">
-      <div class="card-img">
-        <img src="images/drink-iced-filter.jpg" alt="Iced filter" loading="lazy" />
-      </div>
-      <div class="card-info">
-        <div class="card-name">Filter, iced</div>
-        <div class="card-cat">Batch brew over ice</div>
-      </div>
-    </div>
-    <a class="card menu-card" href="https://www.instagram.com/conciergecoffee/p/C3ohqQTL0vT/" target="_blank" rel="noopener noreferrer">
-      <div class="card-img">
-        <img src="images/drink-hojicha.jpg" alt="Hojicha Latte" loading="lazy" />
-        <div class="menu-credit"><span>Photograph @conciergecoffee ↗</span></div>
-      </div>
-      <div class="card-info">
-        <div class="card-name">Hojicha Latte</div>
-        <div class="card-cat">Roasted green tea, milk</div>
-      </div>
-    </a>
-    <a class="card menu-card" href="https://www.instagram.com/cafe.planes/p/DV6UxqekjoI/" target="_blank" rel="noopener noreferrer">
-      <div class="card-img">
-        <img src="images/drink-flat-white.jpg" alt="Flat White" loading="lazy" />
-        <div class="menu-credit"><span>Photograph @cafe.planes ↗</span></div>
-      </div>
-      <div class="card-info">
-        <div class="card-name">Flat White</div>
-        <div class="card-cat">Double espresso, steamed milk</div>
-      </div>
-    </a>
-  </div>
-
-</section>
-
-<!-- MERCH -->
-<section class="shop" id="merch">
-  <div class="shop-head">
-    <span class="shop-title">Merch</span>
-  </div>
-  <!-- The Concierge livery render, 1672x941. Exactly 16/9, so the band crops
-       nothing at desktop; the narrower ratios below only take white off the
-       sides. Type reads beneath: a render on paper has nothing for white type
-       to sit on the way a dark photograph did. -->
-  <div class="feature feature--wide feature--onwhite">
-    <div class="card-img" style="background:#fff">
-      <img src="images/merch-rc-car-1.jpg" alt="Porsche 911 Carrera RSR in Concierge livery" />
-    </div>
-    <div class="feature-face">
-      <div class="feature-name">Porsche 911 Carrera RSR</div>
-      <div class="feature-cat">TAMIYA &middot; Concierge Limited Special Edition &middot; Handmade</div>
-    </div>
-  </div>
-  <div class="grid">
-    <div class="card merch-card">
-      <div class="card-img" style="background:#f7f7f7">
-        <img src="images/merch-waterbottle.webp" alt="Water Bottle" style="object-fit:cover" loading="lazy" />
-      </div>
-      <div class="card-info">
-        <div>
-          <div class="card-name">Water Bottle</div>
-          <div class="card-sub">Limited Edition &middot; KINTO</div>
-        </div>
-      </div>
-    </div>
-    <div class="card merch-card">
-      <div class="card-img" style="background:#f7f7f7">
-        <img src="images/merch-tshirt.jpg" alt="T-Shirt" loading="lazy" />
-      </div>
-      <div class="card-info">
-        <div>
-          <div class="card-name">T-Shirt</div>
-          <div class="card-sub">Limited Edition</div>
-        </div>
-      </div>
-    </div>
-    <div class="card merch-card">
-      <div class="card-img" style="background:#f7f7f7">
-        <img src="images/merch-sweater.jpg" alt="Sweater" loading="lazy" />
-      </div>
-      <div class="card-info">
-        <div>
-          <div class="card-name">Sweater</div>
-          <div class="card-sub">Limited Edition &middot; Reverse Weave</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- STORY -->
-<section class="shop" id="story">
-  <div class="shop-head">
-    <span class="shop-title">About</span>
-  </div>
-  <div class="story-split">
-    <div class="story-facts">
-      <div class="story-fact">
-        <div class="story-fact-h">Berlin</div>
-        <p>A neighborhood place with underground roots. Roasts once a week, delivers on Thursdays.</p>
-      </div>
-      <div class="story-fact">
-        <div class="story-fact-h">Los Angeles</div>
-        <p>821 Traction Ave, in the Arts District. Roasts every second Tuesday morning, in larger batches.</p>
-      </div>
-      <div class="story-fact">
-        <div class="story-fact-h">Roasting</div>
-        <p>Espresso and a single origin filter in both cities. Green is bought by Benjamin and arrives every four to five weeks, which is availability rather than schedule.</p>
-      </div>
-      <a class="story-more" href="about.html">About &rarr;</a>
-    </div>
-    <div class="story-img">
-      <img src="images/about-espresso-bar.jpg" alt="An espresso bar, mid century" loading="lazy" />
-    </div>
-  </div>
+  <div class="sp-grid" id="more-grid"></div>
 </section>
 
 <!-- FOOTER -->
@@ -1329,28 +1277,6 @@
 </footer>
 
 <script>
-
-  // Hero slideshow. Five seconds a frame, paused when the tab is in the
-  // background, and left alone entirely for anyone who has asked the system
-  // to reduce motion.
-  (function () {
-    const slides = [...document.querySelectorAll('#hero-slides .slide')];
-    if (slides.length < 2) return;
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    let i = 0, timer = null;
-    const step = () => {
-      slides[i].classList.remove('on');
-      i = (i + 1) % slides.length;
-      slides[i].classList.add('on');
-    };
-    const start = () => { if (!timer) timer = setInterval(step, 5000); };
-    const stop = () => { clearInterval(timer); timer = null; };
-
-    document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
-    start();
-  })();
-
   // Nav sheet. Plain script rather than part of the Shopify module, so the
   // Visit page can use the same markup without carrying the storefront code.
   function toggleNav(force) {
@@ -1371,98 +1297,99 @@
 </script>
 
 <script type="module">
-  /* The homepage sells from one grid. Everything that talks to Shopify, the
-     bag and the quick add panel live in shopify.js, which the shop page and
-     the product pages load as well. */
+  /* One page for every product: product.html?p=<handle>. The catalogue is five
+     coffees and it is already loaded for the grids, so the page picks its
+     product out of that rather than asking Shopify a second question. */
   import {
-    initStore, esc, formatPrice, productName, productSizes, productHref,
-    getProductImage, getBeanImage, variants, CONCEPTS,
+    initStore, esc, formatPrice, productName, productSizes, productHref, usWeight,
+    getProductImage, variants, variantSize, shopCardHTML, addToCartHandler,
   } from './shopify.js';
 
-  function renderConcepts() {
-    return CONCEPTS.map(c => `
-        <div class="card shop-card concept-card">
-          <div class="card-img">
-            <img class="card-base" src="${c.img}" alt="${esc(c.name)}" loading="lazy" />
-            <div class="card-face">
-              <div class="card-blend">${esc(c.name)}</div>
-              <div>
-                <div class="card-meta">
-                  <span>${esc(c.note)}</span>
-                  <span class="card-status">${esc(c.status)}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      `).join('');
+  const handle = new URLSearchParams(location.search).get('p');
+  let current = null, chosen = null;
+
+  function missing() {
+    document.getElementById('pd-body').innerHTML = `
+      <div class="pd-missing">
+        <div class="pd-name">Not in the shop.</div>
+        <p class="pd-desc">That coffee is not in the shop just now. The rest of it is on the <a href="shop.html" style="border-bottom:1px solid #ddd">shop page</a>.</p>
+      </div>`;
   }
 
-  function renderProducts(products) {
-    const grid = document.getElementById('product-grid');
-    if (!products.length) {
-      grid.innerHTML = '<p style="color:#6f6f6f;font-size:11px;grid-column:1/-1;padding:24px 0">No products found.</p>'
-                     + renderConcepts();
-      return;
-    }
-
-    grid.innerHTML = products.map(p => {
-      const price = formatPrice(p.priceRange.minVariantPrice.amount, p.priceRange.minVariantPrice.currencyCode);
-      const sizes = productSizes(p);
-      const name = productName(p);
-
-      const vs = variants(p);
-      const only = vs.length === 1 ? vs[0] : null;
-      const sellable = only ? only.availableForSale : vs.some(v => v.availableForSale);
-      // One size adds straight to the bag. More than one has to be chosen, so
-      // the button opens the quick add panel instead of guessing.
-      const cta = !sellable ? 'Sold out'
-                : only ? `Buy ${esc(name)} \u2014 ${price}`
-                : `Choose size \u2014 from ${price}`;
-      // The short form for a two-up phone card. Same meaning, no product name:
-      // the name is already set across the top of the same card.
-      const ctaTight = !sellable ? 'Sold out'
-                     : only ? `Buy \u00b7 ${price}`
-                     : 'Choose size';
-      const action = only ? `addToCartHandler('${only.id}')` : `openProduct('${p.id}')`;
-
-      return `
-        <div class="card shop-card" onclick="openProduct('${p.id}')">
-          <div class="card-img">
-            <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}" />
-            <img class="card-alt" src="${getBeanImage(p)}" alt="" aria-hidden="true" loading="lazy" />
-            <div class="card-face">
-              <div class="card-blend">${esc(name)}</div>
-              <div>
-                <div class="card-meta">
-                  <span>${esc(sizes.join(' / '))}</span>
-                  <span>${price}</span>
-                </div>
-                <button class="card-cta" ${sellable ? '' : 'disabled'} aria-label="${cta}"
-                  onclick="event.stopPropagation(); ${sellable ? action : ''}"><span class="cta-full" aria-hidden="true">${cta}</span><span class="cta-tight" aria-hidden="true">${ctaTight}</span></button>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('') + renderConcepts();
-  }
-
-  function renderFooterLinks(products) {
-    // These were href="#", which jumped to the top of the page, and then an
-    // overlay. They are links to the product's own page now.
+  function render(products) {
     document.getElementById('footer-links').innerHTML = products
       .map(p => `<li><a href="${productHref(p)}">${esc(productName(p))}</a></li>`).join('');
+
+    current = products.find(p => p.handle === handle) || null;
+    if (!current) { missing(); showMore(products, null); return; }
+
+    document.title = `${productName(current)} \u2014 Concierge Coffee`;
+
+    const vs = variants(current);
+    chosen = vs.find(v => v.availableForSale) || vs[0] || null;
+    const images = current.images.edges.map(e => e.node);
+    const main = getProductImage(current);
+    const desc = String(current.description || '').trim();
+
+    document.getElementById('pd-body').innerHTML = `
+      <div class="pd-split">
+        <div>
+          <div class="pd-main"><img id="pd-img" src="${esc(main)}" alt="${esc(current.title)}" /></div>
+          ${images.length > 1 ? `<div class="pd-thumbs">${images.slice(0, 4).map(im =>
+            `<button class="pd-thumb" onclick="pdSwap('${esc(im.url)}')" aria-label="Show another picture"><img src="${esc(im.url)}" alt="" /></button>`).join('')}</div>` : ''}
+        </div>
+        <div class="pd-detail">
+          <h1 class="pd-name">${esc(productName(current))}</h1>
+          <div class="pd-price" id="pd-price"></div>
+          ${desc ? `<p class="pd-desc">${esc(usWeight(desc))}</p>` : ''}
+          <div class="pd-sizes">${esc(productSizes(current).join(' / '))}</div>
+          <div class="qa-field">
+            <label class="qa-lbl" for="pd-size">Select size</label>
+            <select class="qa-sel" id="pd-size" onchange="pdSelect(this.value)">
+              ${vs.map(v => `<option value="${esc(v.id)}"${v.id === chosen?.id ? ' selected' : ''}${v.availableForSale ? '' : ' disabled'}>${
+                esc(variantSize(v) === 'Default Title' ? 'One size' : variantSize(v))}${v.availableForSale ? '' : ' \u00b7 Sold out'}</option>`).join('')}
+            </select>
+          </div>
+          <div class="qa-field">
+            <label class="qa-lbl" for="pd-qty">Quantity</label>
+            <select class="qa-sel" id="pd-qty">${[1,2,3,4,5,6,7,8,9,10].map(n => `<option>${n}</option>`).join('')}</select>
+          </div>
+          <button class="atc" id="pd-atc" onclick="pdAdd()">Add to Cart</button>
+        </div>
+      </div>`;
+
+    if (vs.length < 2) document.getElementById('pd-size').disabled = true;
+    price();
+    showMore(products, current);
   }
 
-  window.scrollToMenu = () => document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
+  function price() {
+    const el = document.getElementById('pd-price');
+    const btn = document.getElementById('pd-atc');
+    if (!el || !chosen) return;
+    el.textContent = formatPrice(chosen.price.amount);
+    btn.disabled = !chosen.availableForSale;
+    btn.textContent = chosen.availableForSale ? 'Add to Cart' : 'Sold out';
+  }
 
-  initStore({
-    render(products) {
-      renderProducts(products);
-      renderFooterLinks(products);
-    },
-  });
+  function showMore(products, exclude) {
+    const rest = products.filter(p => p !== exclude);
+    if (!rest.length) return;
+    document.getElementById('more').hidden = false;
+    document.getElementById('more-grid').innerHTML = rest.slice(0, 3).map(shopCardHTML).join('');
+  }
+
+  window.pdSwap = url => { document.getElementById('pd-img').src = url; };
+  window.pdSelect = id => { chosen = variants(current).find(v => v.id === id) || chosen; price(); };
+  window.pdAdd = async () => {
+    if (!chosen || !chosen.availableForSale) return;
+    const btn = document.getElementById('pd-atc');
+    btn.disabled = true; btn.textContent = 'Adding...';
+    await addToCartHandler(chosen.id, document.getElementById('pd-qty').value);
+    btn.disabled = false; btn.textContent = 'Add to Cart';
+  };
+
+  initStore({ render });
 </script>
 </body>
 </html>
