@@ -620,8 +620,6 @@
   }
 
   .menu-note { font-size: 10px; color: var(--muted); }
-  /* the rail carries no scrollbar, so the note says which way it goes */
-  .menu-note::after { content: '   \2190 \2192'; letter-spacing: 0.2em; }
 
   /* ── FEATURE BAND ──
      One photograph across the width of the section with the type overlaid at
@@ -684,12 +682,13 @@
     align-items: stretch;
     column-gap: var(--card-gap);
   }
-  /* Square, at half the section width. The portrait source is 3/4, so a
-     square frame trims a sixth off the top and a sixth off the bottom --
-     centred, which keeps the cup whole and the glasses in shot. This is the
-     one place on the page where a decided shape wins over the source's own,
-     because the height of a full-height portrait ran past the section. */
-  .feature--split .card-img { aspect-ratio: 1/1; }
+  /* 4/5 -- the ratio of the picture itself, so cover crops nothing. The file
+     is the original Instagram frame now rather than the 900x1200 crop the site
+     had been carrying, which is why the phone and the sunglasses finally sit
+     inside the frame with air around them instead of running off the edge.
+     Every square or portrait shape tried before this was trimming a picture
+     that was already trimmed. */
+  .feature--split .card-img { aspect-ratio: 4/5; }
 
   .feature--split .feature-face {
     position: static;
@@ -709,33 +708,16 @@
     margin-top: 26px;
   }
 
-  /* ── DRINK RAIL ──
-     Eight drinks in a four-up grid read as a second shop. A rail scrolls
-     across instead of down, which is the one direction the rest of the page
-     does not use. The track is a fixed width rather than minmax(0, ...): a
-     track with a zero minimum is compressed back to fit the container and the
-     rail silently stops scrolling. */
+  /* ── DRINK GRID ──
+     Four up, every card the same size, the row ending exactly on the section
+     gutter. The rail this replaces cut its last card at the edge as a scroll
+     affordance; read as a broken grid instead, which is a fair verdict when
+     every other block on the page ends flush. */
   .menu-grid {
     display: grid;
-    grid-template-columns: none;
-    grid-auto-flow: column;
-    /* Tracks are a fraction of the CONTAINER, not of the viewport. 25vw plus a
-       negative margin ran the rail out to the window edge while every other
-       block on the page stopped at the 32px gutter, which reads as a broken
-       grid rather than as a scroll affordance -- and vw includes the scrollbar
-       width in Chrome, so on a desktop with classic scrollbars it pushed the
-       whole document sideways. Three and a half cards fit, so the half card is
-       cut by the section edge instead: same affordance, correct width. */
-    grid-auto-columns: calc((100% - 3 * var(--card-gap)) / 3.5);
+    grid-template-columns: repeat(4, 1fr);
     gap: var(--card-gap);
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x proximity;
-    scrollbar-width: none;
   }
-  .menu-grid::-webkit-scrollbar { display: none; }
-  .menu-grid:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
-  .menu-card { scroll-snap-align: start; }
 
   .menu-sub {
     font-size: 9px;
@@ -841,11 +823,11 @@
     :root { --section-gap: 104px; --head-gap: 22px; --card-gap: 14px; }
     nav, .hero, .shop, footer { padding-left: 24px; padding-right: 24px; }
     .grid { grid-template-columns: repeat(3, 1fr); }
-    .menu-grid { grid-auto-columns: calc((100% - 2 * var(--card-gap)) / 2.5); }
+    .menu-grid { grid-template-columns: repeat(3, 1fr); }
     .feature .card-img { aspect-ratio: 3/2; }
     /* restated, not inherited: .feature .card-img sits later in the file at
-       the same specificity, so without this the square becomes 3/2 here */
-    .feature--split .card-img { aspect-ratio: 1/1; }
+       the same specificity, so without this it becomes 3/2 here */
+    .feature--split .card-img { aspect-ratio: 4/5; }
     .feature--wide .card-img { aspect-ratio: 16/9; }
     .feature-face { padding: 26px 24px; }
     .feature--split .feature-face { padding: 0 24px; }
@@ -894,19 +876,20 @@
     .hero-hours { text-align: left; align-self: flex-start; }
     .shop { padding-bottom: var(--section-gap); }
     .grid { grid-template-columns: repeat(2, 1fr); }
-    .menu-grid { grid-auto-columns: calc((100% - 1 * var(--card-gap)) / 1.6); }
+    .menu-grid { grid-template-columns: repeat(2, 1fr); }
     /* a feature on a phone wants height, not width, and 4/5 is close to
        the native crop so it barely crops at all */
     .feature .card-img { aspect-ratio: 4/5; }
-    /* the split stays square here too: the same rule, later in the file,
-       otherwise re-shapes the stacked picture */
-    .feature--split .card-img { aspect-ratio: 1/1; }
+    /* restated here too, for the same reason */
+    .feature--split .card-img { aspect-ratio: 4/5; }
     .feature--wide .card-img { aspect-ratio: 4/3; }
     .feature-face { padding: 18px 16px; }
     .feature-cat { max-width: none; }
-    /* stacked: picture, then type under it on white. Square, so full width
-       is 736 tall at most rather than the 981 a portrait frame would give. */
+    /* stacked: picture, then type under it on white. Capped, because at 736
+       wide an uncropped 4/5 picture is 920 tall -- a whole screen for one
+       drink. The cap sizes it without cropping anything back off. */
     .feature--split { grid-template-columns: 1fr; }
+    .feature--split .card-img { max-width: 640px; }
     .feature--split .feature-face { padding: 16px 0 0; }
     .feature--split .feature-cat { max-width: none; margin-top: 8px; }
     .feature--split .feature-note { margin-top: 14px; }
@@ -927,7 +910,7 @@
     .logo .lk { width: 20.1px; height: 16px; }
     .logo .lw { width: 60.7px; height: 13px; }
     .shop-head { padding-bottom: var(--head-gap); }
-    .menu-grid { grid-auto-columns: calc((100% - 1 * var(--card-gap)) / 1.25); }
+    .menu-grid { grid-template-columns: repeat(2, 1fr); }
 
     /* Shop card at two up. The face has to carry a name, a size, a price and
        a button in about 145px of usable width. */
@@ -1134,10 +1117,7 @@
       <div class="feature-note">Served at 821 Traction Ave</div>
     </div>
   </div>
-  <!-- tabindex and role so the rail is reachable and announced: four of the
-       seven cards are plain divs with nothing focusable inside, so without
-       this a keyboard could not scroll it. -->
-  <div class="menu-grid" tabindex="0" role="region" aria-label="Coffee specialties, scroll sideways">
+  <div class="menu-grid">
     <div class="card menu-card">
       <div class="card-img">
         <img src="images/drink-einspanner.jpg" alt="Einspänner" loading="lazy" />
@@ -1183,6 +1163,16 @@
       <div class="card-info">
         <div class="card-name">Hojicha Latte</div>
         <div class="card-cat">Roasted green tea, milk</div>
+      </div>
+    </a>
+    <a class="card menu-card" href="https://www.instagram.com/cafe.planes/p/DV6UxqekjoI/" target="_blank" rel="noopener noreferrer">
+      <div class="card-img">
+        <img src="images/drink-flat-white.jpg" alt="Flat White" loading="lazy" />
+        <div class="menu-credit"><span>Photograph @cafe.planes ↗</span></div>
+      </div>
+      <div class="card-info">
+        <div class="card-name">Flat White</div>
+        <div class="card-cat">Double espresso, steamed milk</div>
       </div>
     </a>
   </div>
