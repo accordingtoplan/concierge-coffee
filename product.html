@@ -1052,12 +1052,6 @@
   }
   .sp-intro { font-size: 12px; line-height: 1.85; color: var(--muted); max-width: 46ch; margin-top: 18px; }
 
-  /* Sections rather than filters: five coffees do not need faceting, and a
-     filter bar over a catalogue this size is furniture. */
-  .sp-index { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 30px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
-  .sp-index a { color: var(--muted); border-bottom: 1px solid #eee; padding-bottom: 3px; transition: color 0.15s, border-color 0.15s; }
-  .sp-index a:hover { color: #111; border-color: #111; }
-
   /* Four up, like the grid on the homepage: five coffees and four merch
      items is a catalogue, and a catalogue wants to be seen at once. The
      sections that hold three cards run three up so neither ends on an orphan. */
@@ -1069,9 +1063,15 @@
   /* 4/5 against sources that are 3/4 and 4/5: a square would cut a
      quarter off a standing bag, and 3/4 towers at this width. */
   .sp-card .card-img { aspect-ratio: 4/5; }
-  .sp-card .card-alt { position: absolute; inset: 0; opacity: 0; transition: opacity 0.4s ease; }
-  .sp-card:hover .card-alt { opacity: 1; }
-  .sp-card:hover .card-base { opacity: 0; }
+
+  /* ── ONE HOVER ──
+     Every card on this page answers the same way: the picture eases up a
+     little, nothing else. The coffee used to crossfade to a bean shot while
+     the merch and the proposals did nothing at all, which read as three
+     different kinds of card rather than one catalogue. The bean swap stays on
+     the homepage, where it is one device on one grid. */
+  .sp-card .card-img img { transition: transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+  .sp-card:hover .card-img img { transform: scale(1.04); }
   .sp-name { font-family: var(--serif); font-size: 18px; line-height: 1.2; margin-top: 14px; }
   .sp-sub { font-size: 11px; line-height: 1.7; color: var(--muted); margin-top: 6px; max-width: 36ch; }
   .sp-foot {
@@ -1103,7 +1103,6 @@
     font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
   }
   .sp-card--static { cursor: default; }
-  .sp-card--static:hover .card-img img { transform: none; }
 
   /* The Porsche is a landscape render on white and the lead of the section, so
      it takes two columns at its own ratio instead of being cropped into a
@@ -1129,7 +1128,6 @@
   }
 
   @media (max-width: 480px) {
-    .sp-index { gap: 16px; }
     .sp-name { font-size: 13px; }
     .sp-add { padding: 12px 8px; }
   }

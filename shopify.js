@@ -190,7 +190,6 @@ export function shopCardHTML(p) {
       <a class="sp-hit" href="${productHref(p)}">
         <div class="card-img">
           <img class="card-base" src="${esc(getProductImage(p))}" alt="${esc(p.title)}" loading="lazy" />
-          <img class="card-alt" src="${getBeanImage(p)}" alt="" aria-hidden="true" loading="lazy" />
         </div>
         <div class="sp-name">${esc(productName(p))}</div>
         ${desc ? `<p class="sp-sub">${esc(usWeight(desc))}</p>` : ''}
@@ -213,7 +212,9 @@ const CHROME = `
     <div class="qa-panel">
       <div class="qa-top">
         <button class="qa-back" onclick="closePdp()">&larr; Back</button>
-        <a class="qa-details" id="pdp-details" href="#">See Full Details</a>
+        <!-- rewritten to the product page every time the panel opens; the
+             shop is the fallback, because a bare hash jumps to the top -->
+        <a class="qa-details" id="pdp-details" href="shop.html">See Full Details</a>
       </div>
       <div class="qa-name" id="pdp-name"></div>
       <div class="qa-price" id="pdp-price"></div>
