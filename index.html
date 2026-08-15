@@ -640,7 +640,7 @@
   }
   .feature .card-img { aspect-ratio: 16/9; }
   .feature--wide .card-img { aspect-ratio: 2/1; }
-  /* the render is 1/1 on white; a 2/1 band would be mostly empty paper */
+  /* the render is 16/9 on white, so this crops nothing at all */
   .feature--onwhite .card-img { aspect-ratio: 16/9; }
   .feature .card-img img { transition: transform 0.9s cubic-bezier(0.22,1,0.36,1); }
   .feature:hover .card-img img { transform: scale(1.03); }
@@ -1221,8 +1221,10 @@
   <div class="shop-head">
     <span class="shop-title">Merch</span>
   </div>
-  <!-- The render is a 1000x1000 studio frame on white, so the type cannot sit
-       over it the way it did on the old dark photograph. It reads beneath. -->
+  <!-- The Concierge livery render, 1672x941. Exactly 16/9, so the band crops
+       nothing at desktop; the narrower ratios below only take white off the
+       sides. Type reads beneath: a render on paper has nothing for white type
+       to sit on the way a dark photograph did. -->
   <div class="feature feature--wide feature--onwhite">
     <div class="card-img" style="background:#fff">
       <img src="images/merch-rc-car-1.jpg" alt="Porsche 911 Carrera RSR in Concierge livery" />
