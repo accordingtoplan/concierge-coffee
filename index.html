@@ -117,7 +117,19 @@
 
 
   /* ── HERO ── */
-  .hero { padding: 24px 32px var(--section-gap); }
+  /* ── PAGE CEILING ──
+     The layout had none, so it did not get better on a large display, only
+     bigger: at 2560 a product card measures 612x816 and the hero is 1092
+     tall. Content stops at 1600 and centres. Written as padding rather than
+     max-width so the nav and footer rules still run edge to edge -- capping
+     the elements would have cut those short. Below 1664 the max() picks the
+     32px gutter and nothing changes. */
+  nav, .hero, .shop, footer {
+    padding-left: max(32px, calc((100% - 1600px) / 2));
+    padding-right: max(32px, calc((100% - 1600px) / 2));
+  }
+
+  .hero { padding-top: 24px; padding-bottom: var(--section-gap); }
 
   .hero-img {
     position: relative;
@@ -195,7 +207,7 @@
   .hero-hours span { font-size: 11px; color: var(--muted); }
 
   /* ── SHOP ── */
-  .shop { padding: 0 32px var(--section-gap); }
+  .shop { padding-top: 0; padding-bottom: var(--section-gap); }
 
   .shop-head {
     display: flex;
@@ -547,7 +559,8 @@
 
   /* ── FOOTER ── */
   footer {
-    padding: 48px 32px;
+    padding-top: 48px;
+    padding-bottom: 48px;
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 48px;
@@ -667,19 +680,16 @@
      sections still open differently. */
   .feature--split {
     display: grid;
-    /* Not an even split. The picture is shown at its own 3/4 ratio, so its
-       height follows its width -- half the page made it 907px tall at 1440,
-       taller than the section it leads. A narrower picture column brings it
-       down to about 660 without cropping anything back off. */
-    grid-template-columns: 4fr 7fr;
+    grid-template-columns: 1fr 1fr;
     align-items: stretch;
     column-gap: var(--card-gap);
   }
-  /* 3/4 is the source's own ratio, so cover crops nothing at all: the
-     picture is shown whole rather than trimmed to a decided shape. Note
-     the file is itself already a tight crop of a wider original --
-     showing more than this needs the original, not more CSS. */
-  .feature--split .card-img { aspect-ratio: 3/4; }
+  /* Square, at half the section width. The portrait source is 3/4, so a
+     square frame trims a sixth off the top and a sixth off the bottom --
+     centred, which keeps the cup whole and the glasses in shot. This is the
+     one place on the page where a decided shape wins over the source's own,
+     because the height of a full-height portrait ran past the section. */
+  .feature--split .card-img { aspect-ratio: 1/1; }
 
   .feature--split .feature-face {
     position: static;
@@ -833,9 +843,10 @@
     .grid { grid-template-columns: repeat(3, 1fr); }
     .menu-grid { grid-auto-columns: calc((100% - 2 * var(--card-gap)) / 2.5); }
     .feature .card-img { aspect-ratio: 3/2; }
+    /* restated, not inherited: .feature .card-img sits later in the file at
+       the same specificity, so without this the square becomes 3/2 here */
+    .feature--split .card-img { aspect-ratio: 1/1; }
     .feature--wide .card-img { aspect-ratio: 16/9; }
-    .feature--split { grid-template-columns: 1fr 1fr; }
-    .feature--split .card-img { aspect-ratio: 3/4; }
     .feature-face { padding: 26px 24px; }
     .feature--split .feature-face { padding: 0 24px; }
     footer { grid-template-columns: 1fr 1fr; gap: 36px; }
@@ -887,17 +898,15 @@
     /* a feature on a phone wants height, not width, and 4/5 is close to
        the native crop so it barely crops at all */
     .feature .card-img { aspect-ratio: 4/5; }
-    /* the split keeps the source ratio here too: same rule, later in the
-       file, was quietly re-cropping the stacked picture */
-    .feature--split .card-img { aspect-ratio: 3/4; }
+    /* the split stays square here too: the same rule, later in the file,
+       otherwise re-shapes the stacked picture */
+    .feature--split .card-img { aspect-ratio: 1/1; }
     .feature--wide .card-img { aspect-ratio: 4/3; }
     .feature-face { padding: 18px 16px; }
     .feature-cat { max-width: none; }
-    /* stacked: picture, then type under it on white. Capped, because at 736
-       wide an uncropped 3/4 picture is 981px -- a whole screen for one drink.
-       The cap sizes the height without cropping anything back off. */
+    /* stacked: picture, then type under it on white. Square, so full width
+       is 736 tall at most rather than the 981 a portrait frame would give. */
     .feature--split { grid-template-columns: 1fr; }
-    .feature--split .card-img { max-width: 460px; }
     .feature--split .feature-face { padding: 16px 0 0; }
     .feature--split .feature-cat { max-width: none; margin-top: 8px; }
     .feature--split .feature-note { margin-top: 14px; }

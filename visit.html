@@ -59,7 +59,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 32px;
     height: 48px;
   }
 
@@ -173,7 +172,8 @@
 
   /* DETAILS STRIP */
   .details {
-    padding: 0 32px var(--section-gap);
+    padding-top: 0;
+    padding-bottom: var(--section-gap);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: var(--card-gap);
@@ -201,7 +201,8 @@
 
   /* PHOTO GRID */
   .photo-grid {
-    padding: 0 32px var(--section-gap);
+    padding-top: 0;
+    padding-bottom: var(--section-gap);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--card-gap);
@@ -234,7 +235,8 @@
 
   /* FOOTER */
   footer {
-    padding: 48px 32px;
+    padding-top: 48px;
+    padding-bottom: 48px;
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 48px;
@@ -282,6 +284,16 @@
     justify-content: space-between;
     font-size: 10px;
     color: var(--muted);
+  }
+
+  /* ── PAGE CEILING ──
+     The layout had none, so it did not get better on a large display, only
+     bigger. Content stops at 1600 and centres. Written as padding rather than
+     max-width so the nav and footer rules still run edge to edge. Below 1664
+     the max() picks the 32px gutter and nothing changes. */
+  nav, .visit-hero, .details, .photo-grid, .arr-intro, .arr-rule, .arr-block, .arr-cta, footer {
+    padding-left: max(32px, calc((100% - 1600px) / 2));
+    padding-right: max(32px, calc((100% - 1600px) / 2));
   }
 
   /* ── RESPONSIVE ──
