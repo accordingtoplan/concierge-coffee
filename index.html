@@ -671,7 +671,11 @@
     align-items: stretch;
     column-gap: var(--card-gap);
   }
-  .feature--split .card-img { aspect-ratio: 1/1; }
+  /* 3/4 is the source's own ratio, so cover crops nothing at all: the
+     picture is shown whole rather than trimmed to a decided shape. Note
+     the file is itself already a tight crop of a wider original --
+     showing more than this needs the original, not more CSS. */
+  .feature--split .card-img { aspect-ratio: 3/4; }
 
   .feature--split .feature-face {
     position: static;
@@ -701,16 +705,19 @@
     display: grid;
     grid-template-columns: none;
     grid-auto-flow: column;
-    grid-auto-columns: 25vw;
+    /* Tracks are a fraction of the CONTAINER, not of the viewport. 25vw plus a
+       negative margin ran the rail out to the window edge while every other
+       block on the page stopped at the 32px gutter, which reads as a broken
+       grid rather than as a scroll affordance -- and vw includes the scrollbar
+       width in Chrome, so on a desktop with classic scrollbars it pushed the
+       whole document sideways. Three and a half cards fit, so the half card is
+       cut by the section edge instead: same affordance, correct width. */
+    grid-auto-columns: calc((100% - 3 * var(--card-gap)) / 3.5);
     gap: var(--card-gap);
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x proximity;
     scrollbar-width: none;
-    /* bleed into the gutter so a card is cut by the page edge and the rail
-       reads as scrollable without a scrollbar or an instruction */
-    margin-right: -32px;
-    padding-right: 32px;
   }
   .menu-grid::-webkit-scrollbar { display: none; }
   .menu-grid:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
@@ -820,10 +827,10 @@
     :root { --section-gap: 104px; --head-gap: 22px; --card-gap: 14px; }
     nav, .hero, .shop, footer { padding-left: 24px; padding-right: 24px; }
     .grid { grid-template-columns: repeat(3, 1fr); }
-    .menu-grid { grid-auto-columns: 34vw; margin-right: -24px; padding-right: 24px; }
+    .menu-grid { grid-auto-columns: calc((100% - 2 * var(--card-gap)) / 2.5); }
     .feature .card-img { aspect-ratio: 3/2; }
     .feature--wide .card-img { aspect-ratio: 16/9; }
-    .feature--split .card-img { aspect-ratio: 4/5; }
+    .feature--split .card-img { aspect-ratio: 3/4; }
     .feature-face { padding: 26px 24px; }
     .feature--split .feature-face { padding: 0 24px; }
     footer { grid-template-columns: 1fr 1fr; gap: 36px; }
@@ -871,7 +878,7 @@
     .hero-hours { text-align: left; align-self: flex-start; }
     .shop { padding-bottom: var(--section-gap); }
     .grid { grid-template-columns: repeat(2, 1fr); }
-    .menu-grid { grid-auto-columns: 62vw; margin-right: -16px; padding-right: 16px; }
+    .menu-grid { grid-auto-columns: calc((100% - 1 * var(--card-gap)) / 1.6); }
     /* a feature on a phone wants height, not width, and 4/5 is close to
        the native crop so it barely crops at all */
     .feature .card-img { aspect-ratio: 4/5; }
@@ -900,7 +907,7 @@
     .logo .lk { width: 20.1px; height: 16px; }
     .logo .lw { width: 60.7px; height: 13px; }
     .shop-head { padding-bottom: var(--head-gap); }
-    .menu-grid { grid-auto-columns: 68vw; margin-right: -14px; padding-right: 14px; }
+    .menu-grid { grid-auto-columns: calc((100% - 1 * var(--card-gap)) / 1.25); }
 
     /* Shop card at two up. The face has to carry a name, a size, a price and
        a button in about 145px of usable width. */
@@ -1022,7 +1029,6 @@
 <section class="hero">
   <div class="hero-img" id="hero-slides">
     <img class="slide on" src="images/hero.jpeg" alt="Concierge Coffee, the bar at 821 Traction Ave" />
-    <img class="slide shift-up" src="images/hero-room.jpg" alt="The room at Traction Ave" loading="lazy" />
     <img class="slide shift-up" src="images/hero-courtyard.jpg" alt="The courtyard" loading="lazy" />
     <img class="slide shift-up" src="images/hero-mirror.jpg" alt="The front room" loading="lazy" />
   </div>
@@ -1119,26 +1125,6 @@
       <div class="card-info">
         <div class="card-name">Einspänner</div>
         <div class="card-cat">Cold brew, double espresso, chocolate, smoked salt, cream top</div>
-      </div>
-    </div>
-    <a class="card menu-card" href="https://www.instagram.com/cafe.planes/p/DV6UxqekjoI/" target="_blank" rel="noopener noreferrer">
-      <div class="card-img">
-        <img src="images/drink-flat-white.jpg" alt="Flat White" loading="lazy" />
-        <div class="menu-credit"><span>Photograph @cafe.planes ↗</span></div>
-      </div>
-      <div class="card-info">
-        <div class="card-name">Flat White</div>
-        <div class="card-cat">Double espresso, steamed milk</div>
-      </div>
-    </a>
-    <div class="card menu-card">
-      <div class="card-img">
-        <img src="images/drink-banana-cream-matcha.jpg" alt="Banana Cream Matcha" loading="lazy" />
-        <div class="menu-credit"><span>Photograph @conciergecoffee</span></div>
-      </div>
-      <div class="card-info">
-        <div class="card-name">Banana Cream Matcha</div>
-        <div class="card-cat">Matcha, banana cream, nutmeg, milk of choice</div>
       </div>
     </div>
     <div class="card menu-card">
