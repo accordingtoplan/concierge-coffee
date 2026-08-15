@@ -640,6 +640,8 @@
   }
   .feature .card-img { aspect-ratio: 16/9; }
   .feature--wide .card-img { aspect-ratio: 2/1; }
+  /* the render is 1/1 on white; a 2/1 band would be mostly empty paper */
+  .feature--onwhite .card-img { aspect-ratio: 16/9; }
   .feature .card-img img { transition: transform 0.9s cubic-bezier(0.22,1,0.36,1); }
   .feature:hover .card-img img { transform: scale(1.03); }
 
@@ -688,7 +690,7 @@
      inside the frame with air around them instead of running off the edge.
      Every square or portrait shape tried before this was trimming a picture
      that was already trimmed. */
-  .feature--split .card-img { aspect-ratio: 4/5; }
+  .feature--split .card-img { aspect-ratio: 1/1; }
 
   .feature--split .feature-face {
     position: static;
@@ -827,8 +829,9 @@
     .feature .card-img { aspect-ratio: 3/2; }
     /* restated, not inherited: .feature .card-img sits later in the file at
        the same specificity, so without this it becomes 3/2 here */
-    .feature--split .card-img { aspect-ratio: 4/5; }
+    .feature--split .card-img { aspect-ratio: 1/1; }
     .feature--wide .card-img { aspect-ratio: 16/9; }
+    .feature--onwhite .card-img { aspect-ratio: 3/2; }
     .feature-face { padding: 26px 24px; }
     .feature--split .feature-face { padding: 0 24px; }
     footer { grid-template-columns: 1fr 1fr; gap: 36px; }
@@ -881,8 +884,9 @@
        the native crop so it barely crops at all */
     .feature .card-img { aspect-ratio: 4/5; }
     /* restated here too, for the same reason */
-    .feature--split .card-img { aspect-ratio: 4/5; }
+    .feature--split .card-img { aspect-ratio: 1/1; }
     .feature--wide .card-img { aspect-ratio: 4/3; }
+    .feature--onwhite .card-img { aspect-ratio: 4/3; }
     .feature-face { padding: 18px 16px; }
     .feature-cat { max-width: none; }
     /* stacked: picture, then type under it on white. Capped, because at 736
@@ -956,9 +960,41 @@
 
   @media (max-width: 480px) {
     #merch .card-name { font-size: 11px; }
+    #story .story-line { flex-direction: column; gap: 6px; }
     #merch .card-sub { display: none; }
     #merch .card-info { padding: 8px 0 0; }
   }
+
+  /* ── STORY PAIR ──
+     Two square frames after merch, and one line pointing at the About page.
+     Square because the two photographs are 1/1 and 4/5 and only a square makes
+     them read as a pair rather than as two loose pictures. */
+  #story .grid--pair { grid-template-columns: repeat(2, 1fr); }
+  #story .card-img { aspect-ratio: 1/1; }
+  #story .story-card { cursor: default; }
+  #story .story-card:hover .card-img img { transform: none; }
+
+  .story-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding-top: 14px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .story-line a { color: #111; border-bottom: 1px solid #eee; transition: border-color 0.15s; }
+  .story-line a:hover { border-color: #111; }
+
+  /* A studio render on white cannot carry white type over a scrim, so this
+     variant drops the overlay and sets the name beneath the picture. */
+  .feature--onwhite .feature-face {
+    position: static;
+    background: none;
+    color: #111;
+    padding: 14px 0 0;
+  }
+  .feature--onwhite .feature-cat { color: var(--muted); max-width: none; }
 
   /* ── TOUCH ──
      There is no hover on a phone, so anything that only appears on hover would
@@ -1020,6 +1056,7 @@
     <a onclick="scrollToMenu()">Menu</a>
     <a onclick="scrollToMerch()">Merch</a>
     <a href="arrangements.html">Arrangements</a>
+    <a href="about.html">About</a>
     <a href="visit.html">Visit</a>
     <a onclick="openCart()" id="bag-link">Bag (0)</a>
   </div>
@@ -1184,16 +1221,15 @@
   <div class="shop-head">
     <span class="shop-title">Merch</span>
   </div>
-  <div class="feature feature--wide">
-    <div class="card-img card-img--slide" style="background:#f7f7f7">
-      <img class="slide-img slide-img--1" src="images/merch-rc-car-1.jpg" alt="RC-Car"
-           style="object-position: center 45%" />
-      <img class="slide-img slide-img--2" src="images/merch-rc-car-2.jpg" alt="RC-Car"
-           style="object-position: center 45%" />
+  <!-- The render is a 1000x1000 studio frame on white, so the type cannot sit
+       over it the way it did on the old dark photograph. It reads beneath. -->
+  <div class="feature feature--wide feature--onwhite">
+    <div class="card-img" style="background:#fff">
+      <img src="images/merch-rc-car-1.jpg" alt="Porsche 911 Carrera RSR in Concierge livery" />
     </div>
     <div class="feature-face">
-      <div class="feature-name">RC-Car</div>
-      <div class="feature-cat">Limited Edition &middot; Custom Livery</div>
+      <div class="feature-name">Porsche 911 Carrera RSR</div>
+      <div class="feature-cat">TAMIYA &middot; Concierge Limited Special Edition &middot; Handmade</div>
     </div>
   </div>
   <div class="grid">
@@ -1233,6 +1269,22 @@
   </div>
 </section>
 
+<!-- STORY -->
+<section class="shop" id="story">
+  <div class="grid grid--pair">
+    <div class="card story-card">
+      <div class="card-img"><img src="images/founders-roastery.jpg" alt="At the roaster" loading="lazy" /></div>
+    </div>
+    <div class="card story-card">
+      <div class="card-img"><img src="images/founders-door.jpg" alt="At the door in Berlin" loading="lazy" /></div>
+    </div>
+  </div>
+  <div class="story-line">
+    <span>Los Angeles and Berlin, est. 2013.</span>
+    <a href="about.html">About &rarr;</a>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div class="ft-brand">
@@ -1255,7 +1307,7 @@
     <div class="ft-h">Merch</div>
     <ul class="ft-links">
       <li><a onclick="scrollToMerch()">Water Bottle</a></li>
-      <li><a onclick="scrollToMerch()">RC-Car</a></li>
+      <li><a onclick="scrollToMerch()">Porsche 911 RSR</a></li>
       <li><a onclick="scrollToMerch()">T-Shirt</a></li>
       <li><a onclick="scrollToMerch()">Sweater</a></li>
     </ul>
@@ -1265,6 +1317,7 @@
     <ul class="ft-links">
       <li><a onclick="scrollToMenu()">Menu</a></li>
       <li><a href="visit.html">Visit</a></li>
+      <li><a href="about.html">About</a></li>
       <li><a href="arrangements.html#wholesale">Wholesale</a></li>
       <li><a href="https://www.instagram.com/conciergecoffee/" target="_blank">Instagram</a></li>
     </ul>
