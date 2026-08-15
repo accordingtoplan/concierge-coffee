@@ -667,7 +667,11 @@
      sections still open differently. */
   .feature--split {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* Not an even split. The picture is shown at its own 3/4 ratio, so its
+       height follows its width -- half the page made it 907px tall at 1440,
+       taller than the section it leads. A narrower picture column brings it
+       down to about 660 without cropping anything back off. */
+    grid-template-columns: 4fr 7fr;
     align-items: stretch;
     column-gap: var(--card-gap);
   }
@@ -830,6 +834,7 @@
     .menu-grid { grid-auto-columns: calc((100% - 2 * var(--card-gap)) / 2.5); }
     .feature .card-img { aspect-ratio: 3/2; }
     .feature--wide .card-img { aspect-ratio: 16/9; }
+    .feature--split { grid-template-columns: 1fr 1fr; }
     .feature--split .card-img { aspect-ratio: 3/4; }
     .feature-face { padding: 26px 24px; }
     .feature--split .feature-face { padding: 0 24px; }
@@ -882,11 +887,17 @@
     /* a feature on a phone wants height, not width, and 4/5 is close to
        the native crop so it barely crops at all */
     .feature .card-img { aspect-ratio: 4/5; }
+    /* the split keeps the source ratio here too: same rule, later in the
+       file, was quietly re-cropping the stacked picture */
+    .feature--split .card-img { aspect-ratio: 3/4; }
     .feature--wide .card-img { aspect-ratio: 4/3; }
     .feature-face { padding: 18px 16px; }
     .feature-cat { max-width: none; }
-    /* the split stacks: picture, then type under it on white */
+    /* stacked: picture, then type under it on white. Capped, because at 736
+       wide an uncropped 3/4 picture is 981px -- a whole screen for one drink.
+       The cap sizes the height without cropping anything back off. */
     .feature--split { grid-template-columns: 1fr; }
+    .feature--split .card-img { max-width: 460px; }
     .feature--split .feature-face { padding: 16px 0 0; }
     .feature--split .feature-cat { max-width: none; margin-top: 8px; }
     .feature--split .feature-note { margin-top: 14px; }
