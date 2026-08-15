@@ -973,6 +973,11 @@
   #story .card-img { aspect-ratio: 1/1; }
   #story .story-card { cursor: default; }
   #story .story-card:hover .card-img img { transform: none; }
+  /* Black and white, as a filter rather than as a second set of files:
+     the colour originals stay in the repo and this is one line to undo.
+     The concept packshots are the other case, where greyscale carries
+     meaning and is baked into the image. */
+  #story .card-img img { filter: grayscale(1); }
 
   .story-line {
     display: flex;
@@ -1273,6 +1278,9 @@
 
 <!-- STORY -->
 <section class="shop" id="story">
+  <div class="shop-head">
+    <span class="shop-title">About</span>
+  </div>
   <div class="grid grid--pair">
     <div class="card story-card">
       <div class="card-img"><img src="images/founders-roastery.jpg" alt="At the roaster" loading="lazy" /></div>

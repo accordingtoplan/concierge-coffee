@@ -296,11 +296,27 @@
     padding-right: max(32px, calc((100% - 1600px) / 2));
   }
 
+  /* ── FOUNDER PAIR ──
+     The same two frames as the homepage, square and black and white, sitting
+     under Two cities because that is what they show: one roastery, one door. */
+  .arr-pair {
+    padding-left: max(32px, calc((100% - 1600px) / 2));
+    padding-right: max(32px, calc((100% - 1600px) / 2));
+    padding-bottom: var(--section-gap);
+  }
+  .arr-pair-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--card-gap); }
+  .arr-pair-img { aspect-ratio: 1/1; overflow: hidden; background: #f7f7f7; }
+  .arr-pair-img img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    filter: grayscale(1);
+  }
+
   /* ── RESPONSIVE ──
      Matches index.html: 1024 tablet, 768 phone landscape, 480 phone. Below 768
      the nav collapses to a sheet. */
 
   @media (max-width: 1024px) {
+    .arr-pair { padding-left: 24px; padding-right: 24px; }
     :root { --section-gap: 104px; --head-gap: 22px; --card-gap: 14px; }
     nav, .visit-hero, .details, .photo-grid, footer { padding-left: 24px; padding-right: 24px; }
     .details { grid-template-columns: repeat(2, 1fr); row-gap: 28px; }
@@ -308,6 +324,7 @@
   }
 
   @media (max-width: 768px) {
+    .arr-pair { padding-left: 16px; padding-right: 16px; }
     :root { --section-gap: 76px; --head-gap: 18px; --card-gap: 10px; }
     nav, .visit-hero, .details, .photo-grid, footer { padding-left: 16px; padding-right: 16px; }
     /* the links leave the bar and become a sheet */
@@ -356,6 +373,7 @@
   }
 
   @media (max-width: 480px) {
+    .arr-pair { padding-left: 14px; padding-right: 14px; }
     :root { --section-gap: 64px; --head-gap: 16px; --card-gap: 8px; }
     nav, .visit-hero, .details, .photo-grid, footer { padding-left: 14px; padding-right: 14px; }
     .logo { gap: 7px; }
@@ -556,6 +574,13 @@
     <p class="arr-note">
       Est. MMXIII. Concierge Coffee Roasters UG.
     </p>
+  </div>
+</section>
+
+<section class="arr-pair">
+  <div class="arr-pair-grid">
+    <div class="arr-pair-img"><img src="images/founders-roastery.jpg" alt="At the roaster" loading="lazy" /></div>
+    <div class="arr-pair-img"><img src="images/founders-door.jpg" alt="At the door in Berlin" loading="lazy" /></div>
   </div>
 </section>
 
