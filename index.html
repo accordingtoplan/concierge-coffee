@@ -902,7 +902,7 @@
     /* stacked, picture first: the section should open with an image like the
        ones above it, and the facts read better under it than over it */
     .story-split { grid-template-columns: 1fr; gap: 18px; }
-    .story-img { order: -1; }
+    .story-img, .abrazo-imgs { order: -1; }
     .feature--split .card-img { max-width: 640px; }
     .feature--split .feature-face { padding: 16px 0 0; }
     .feature--split .feature-cat { max-width: none; margin-top: 8px; }
@@ -996,6 +996,13 @@
     transition: border-color 0.15s;
   }
   .story-more:hover { border-color: #111; }
+
+  /* ── ABRAZO ──
+     Same split as the story block: text left, pictures right. Two portrait
+     frames instead of one square, because a night reads as moments rather
+     than one still. Same grayscale as every photograph on this page. */
+  .abrazo-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .abrazo-imgs .story-img { aspect-ratio: 3/4; }
 
   .story-img { aspect-ratio: 1/1; overflow: hidden; background: #f7f7f7; }
   .story-img img {
@@ -1220,6 +1227,34 @@
     </a>
   </div>
 
+</section>
+
+<!-- ABRAZO -->
+<section class="shop" id="abrazo">
+  <div class="shop-head">
+    <span class="shop-title">Abrazo</span>
+  </div>
+  <div class="story-split">
+    <div class="story-facts">
+      <div class="story-fact">
+        <div class="story-fact-h">The evening</div>
+        <p>Abrazo is Concierge after dark. The espresso machine goes quiet, the bar pours wine, someone plays records, and the room belongs to the neighbourhood for a night. Something to eat, chess, and whoever is showing work that month.</p>
+      </div>
+      <div class="story-fact">
+        <div class="story-fact-h">Nights</div>
+        <p>One or two a month, announced on Instagram. Proposals for a night are read.</p>
+      </div>
+      <a class="story-more" href="arrangements.html#abrazo">Abrazo &rarr;</a>
+    </div>
+    <div class="abrazo-imgs">
+      <div class="story-img">
+        <img src="images/abrazo-dj.jpg" alt="A set on the SP-404 at the end of the bar" loading="lazy" />
+      </div>
+      <div class="story-img">
+        <img src="images/abrazo-coasters.jpg" alt="Abrazo coasters on the bar" loading="lazy" />
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- MERCH -->

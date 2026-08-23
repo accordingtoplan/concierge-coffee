@@ -425,6 +425,11 @@
   .arr-body p + p { margin-top: 14px; }
   .arr-body .arr-note { color: var(--muted); font-size: 11px; line-height: 1.8; }
 
+  /* One photograph inside a block, body width, 3/2. Introduced for Abrazo;
+     any block that earns a picture uses the same frame. */
+  .arr-img { margin-top: 24px; aspect-ratio: 3/2; overflow: hidden; background: #f7f7f7; }
+  .arr-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
   .arr-rule { height: 1px; background: #f0f0f0; margin: 0 0 56px; }
 
   .arr-cta {
@@ -802,6 +807,9 @@
     <p class="arr-note">
       Nights are announced on Instagram. Proposals for a night are read.
     </p>
+    <div class="arr-img">
+      <img src="images/abrazo-wine.jpg" alt="Bottles on ice behind the bar on an Abrazo night" loading="lazy" />
+    </div>
   </div>
 </section>
 
