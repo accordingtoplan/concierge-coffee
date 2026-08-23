@@ -902,7 +902,10 @@
     /* stacked, picture first: the section should open with an image like the
        ones above it, and the facts read better under it than over it */
     .story-split { grid-template-columns: 1fr; gap: 18px; }
-    .story-img, .abrazo-imgs { order: -1; }
+    .story-img, .abrazo-slides { order: -1; }
+    /* Doubled selector on purpose: the base --wide rule sits later in the
+       file, so the mobile override needs the extra weight to win. */
+    .story-split.story-split--wide { grid-template-columns: 1fr; }
     .feature--split .card-img { max-width: 640px; }
     .feature--split .feature-face { padding: 16px 0 0; }
     .feature--split .feature-cat { max-width: none; margin-top: 8px; }
@@ -998,11 +1001,40 @@
   .story-more:hover { border-color: #111; }
 
   /* ── ABRAZO ──
-     Same split as the story block: text left, pictures right. Two portrait
-     frames instead of one square, because a night reads as moments rather
-     than one still. Same grayscale as every photograph on this page. */
-  .abrazo-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .abrazo-imgs .story-img { aspect-ratio: 3/4; }
+     Same split as the story block, but the picture takes two thirds: a night
+     reads as a room, not a thumbnail. One 3/2 frame running a crossfade of
+     five photographs, arrows in the corner, same grayscale as every
+     photograph on this page. */
+  .story-split--wide { grid-template-columns: 1fr 2fr; }
+  .abrazo-slides {
+    position: relative;
+    aspect-ratio: 3/2;
+    overflow: hidden;
+    background: #f7f7f7;
+  }
+  .abrazo-slides .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.1s ease;
+  }
+  .abrazo-slides .slide.on { opacity: 1; }
+  .abrazo-slides .slide img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    filter: grayscale(1);
+  }
+  .abrazo-arrows { position: absolute; right: 0; bottom: 0; display: flex; z-index: 2; }
+  .abrazo-arrows button {
+    width: 36px; height: 36px;
+    border: 0; padding: 0;
+    background: #fff; color: #111;
+    font: 14px/1 var(--sans, 'Helvetica Neue', Helvetica, Arial, sans-serif);
+    cursor: pointer;
+  }
+  .abrazo-arrows button:hover { background: #111; color: #fff; }
+  @media (prefers-reduced-motion: reduce) {
+    .abrazo-slides .slide { transition: none; }
+  }
 
   .story-img { aspect-ratio: 1/1; overflow: hidden; background: #f7f7f7; }
   .story-img img {
@@ -1234,7 +1266,7 @@
   <div class="shop-head">
     <span class="shop-title">Abrazo</span>
   </div>
-  <div class="story-split">
+  <div class="story-split story-split--wide">
     <div class="story-facts">
       <div class="story-fact">
         <div class="story-fact-h">The evening</div>
@@ -1246,12 +1278,15 @@
       </div>
       <a class="story-more" href="arrangements.html#abrazo">Abrazo &rarr;</a>
     </div>
-    <div class="abrazo-imgs">
-      <div class="story-img">
-        <img src="images/abrazo-dj.jpg" alt="A set on the SP-404 at the end of the bar" loading="lazy" />
-      </div>
-      <div class="story-img">
-        <img src="images/abrazo-coasters.jpg" alt="Abrazo coasters on the bar" loading="lazy" />
+    <div class="abrazo-slides" id="abrazo-slides">
+      <div class="slide on"><img src="images/abrazo-dj.jpg" alt="A set on the SP-404 at the end of the bar" /></div>
+      <div class="slide"><img src="images/abrazo-room.jpg" alt="The room on an Abrazo night" loading="lazy" /></div>
+      <div class="slide"><img src="images/abrazo-table.jpg" alt="A table in the courtyard" loading="lazy" /></div>
+      <div class="slide"><img src="images/abrazo-friends.jpg" alt="Four guests at a table outside" loading="lazy" /></div>
+      <div class="slide"><img src="images/abrazo-coasters.jpg" alt="Abrazo coasters on the bar" loading="lazy" /></div>
+      <div class="abrazo-arrows">
+        <button type="button" aria-label="Previous photograph" onclick="abrazoStep(-1)">&larr;</button>
+        <button type="button" aria-label="Next photograph" onclick="abrazoStep(1)">&rarr;</button>
       </div>
     </div>
   </div>
@@ -1399,6 +1434,31 @@
     };
     const start = () => { if (!timer) timer = setInterval(step, 5000); };
     const stop = () => { clearInterval(timer); timer = null; };
+
+    document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+    start();
+  })();
+
+  // Abrazo slideshow. Same five-second crossfade as the hero, plus arrows.
+  // A click moves the frame and restarts the clock, so the automatic step
+  // never lands right after a manual one. Reduced motion keeps the arrows
+  // and drops only the automatic advance.
+  let abrazoStep;
+  (function () {
+    const slides = [...document.querySelectorAll('#abrazo-slides .slide')];
+    if (slides.length < 2) return;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let i = 0, timer = null;
+    const go = (d) => {
+      slides[i].classList.remove('on');
+      i = (i + d + slides.length) % slides.length;
+      slides[i].classList.add('on');
+    };
+    const start = () => { if (!timer && !reduced) timer = setInterval(() => go(1), 5000); };
+    const stop = () => { clearInterval(timer); timer = null; };
+
+    abrazoStep = (d) => { stop(); go(d); start(); };
 
     document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
     start();
