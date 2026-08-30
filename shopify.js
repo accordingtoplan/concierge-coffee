@@ -155,11 +155,7 @@ export function productHref(p) { return `product.html?p=${encodeURIComponent(p.h
    Blends put to Benjamin and Namy rather than products. Named from the hotel
    world the crossed keys already point at, which extends: valet, porter,
    doorman, maître d'. No "blend" in any name, per the naming note. */
-export const CONCEPTS = [
-  { name: 'Doorman',      note: 'Everyday filter',             status: 'Coming soon', img: 'images/concept-doorman.jpg' },
-  { name: 'Valet',        note: 'Limited release, co-ferment', status: 'Sold out',    img: 'images/concept-valet.jpg' },
-  { name: 'Night Porter', note: 'Decaf, sugarcane process',    status: 'Sold out',    img: 'images/concept-night-porter.jpg' },
-];
+export const CONCEPTS = [];  // Doorman, Valet, Night Porter removed Aug 2026
 
 /* ── MERCH ──
    None of it is in Shopify, so none of it can be bought here yet. The cards
