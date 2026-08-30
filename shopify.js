@@ -126,11 +126,11 @@ export function inStock(p) { return variants(p).some(v => v.availableForSale); }
    in the repo, keyed on handle so a photograph uploaded to Shopify silently
    takes over. */
 const FALLBACK_IMAGES = {
-  'espresso-roast': 'images/espresso.jpeg',
-  'espresso-blend-250g': 'images/product-espresso-blend.jpg',
-  'filter-single-origin-250g': 'images/product-filter-single.jpg',
-  'decaf-roast': 'images/espresso-2.jpeg',
-  'seasonal-limited': 'images/nicaragua.jpeg',
+  'espresso-roast': 'images/product-blank.jpg',
+  'espresso-blend-250g': 'images/product-espresso.jpg',
+  'filter-single-origin-250g': 'images/product-colombia.jpg',
+  'decaf-roast': 'images/product-blank-overhead.jpg',
+  'seasonal-limited': 'images/product-peru.jpg',
 };
 
 export function getProductImage(p) {
