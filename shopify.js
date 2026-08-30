@@ -51,9 +51,20 @@ let cart = null;
 export function allProducts() { return products; }
 export function productByHandle(handle) { return products.find(p => p.handle === handle) || null; }
 
+/* Grid order. Lower comes first; anything not listed lands in the middle.
+   Decaf sits last because it is decaf. */
+const HANDLE_ORDER = {
+  'espresso-blend-250g': 10,
+  'filter-single-origin-250g': 20,
+  'seasonal-limited': 30,
+  'espresso-roast': 40,
+  'decaf-roast': 100,
+};
+
 export async function loadProducts() {
   const data = await shopifyFetch(`{ products(first: 20) { edges { node { ${PRODUCT_FIELDS} } } } }`);
   products = data?.products?.edges?.map(e => e.node) ?? [];
+  products.sort((a, b) => (HANDLE_ORDER[a.handle] ?? 50) - (HANDLE_ORDER[b.handle] ?? 50));
   return products;
 }
 
