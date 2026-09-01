@@ -224,7 +224,6 @@ const CHROME = `
 <div class="pdp-overlay" id="pdp-overlay" role="dialog" aria-modal="true" aria-labelledby="pdp-name">
   <div class="qa-modal" id="qa-modal">
     <button class="qa-x" onclick="closePdp()" aria-label="Close">&times;</button>
-    <div class="qa-img"><img id="pdp-hero-img" src="" alt="" /></div>
     <div class="qa-panel">
       <div class="qa-top">
         <button class="qa-back" onclick="closePdp()">&larr; Back</button>
@@ -431,10 +430,6 @@ export function openProduct(key) {
 
   const vs = variants(p);
   selectedVariant = vs.find(v => v.availableForSale) || vs[0] || null;
-
-  const img = document.getElementById('pdp-hero-img');
-  img.src = getProductImage(p);
-  img.alt = p.title;
 
   document.getElementById('pdp-name').textContent = productName(p);
   document.getElementById('pdp-details').href = productHref(p);

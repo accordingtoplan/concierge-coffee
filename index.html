@@ -1443,6 +1443,10 @@
     'affogato', 'cardamom-rose-cream-top', 'matcha-affogato', 'hojicha-latte',
   ];
 
+  /* Where the 3/4 crop should sit per photograph, when centre cuts the
+     drink. */
+  const IMAGE_POSITION = { 'flat-white': 'center 85%' };
+
   function drinkCardHTML(p) {
     const vs = variants(p).filter(v => v.availableForSale);
     const price = formatPrice(Math.min(...vs.map(v => Number(v.price.amount))));
@@ -1454,7 +1458,8 @@
     return `
       <div class="card drink-card" onclick="openProduct('${esc(p.handle)}')">
         <div class="card-img">
-          <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}" />
+          <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}"${
+            IMAGE_POSITION[p.handle] ? ` style="object-position:${IMAGE_POSITION[p.handle]}"` : ''} />
           <div class="card-face">
             <div>
               <div class="card-blend">${esc(productName(p))}</div>
