@@ -769,6 +769,10 @@
   /* Square, unlike the 3/4 cards everywhere else: two columns wide, the
      portrait crop would tower. */
   .menu-lead .card-img { aspect-ratio: 1/1; }
+  /* On a phone the two leads stack full width; they lead. */
+  @media (max-width: 480px) {
+    .menu-lead { grid-template-columns: 1fr; }
+  }
   .drink-card:hover .card-cta { opacity: 1; transform: translateY(0); pointer-events: auto; }
   .drink-ing {
     margin-top: 6px;
@@ -989,7 +993,7 @@
        and then across, which is how a list is read, and it balances itself as
        the catalogue grows or shrinks. A grid would go across-then-down and
        would need the product count hard-coded. */
-    .ft-col--shop .ft-links { display: block; columns: 2; column-gap: 18px; }
+    /* Three links stack; the two-column split was for a full product list. */
     .ft-col--shop .ft-links li { break-inside: avoid; }
     .ft-col--info { padding-top: 22px; }
 
@@ -1132,23 +1136,8 @@
 </svg>
 
 <!-- NAV -->
-<nav>
-  <a href="index.html" class="logo" aria-label="Concierge Coffee &mdash; home">
-    <svg class="lk" viewBox="0 0 151.07 120.06" aria-hidden="true"><use href="#cc-keys"/></svg>
-    <svg class="lw" viewBox="0 0 415.33 88.96" aria-hidden="true"><use href="#cc-word"/></svg>
-  </a>
-  <div class="nav-r">
-    <a href="index.html" aria-current="page">Home</a>
-    <a href="shop.html">Shop</a>
-    <a href="arrangements.html">Arrangements</a>
-    <a href="about.html">About</a>
-    <a href="visit.html">Visit</a>
-    <a onclick="openCart()" id="bag-link">Bag (0)</a>
-  </div>
-  <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" onclick="toggleNav()">
-    <span></span><span></span>
-  </button>
-</nav>
+<!-- Shared across the site: layout.js fills this in. -->
+<nav></nav>
 
 <!-- HERO -->
 <section class="hero">
@@ -1325,39 +1314,9 @@
 </section>
 
 <!-- FOOTER -->
-<footer>
-  <div class="ft-brand">
-    <div class="ft-logo">
-      <svg class="lk" viewBox="0 0 151.07 120.06" aria-hidden="true"><use href="#cc-keys"/></svg>
-      <svg class="lw" viewBox="0 0 415.33 88.96" role="img" aria-label="Concierge Coffee"><use href="#cc-word"/></svg>
-    </div>
-    <div class="ft-addr">
-      <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank" rel="noopener">821 Traction Ave<br>Los Angeles, CA 90013</a>
-      <a class="ft-city" href="https://maps.app.goo.gl/ESjak6LpyHTXgknbA" target="_blank" rel="noopener">Lützowstraße 92<br>10785 Berlin</a>
-    </div>
-  </div>
-  <div class="ft-col ft-col--shop">
-    <div class="ft-h">Shop</div>
-    <ul class="ft-links" id="footer-links">
-      <li><a href="shop.html">Coffee</a></li>
-      <li><a href="index.html#menu">Drinks</a></li>
-      <li><a href="shop.html#merch">Merch</a></li>
-    </ul>
-  </div>
-  <div class="ft-col ft-col--info">
-    <div class="ft-h">Info</div>
-    <ul class="ft-links">
-      <li><a href="visit.html">Visit</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="arrangements.html">Arrangements</a></li>
-    </ul>
-  </div>
-  <div class="ft-copy">
-    <span>&copy; 2026 Concierge Coffee LLC</span>
-    <a href="https://www.instagram.com/conciergecoffee/" target="_blank" rel="noopener">Instagram</a>
-    <a class="ft-credit" href="https://frederikfrede.com" target="_blank" rel="noopener">Design</a>
-  </div>
-</footer>
+<!-- Shared across the site: layout.js fills this in. -->
+<footer></footer>
+<script type="module" src="layout.js"></script>
 
 <script>
 
@@ -1454,6 +1413,8 @@
     const vs = variants(p).filter(v => v.availableForSale);
     const price = formatPrice(Math.min(...vs.map(v => Number(v.price.amount))));
     const cta = vs.length > 1 ? `Order for Pick-up · from ${price}` : `Order for Pick-up · ${price}`;
+    /* The short form for a two-up phone card; same meaning, less width. */
+    const ctaTight = vs.length > 1 ? `Pick-up · from ${price}` : `Pick-up · ${price}`;
     const sizes = productSizes(p).join(' / ');
     /* The ingredient line is the Shopify description with the pick-up
        sentence taken off; one source for what is in the glass. */
@@ -1474,7 +1435,7 @@
                 <span>${price}</span>
               </div>
               <button class="card-cta" aria-label="${esc(cta)}"
-                onclick="event.stopPropagation(); openProduct('${esc(p.handle)}')">${esc(cta)}</button>
+                onclick="event.stopPropagation(); openProduct('${esc(p.handle)}')"><span class="cta-full" aria-hidden="true">${esc(cta)}</span><span class="cta-tight" aria-hidden="true">${esc(ctaTight)}</span></button>
             </div>
           </div>
         </div>
