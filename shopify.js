@@ -147,6 +147,9 @@ const FALLBACK_IMAGES = {
   'filter-single-origin-250g': 'images/product-colombia.jpg',
   'decaf-roast': 'images/product-blank-overhead.jpg',
   'seasonal-limited': 'images/product-peru.jpg',
+  /* Saffron Latte has no photograph in Shopify yet; the crop from the Local
+     Lens feature carries the card until one is uploaded. */
+  'saffron-latte': 'images/drink-saffron-latte.jpg',
 };
 
 export function getProductImage(p) {

@@ -614,7 +614,15 @@
     padding-bottom: var(--head-gap);
   }
 
-  .menu-note { font-size: 10px; color: var(--muted); }
+  /* The pick-up promise is the section's one operational fact, so it reads
+     as a line of its own under the headline rather than a footnote, and it
+     stays on phones. */
+  .menu-pickup {
+    margin: -6px 0 var(--head-gap);
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 52ch;
+  }
 
   /* ── FEATURE BAND ──
      One photograph across the width of the section with the type overlaid at
@@ -710,9 +718,11 @@
      gutter. The rail this replaces cut its last card at the edge as a scroll
      affordance; read as a broken grid instead, which is a fair verdict when
      every other block on the page ends flush. */
+  /* Three across, not the shop's four: nine drinks make three clean rows,
+     and the cards hold the longer pick-up button without crowding. */
   .menu-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--card-gap);
   }
 
@@ -923,7 +933,6 @@
     .feature--split .feature-cat { max-width: none; margin-top: 8px; }
     .feature--split .feature-note { margin-top: 14px; }
     .menu-head { padding-bottom: var(--head-gap); }
-    .menu-note { display: none; }
     .pdp-overlay { padding: 12px; }
     .qa-modal { max-width: 460px; }
     .cart-drawer { width: 100%; right: -100%; padding: 24px 16px; }
@@ -1173,9 +1182,9 @@
 <!-- MENU -->
 <section class="shop" id="menu">
   <div class="menu-head">
-    <span class="shop-title">Coffee Specialties</span>
-    <span class="menu-note">Order online for pick-up at 821 Traction Ave, DTLA</span>
+    <span class="shop-title">Drinks</span>
   </div>
+  <p class="menu-pickup">Order online, pick up at the bar. 821 Traction Ave, Arts District, Downtown LA.</p>
   <!-- The two iced leads. Rendered from Shopify like the shop cards, so name,
        price and button all come from the store; the markup here is only the
        slot. Two columns, in place of the old Specialty of the Month band. -->
@@ -1432,13 +1441,14 @@
   const MENU_LEADS = ['filter-iced', 'matcha-latte-iced'];
   const MENU_GRID = [
     'einspanner', 'flat-white', 'latte-iced', 'yuzu-matcha-tonic',
-    'affogato', 'cardamom-rose-cream-top', 'matcha-affogato', 'hojicha-latte',
+    'saffron-latte', 'affogato', 'cardamom-rose-cream-top', 'matcha-affogato',
+    'hojicha-latte',
   ];
 
   function drinkCardHTML(p) {
     const vs = variants(p).filter(v => v.availableForSale);
     const price = formatPrice(Math.min(...vs.map(v => Number(v.price.amount))));
-    const cta = vs.length > 1 ? `Order · from ${price}` : `Order · ${price}`;
+    const cta = vs.length > 1 ? `Order for Pick-up · from ${price}` : `Order for Pick-up · ${price}`;
     const sizes = productSizes(p).join(' / ');
     /* The ingredient line is the Shopify description with the pick-up
        sentence taken off; one source for what is in the glass. */
