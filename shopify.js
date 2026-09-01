@@ -49,6 +49,11 @@ let products = [];
 let cart = null;
 
 export function allProducts() { return products; }
+
+/* Drinks are orderable from the menu grid, not the shop grid. The tag is the
+   switch: anything tagged `drink` in Shopify stays out of every bean grid
+   but can still be opened, bought and bagged like the rest. */
+export function isDrink(p) { return (p.tags || []).includes('drink'); }
 export function productByHandle(handle) { return products.find(p => p.handle === handle) || null; }
 
 /* Grid order. Lower comes first; anything not listed lands in the middle.
@@ -465,7 +470,7 @@ export async function initStore({ render } = {}) {
   });
 
   await loadProducts();
-  render?.(products);
+  render?.(products.filter(p => !isDrink(p)));
   renderFooterLinks();
   await restoreCart();
   return products;

@@ -1299,6 +1299,7 @@
   import {
     initStore, esc, formatPrice, productName, productSizes, usWeight,
     getProductImage, variants, variantSize, shopCardHTML, addToCartHandler,
+    productByHandle,
   } from './shopify.js';
 
   const handle = new URLSearchParams(location.search).get('p');
@@ -1313,7 +1314,9 @@
   }
 
   function render(products) {
-    current = products.find(p => p.handle === handle) || null;
+    /* By handle against the full catalogue, not the bean list this render
+       receives: the drinks live on this page too, they just skip the grids. */
+    current = productByHandle(handle);
     if (!current) { missing(); showMore(products, null); return; }
 
     document.title = `${productName(current)} \u2014 Concierge Coffee`;

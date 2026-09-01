@@ -739,6 +739,24 @@
     margin-top: 3px;
   }
 
+  /* The order button on a drink card. Text-sized and below the picture,
+     where the menu keeps its words; the white overlay button belongs to the
+     shop cards. Hidden until shopify.js finds the matching product, so a
+     drink pulled from the store quietly loses its button. */
+  .menu-order {
+    margin-top: 8px;
+    padding: 0 0 2px;
+    border: 0;
+    border-bottom: 1px solid #111;
+    background: none;
+    color: #111;
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+  }
+  .menu-order:hover { color: #6f6f6f; border-bottom-color: #6f6f6f; }
+
   .menu-card .card-img img { transition: transform 0.7s cubic-bezier(0.22,1,0.36,1); }
   .menu-card:hover .card-img img { transform: scale(1.06); }
 
@@ -1163,7 +1181,7 @@
 <section class="shop" id="menu">
   <div class="menu-head">
     <span class="shop-title">Coffee Specialties</span>
-    <span class="menu-note">Served at 821 Traction Ave</span>
+    <span class="menu-note">Order online for pick-up at 821 Traction Ave</span>
   </div>
   <!-- Specialty of the Month. Swap the picture, the name and the line each
        month. At 4/5 the crop is close to the 3/4 source, so no vertical
@@ -1187,6 +1205,7 @@
       <div class="card-info">
         <div class="card-name">Einspänner</div>
         <div class="card-cat">Cold brew, double espresso, chocolate, smoked salt, cream top</div>
+        <button class="menu-order" data-order="einspanner" hidden>Order</button>
       </div>
     </div>
     <div class="card menu-card">
@@ -1235,6 +1254,7 @@
       <div class="card-info">
         <div class="card-name">Flat White</div>
         <div class="card-cat">Double espresso, steamed milk</div>
+        <button class="menu-order" data-order="flat-white" hidden>Order</button>
       </div>
     </a>
     <a class="card menu-card" href="https://www.instagram.com/mnml.nomad/p/DU_hb_-Eot9/" target="_blank" rel="noopener noreferrer">
@@ -1245,8 +1265,19 @@
       <div class="card-info">
         <div class="card-name">Latte, iced</div>
         <div class="card-cat">Espresso, milk, over ice</div>
+        <button class="menu-order" data-order="latte-iced" hidden>Order</button>
       </div>
     </a>
+    <div class="card menu-card">
+      <div class="card-img">
+        <img src="images/drink-iced-filter.jpg" alt="Filter, iced" loading="lazy" />
+      </div>
+      <div class="card-info">
+        <div class="card-name">Filter, iced</div>
+        <div class="card-cat">Batch brew over ice</div>
+        <button class="menu-order" data-order="filter-iced" hidden>Order</button>
+      </div>
+    </div>
     <a class="card menu-card" href="https://www.instagram.com/yewonperry/p/C7kHcfRSeL7/" target="_blank" rel="noopener noreferrer">
       <div class="card-img">
         <img src="images/drink-iced-matcha-latte.jpg" alt="Matcha Latte, iced" loading="lazy" />
@@ -1490,7 +1521,25 @@
   import {
     initStore, esc, formatPrice, productName, productSizes,
     getProductImage, getBeanImage, variants, CONCEPTS,
+    productByHandle, inStock, openProduct,
   } from './shopify.js';
+
+  /* The four orderable drinks. Each menu card that sells carries
+     data-order="<shopify handle>"; the card's button wakes up only when the
+     store answers with that product, priced from the store so the site never
+     carries a second copy of a price. Buttons sit inside the Instagram credit
+     links on two cards, so the click has to stay theirs. */
+  function wireMenuOrders() {
+    document.querySelectorAll('[data-order]').forEach(btn => {
+      const p = productByHandle(btn.dataset.order);
+      if (!p || !inStock(p)) return;
+      const vs = variants(p).filter(v => v.availableForSale);
+      const price = formatPrice(Math.min(...vs.map(v => Number(v.price.amount))));
+      btn.textContent = vs.length > 1 ? `Order · from ${price}` : `Order · ${price}`;
+      btn.hidden = false;
+      btn.onclick = e => { e.preventDefault(); e.stopPropagation(); openProduct(p.handle); };
+    });
+  }
 
   function renderConcepts() {
     return CONCEPTS.map(c => `
@@ -1561,7 +1610,7 @@
     }).join('') + renderConcepts();
   }
 
-  initStore({ render: renderProducts });
+  initStore({ render: renderProducts }).then(wireMenuOrders);
 </script>
 </body>
 </html>
