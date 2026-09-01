@@ -241,7 +241,7 @@
     padding-top: 48px;
     padding-bottom: 48px;
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr;
     gap: 48px;
     border-top: 1px solid #f0f0f0;
   }
@@ -266,7 +266,10 @@
   .ft-addr { font-size: 11px; line-height: 1.9; color: var(--muted); }
   .ft-addr a { color: inherit; transition: color 0.15s; }
   .ft-addr a:hover { color: #111; }
-  .ft-tel { display: block; margin-top: 10px; }
+  .ft-city { display: block; margin-top: 14px; }
+  .ft-social { margin-top: 16px; font-size: 11px; }
+  .ft-social a { color: var(--muted); }
+  .ft-social a:hover { color: #111; }
 
   .ft-h {
     font-size: 10px;
@@ -400,7 +403,7 @@
        the catalogue grows or shrinks. */
     .ft-col--shop .ft-links { display: block; columns: 2; column-gap: 18px; }
     .ft-col--shop .ft-links li { break-inside: avoid; }
-    .ft-col--merch, .ft-col--info { padding-top: 22px; }
+    .ft-col--info { padding-top: 22px; }
 
     .ft-h { margin-bottom: 2px; }
     .ft-links { gap: 0; }
@@ -857,8 +860,8 @@
 
 <div class="arr-cta">
   <span>821 Traction Ave, Los Angeles, CA 90013</span>
+  <span>L&uuml;tzowstra&szlig;e 92, 10785 Berlin</span>
   <a href="tel:+13107287915">(310) 728-7915</a>
-  <a href="https://www.instagram.com/conciergecoffee/" target="_blank" rel="noopener">Instagram &rarr;</a>
 </div>
 
 <!-- FOOTER -->
@@ -870,22 +873,18 @@
     </div>
     <div class="ft-addr">
       <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank" rel="noopener">821 Traction Ave<br>Los Angeles, CA 90013</a>
-      <a class="ft-tel" href="tel:+13107287915">(310) 728-7915</a>
+      <a class="ft-city" href="https://maps.google.com/?q=L%C3%BCtzowstra%C3%9Fe+92,+10785+Berlin" target="_blank" rel="noopener">Lützowstraße 92<br>10785 Berlin</a>
+    </div>
+    <div class="ft-social">
+      <a href="https://www.instagram.com/conciergecoffee/" target="_blank" rel="noopener">Instagram &#8599;</a>
     </div>
   </div>
   <div class="ft-col ft-col--shop">
     <div class="ft-h">Shop</div>
     <ul class="ft-links" id="footer-links">
-      <li><a href="shop.html">Shop</a></li>
-    </ul>
-  </div>
-  <div class="ft-col ft-col--merch">
-    <div class="ft-h">Merch</div>
-    <ul class="ft-links">
-      <li><a href="shop.html#merch">Water Bottle</a></li>
-      <li><a href="shop.html#merch">Porsche 911 RSR</a></li>
-      <li><a href="shop.html#merch">T-Shirt</a></li>
-      <li><a href="shop.html#merch">Sweater</a></li>
+      <li><a href="shop.html">Coffee</a></li>
+      <li><a href="index.html#menu">Drinks</a></li>
+      <li><a href="shop.html#merch">Merch</a></li>
     </ul>
   </div>
   <div class="ft-col ft-col--info">
@@ -894,12 +893,12 @@
       <li><a href="visit.html">Visit</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="arrangements.html">Arrangements</a></li>
-      <li><a href="https://www.instagram.com/conciergecoffee/" target="_blank">Instagram</a></li>
     </ul>
   </div>
   <div class="ft-copy">
     <span>&copy; 2026 Concierge Coffee LLC</span>
     <span>conciergecoffee.com</span>
+    <a class="ft-credit" href="https://frederikfrede.com" target="_blank" rel="noopener">Site by Frederik Frede</a>
   </div>
 </footer>
 

@@ -359,11 +359,15 @@ export function updateBagLink(count) {
 /* The Shop column of the footer is the catalogue, on every page that has a
    footer, which is every page. Written here rather than in each page's module
    because the footer is now the same everywhere and should stay that way. */
+/* The footer sells in three words, not a product list; the links are static
+   in the markup. The hook stays so a page without them still gets a set. */
 function renderFooterLinks() {
   const ul = document.getElementById('footer-links');
-  if (!ul || !products.length) return;
-  ul.innerHTML = products
-    .map(p => `<li><a href="${productHref(p)}">${esc(productName(p))}</a></li>`).join('');
+  if (!ul || ul.children.length > 1) return;
+  ul.innerHTML = `
+    <li><a href="shop.html">Coffee</a></li>
+    <li><a href="index.html#menu">Drinks</a></li>
+    <li><a href="shop.html#merch">Merch</a></li>`;
 }
 
 export function openCart() {
@@ -386,6 +390,38 @@ export function goToCheckout() {
    a second overlay. */
 let currentProduct = null;
 let selectedVariant = null;
+
+/* Where the order came from. The panel opens over the card that was clicked
+   rather than the middle of the page, above it when there is room, below it
+   when there is not, always inside the viewport. On a phone it stays the
+   centred sheet. */
+let originRect = null;
+if (typeof document !== 'undefined') {
+  document.addEventListener('pointerdown', e => {
+    const card = e.target.closest ? e.target.closest('.card') : null;
+    originRect = card ? card.getBoundingClientRect() : null;
+  }, true);
+}
+
+function placeQaModal() {
+  const modal = document.getElementById('qa-modal');
+  if (!modal) return;
+  modal.style.position = '';
+  modal.style.left = '';
+  modal.style.top = '';
+  modal.style.margin = '';
+  if (!originRect || window.innerWidth <= 768) return;
+  const m = modal.getBoundingClientRect();
+  let left = originRect.left + originRect.width / 2 - m.width / 2;
+  left = Math.max(16, Math.min(left, window.innerWidth - m.width - 16));
+  let top = originRect.top - m.height - 12;
+  if (top < 16) top = originRect.bottom + 12;
+  top = Math.max(16, Math.min(top, window.innerHeight - m.height - 16));
+  modal.style.position = 'fixed';
+  modal.style.left = `${Math.round(left)}px`;
+  modal.style.top = `${Math.round(top)}px`;
+  modal.style.margin = '0';
+}
 
 export function openProduct(key) {
   const p = products.find(x => x.id === key || x.handle === key);
@@ -417,6 +453,7 @@ export function openProduct(key) {
   updatePdpPrice();
   document.getElementById('pdp-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  placeQaModal();
 }
 
 export function closePdp(e) {
