@@ -260,7 +260,7 @@
     object-fit: cover;
     object-position: center;
     display: block;
-    transition: transform 0.5s ease, opacity 0.4s ease;
+    transition: transform 0.5s ease, opacity 0.4s ease, filter 0.5s ease;
   }
 
   .card:hover .card-img img { transform: scale(1.1); }
@@ -774,6 +774,10 @@
   }
   /* Grid cards carry a smaller ingredient line than the leads. */
   .menu-grid .drink-ing { font-size: 10px; margin-top: 4px; }
+
+  /* The drink hover: a harder push in and the colour drained, so the grid
+     reads documentary the moment a card is considered. */
+  .drink-card:hover .card-img img { transform: scale(1.22); filter: grayscale(1); }
 
   /* Part of the drink photography is other people's. The card face belongs
      to the sale now, so the credits sit in one line under the grid. */
@@ -1433,9 +1437,9 @@
      card language. The handle lists are the only layout decision the page
      keeps: which drinks lead, and the row order below. Everything else,
      name, ingredients, price, sizes, photograph, comes from the store. */
-  const MENU_LEADS = ['filter-iced', 'matcha-latte-iced'];
+  const MENU_LEADS = ['filter-iced', 'yuzu-matcha-tonic'];
   const MENU_GRID = [
-    'einspanner', 'flat-white', 'latte-iced', 'yuzu-matcha-tonic',
+    'einspanner', 'flat-white', 'latte-iced', 'matcha-latte-iced',
     'affogato', 'cardamom-rose-cream-top', 'matcha-affogato', 'hojicha-latte',
   ];
 
