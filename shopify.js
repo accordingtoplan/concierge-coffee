@@ -152,6 +152,25 @@ const FALLBACK_IMAGES = {
   'saffron-latte': 'images/drink-saffron-latte.jpg',
 };
 
+/* The hover frame on a drink card: a second photograph of the same drink.
+   A product's second Shopify image wins when one exists; this map fills in
+   from the repo until then. A drink with no second frame simply keeps its
+   photograph on hover. */
+const DRINK_ALT = {
+  'einspanner': 'images/drink-einspanner-02.jpg',
+  'flat-white': 'images/drink-flat-white.jpg',
+  'latte-iced': 'images/drink-iced-latte.jpg',
+  'filter-iced': 'images/drink-iced-filter-02.jpg',
+  'matcha-latte-iced': 'images/drink-iced-matcha-latte.jpg',
+  'yuzu-matcha-tonic': 'images/drink-yuzu-matcha-tonic-02.jpg',
+  'affogato': 'images/drink-matcha-affogato-02.jpg',
+  'matcha-affogato': 'images/drink-matcha-affogato.jpg',
+  'cardamom-rose-cream-top': 'images/drink-cardamom-rose.jpg',
+};
+export function getDrinkAltImage(p) {
+  return p.images.edges[1]?.node?.url || DRINK_ALT[p.handle] || null;
+}
+
 export function getProductImage(p) {
   return p.images.edges[0]?.node?.url || FALLBACK_IMAGES[p.handle] || 'images/espresso.jpeg';
 }

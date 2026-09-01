@@ -260,7 +260,7 @@
     object-fit: cover;
     object-position: center;
     display: block;
-    transition: transform 0.5s ease;
+    transition: transform 0.5s ease, opacity 0.4s ease;
   }
 
   .card:hover .card-img img { transform: scale(1.1); }
@@ -772,10 +772,15 @@
     max-width: 44ch;
     opacity: 0.85;
   }
-  /* Ingredients on the small grid cards would crowd a 3/4 frame that also
-     carries a price and a button; the quick add and the product page name
-     them instead. */
-  .menu-grid .drink-ing { display: none; }
+  /* Grid cards carry a smaller ingredient line than the leads. */
+  .menu-grid .drink-ing { font-size: 10px; margin-top: 4px; }
+
+  /* The hover frame: a second photograph of the same drink, crossfading in
+     the way the coffee bags turn to beans. Only cards that actually carry
+     one fade the base out. */
+  .drink-card .card-alt { position: absolute; inset: 0; opacity: 0; }
+  .drink-card.has-alt:hover .card-base { opacity: 0; }
+  .drink-card.has-alt:hover .card-alt { opacity: 1; }
 
   /* Part of the drink photography is other people's. The card face belongs
      to the sale now, so the credits sit in one line under the grid. */
@@ -1082,7 +1087,7 @@
      invisible behind the packshot. */
   @media (hover: none) {
     .card-cta { opacity: 1; transform: none; pointer-events: auto; min-height: 44px; }
-    .shop-card .card-alt { display: none; }
+    .shop-card .card-alt, .drink-card .card-alt { display: none; }
 
     /* A footer link was a 24x12 target. A thumb needs 44px, and that is a
        fact about fingers rather than about viewport width, so it hangs off
@@ -1427,7 +1432,7 @@
      the product pages load as well. */
   import {
     initStore, esc, formatPrice, productName, productSizes,
-    getProductImage, getBeanImage, variants, CONCEPTS,
+    getProductImage, getBeanImage, getDrinkAltImage, variants, CONCEPTS,
     productByHandle, inStock, openProduct,
   } from './shopify.js';
 
@@ -1450,9 +1455,10 @@
        sentence taken off; one source for what is in the glass. */
     const ing = String(p.description || '').replace(/\.?\s*Pick-up.*$/i, '');
     return `
-      <div class="card drink-card" onclick="openProduct('${esc(p.handle)}')">
+      <div class="card drink-card${getDrinkAltImage(p) ? ' has-alt' : ''}" onclick="openProduct('${esc(p.handle)}')">
         <div class="card-img">
           <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}" />
+          ${getDrinkAltImage(p) ? `<img class="card-alt" src="${getDrinkAltImage(p)}" alt="" aria-hidden="true" loading="lazy" />` : ''}
           <div class="card-face">
             <div>
               <div class="card-blend">${esc(productName(p))}</div>
