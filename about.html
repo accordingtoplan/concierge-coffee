@@ -285,14 +285,18 @@
   .ft-links a { font-size: 11px; color: var(--muted); cursor: pointer; transition: color 0.15s; }
   .ft-links a:hover { color: #111; }
 
+  /* The bottom bar shares the footer's own columns, so the Instagram link
+     stands exactly under Shop and the credit under Info's edge, right. */
   .ft-copy {
     grid-column: 1 / -1;
     padding-top: 32px;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 48px;
     font-size: 10px;
     color: var(--muted);
   }
+  .ft-copy .ft-credit { justify-self: end; }
 
   /* ── PAGE CEILING ──
      The layout had none, so it did not get better on a large display, only
@@ -898,7 +902,7 @@
   <div class="ft-copy">
     <span>&copy; 2026 Concierge Coffee LLC</span>
     <a href="https://www.instagram.com/conciergecoffee/" target="_blank" rel="noopener">Instagram</a>
-    <a class="ft-credit" href="https://frederikfrede.com" target="_blank" rel="noopener">Design by</a>
+    <a class="ft-credit" href="https://frederikfrede.com" target="_blank" rel="noopener">Design</a>
   </div>
 </footer>
 
