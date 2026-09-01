@@ -739,20 +739,21 @@
     margin-top: 3px;
   }
 
-  /* The two iced leads at the head of the menu. Same language as the shop
-     cards: name on the picture, price and button at the foot, zoom on hover.
-     No bean layer to crossfade to, so the photograph holds through the hover
-     and only the button rises. */
+  /* Drink cards, leads and grid alike. The shop card language: name on the
+     picture, ingredients under it, price at the foot, the order button
+     rising on hover. No bean layer to crossfade to, so the photograph holds
+     through the hover and only the button rises. */
   .menu-lead {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--card-gap);
+    margin-bottom: var(--card-gap);
   }
   /* Square, unlike the 3/4 cards everywhere else: two columns wide, the
      portrait crop would tower. */
   .menu-lead .card-img { aspect-ratio: 1/1; }
-  .lead-card:hover .card-cta { opacity: 1; transform: translateY(0); pointer-events: auto; }
-  .lead-ing {
+  .drink-card:hover .card-cta { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .drink-ing {
     margin-top: 6px;
     font-size: 11px;
     letter-spacing: 0.03em;
@@ -760,59 +761,21 @@
     max-width: 44ch;
     opacity: 0.85;
   }
-  .menu-lead-credit {
+  /* Ingredients on the small grid cards would crowd a 3/4 frame that also
+     carries a price and a button; the quick add and the product page name
+     them instead. */
+  .menu-grid .drink-ing { display: none; }
+
+  /* Part of the drink photography is other people's. The card face belongs
+     to the sale now, so the credits sit in one line under the grid. */
+  .menu-photo-credit {
     padding: 8px 0 0;
-    margin-bottom: var(--card-gap);
     font-size: 10px;
     letter-spacing: 0.04em;
     color: var(--muted);
     text-align: right;
   }
-  .menu-lead-credit a { color: inherit; }
-
-  /* The order button on a drink card. Text-sized and below the picture,
-     where the menu keeps its words; the white overlay button belongs to the
-     shop cards. Hidden until shopify.js finds the matching product, so a
-     drink pulled from the store quietly loses its button. */
-  .menu-order {
-    margin-top: 8px;
-    padding: 0 0 2px;
-    border: 0;
-    border-bottom: 1px solid #111;
-    background: none;
-    color: #111;
-    font-family: inherit;
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    cursor: pointer;
-  }
-  .menu-order:hover { color: #6f6f6f; border-bottom-color: #6f6f6f; }
-
-  .menu-card .card-img img { transition: transform 0.7s cubic-bezier(0.22,1,0.36,1); }
-  .menu-card:hover .card-img img { transform: scale(1.06); }
-
-  a.menu-card { cursor: pointer; display: block; color: inherit; }
-
-  .menu-credit {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: flex-end;
-    padding: 14px;
-    background: linear-gradient(to top,
-      rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.16) 34%, rgba(0,0,0,0) 62%);
-    opacity: 0;
-    transition: opacity 0.35s ease;
-    pointer-events: none;
-  }
-
-  .menu-card:hover .menu-credit { opacity: 1; }
-
-  .menu-credit span {
-    font-size: 10px;
-    color: #fff;
-    letter-spacing: 0.06em;
-  }
+  .menu-photo-credit a { color: inherit; }
 
   .card-img--empty {
     display: flex;
@@ -1109,7 +1072,6 @@
      invisible behind the packshot. */
   @media (hover: none) {
     .card-cta { opacity: 1; transform: none; pointer-events: auto; min-height: 44px; }
-    .menu-credit { opacity: 1; }
     .shop-card .card-alt { display: none; }
 
     /* A footer link was a 24x12 target. A thumb needs 44px, and that is a
@@ -1218,95 +1180,16 @@
        price and button all come from the store; the markup here is only the
        slot. Two columns, in place of the old Specialty of the Month band. -->
   <div class="menu-lead" id="menu-lead"></div>
-  <div class="menu-lead-credit"><a href="https://www.instagram.com/yewonperry/p/C7kHcfRSeL7/" target="_blank" rel="noopener noreferrer">Photograph @yewonperry &#8599;</a></div>
-  <!-- Every card sells. Row order: the signatures and milk drinks first,
-       the ice cream and tea row after. -->
-  <div class="menu-grid">
-    <div class="card menu-card">
-      <div class="card-img">
-        <img src="images/drink-einspanner.jpg" alt="Einspänner" loading="lazy" />
-      </div>
-      <div class="card-info">
-        <div class="card-name">Einspänner</div>
-        <div class="card-cat">Cold brew, double espresso, chocolate, smoked salt, cream top</div>
-        <button class="menu-order" data-order="einspanner" hidden>Order</button>
-      </div>
-    </div>
-    <a class="card menu-card" href="https://www.instagram.com/cafe.planes/p/DV6UxqekjoI/" target="_blank" rel="noopener noreferrer">
-      <div class="card-img">
-        <img src="images/drink-flat-white.jpg" alt="Flat White" loading="lazy" />
-        <div class="menu-credit"><span>Photograph @cafe.planes ↗</span></div>
-      </div>
-      <div class="card-info">
-        <div class="card-name">Flat White</div>
-        <div class="card-cat">Double espresso, steamed milk</div>
-        <button class="menu-order" data-order="flat-white" hidden>Order</button>
-      </div>
-    </a>
-    <a class="card menu-card" href="https://www.instagram.com/mnml.nomad/p/DU_hb_-Eot9/" target="_blank" rel="noopener noreferrer">
-      <div class="card-img">
-        <img src="images/drink-iced-latte.jpg" alt="Latte, iced" loading="lazy" />
-        <div class="menu-credit"><span>Photograph @mnml.nomad ↗</span></div>
-      </div>
-      <div class="card-info">
-        <div class="card-name">Latte, iced</div>
-        <div class="card-cat">Espresso, milk, over ice</div>
-        <button class="menu-order" data-order="latte-iced" hidden>Order</button>
-      </div>
-    </a>
-    <div class="card menu-card">
-      <div class="card-img">
-        <img src="images/drink-yuzu-matcha-tonic.jpg" alt="Yuzu Matcha Tonic" loading="lazy" />
-      </div>
-      <div class="card-info">
-        <div class="card-name">Yuzu Matcha Tonic</div>
-        <div class="card-cat">Matcha, yuzu, simple syrup, fresh lime</div>
-        <button class="menu-order" data-order="yuzu-matcha-tonic" hidden>Order</button>
-      </div>
-    </div>
-    <div class="card menu-card">
-      <div class="card-img">
-        <img src="images/drink-matcha-affogato.jpg" alt="Affogato" loading="lazy" />
-      </div>
-      <div class="card-info">
-        <div class="card-name">Affogato</div>
-        <div class="card-cat">Vanilla ice cream with espresso, matcha or hojicha</div>
-        <button class="menu-order" data-order="affogato" hidden>Order</button>
-      </div>
-    </div>
-    <a class="card menu-card" href="https://www.instagram.com/conciergecoffee/p/DMOyYk9Jrmt/" target="_blank" rel="noopener noreferrer">
-      <div class="card-img">
-        <img src="images/drink-cardamom-rose-cream.jpg" alt="Cardamom-Rose Cream Top" loading="lazy" />
-        <div class="menu-credit"><span>Photograph @conciergecoffee ↗</span></div>
-      </div>
-      <div class="card-info">
-        <div class="card-name">Cardamom-Rose Cream Top</div>
-        <div class="card-cat">Cardamom, rose, cream top</div>
-        <button class="menu-order" data-order="cardamom-rose-cream-top" hidden>Order</button>
-      </div>
-    </a>
-    <div class="card menu-card">
-      <div class="card-img">
-        <img src="images/drink-matcha-affogato-02.jpg" alt="Matcha Affogato" loading="lazy" />
-      </div>
-      <div class="card-info">
-        <div class="card-name">Matcha Affogato</div>
-        <div class="card-cat">Vanilla ice cream, matcha</div>
-        <button class="menu-order" data-order="matcha-affogato" hidden>Order</button>
-      </div>
-    </div>
-    <a class="card menu-card" href="https://www.instagram.com/conciergecoffee/p/C3ohqQTL0vT/" target="_blank" rel="noopener noreferrer">
-      <div class="card-img">
-        <img src="images/drink-hojicha.jpg" alt="Hojicha Latte" loading="lazy" />
-        <div class="menu-credit"><span>Photograph @conciergecoffee ↗</span></div>
-      </div>
-      <div class="card-info">
-        <div class="card-name">Hojicha Latte</div>
-        <div class="card-cat">Roasted green tea, milk</div>
-        <button class="menu-order" data-order="hojicha-latte" hidden>Order</button>
-      </div>
-    </a>
-  </div>
+  <!-- Two rows of four, rendered from Shopify like the leads above: the
+       signatures and milk drinks first, the ice cream and tea row after.
+       The photography is partly other people's; the credits sit in one
+       line under the grid, since the card face now belongs to the sale. -->
+  <div class="menu-grid" id="menu-grid"></div>
+  <div class="menu-photo-credit">Photographs
+    <a href="https://www.instagram.com/cafe.planes/p/DV6UxqekjoI/" target="_blank" rel="noopener noreferrer">@cafe.planes</a>,
+    <a href="https://www.instagram.com/mnml.nomad/p/DU_hb_-Eot9/" target="_blank" rel="noopener noreferrer">@mnml.nomad</a>,
+    <a href="https://www.instagram.com/yewonperry/p/C7kHcfRSeL7/" target="_blank" rel="noopener noreferrer">@yewonperry</a> and
+    <a href="https://www.instagram.com/conciergecoffee/" target="_blank" rel="noopener noreferrer">@conciergecoffee</a> &#8599;</div>
 
 </section>
 
@@ -1542,59 +1425,54 @@
     productByHandle, inStock, openProduct,
   } from './shopify.js';
 
-  /* The four orderable drinks. Each menu card that sells carries
-     data-order="<shopify handle>"; the card's button wakes up only when the
-     store answers with that product, priced from the store so the site never
-     carries a second copy of a price. Buttons sit inside the Instagram credit
-     links on two cards, so the click has to stay theirs. */
-  function wireMenuOrders() {
-    document.querySelectorAll('[data-order]').forEach(btn => {
-      const p = productByHandle(btn.dataset.order);
-      if (!p || !inStock(p)) return;
-      const vs = variants(p).filter(v => v.availableForSale);
-      const price = formatPrice(Math.min(...vs.map(v => Number(v.price.amount))));
-      btn.textContent = vs.length > 1 ? `Order · from ${price}` : `Order · ${price}`;
-      btn.hidden = false;
-      btn.onclick = e => { e.preventDefault(); e.stopPropagation(); openProduct(p.handle); };
-    });
-  }
-
-  /* The two iced leads at the head of the menu. Same card grammar as the
-     shop grid, built from the same Shopify data; no bean layer, so the
-     photograph holds and only the button rises on hover. */
+  /* The drinks, leads and grid alike, rendered from Shopify in the shop
+     card language. The handle lists are the only layout decision the page
+     keeps: which drinks lead, and the row order below. Everything else,
+     name, ingredients, price, sizes, photograph, comes from the store. */
   const MENU_LEADS = ['filter-iced', 'matcha-latte-iced'];
-  function renderMenuLead() {
-    const slot = document.getElementById('menu-lead');
-    const cards = MENU_LEADS.map(productByHandle).filter(p => p && inStock(p));
-    slot.innerHTML = cards.map(p => {
-      const vs = variants(p).filter(v => v.availableForSale);
-      const price = formatPrice(Math.min(...vs.map(v => Number(v.price.amount))));
-      const cta = vs.length > 1 ? `Order · from ${price}` : `Order · ${price}`;
-      const sizes = productSizes(p).join(' / ');
-      /* The ingredient line is the Shopify description with the pick-up
-         sentence taken off; one source for what is in the glass. */
-      const ing = String(p.description || '').replace(/\.?\s*Pick-up.*$/i, '');
-      return `
-        <div class="card lead-card" onclick="openProduct('${esc(p.handle)}')">
-          <div class="card-img">
-            <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}" />
-            <div class="card-face">
-              <div>
-                <div class="card-blend">${esc(productName(p))}</div>
-                <div class="lead-ing">${esc(ing)}</div>
+  const MENU_GRID = [
+    'einspanner', 'flat-white', 'latte-iced', 'yuzu-matcha-tonic',
+    'affogato', 'cardamom-rose-cream-top', 'matcha-affogato', 'hojicha-latte',
+  ];
+
+  function drinkCardHTML(p) {
+    const vs = variants(p).filter(v => v.availableForSale);
+    const price = formatPrice(Math.min(...vs.map(v => Number(v.price.amount))));
+    const cta = vs.length > 1 ? `Order · from ${price}` : `Order · ${price}`;
+    const sizes = productSizes(p).join(' / ');
+    /* The ingredient line is the Shopify description with the pick-up
+       sentence taken off; one source for what is in the glass. */
+    const ing = String(p.description || '').replace(/\.?\s*Pick-up.*$/i, '');
+    return `
+      <div class="card drink-card" onclick="openProduct('${esc(p.handle)}')">
+        <div class="card-img">
+          <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}" />
+          <div class="card-face">
+            <div>
+              <div class="card-blend">${esc(productName(p))}</div>
+              <div class="drink-ing">${esc(ing)}</div>
+            </div>
+            <div>
+              <div class="card-meta">
+                <span>${esc(sizes)}</span>
+                <span>${price}</span>
               </div>
-              <div>
-                <div class="card-meta">
-                  <span>${esc(sizes)}</span>
-                  <span>${price}</span>
-                </div>
-                <button class="card-cta" aria-label="${esc(cta)}"
-                  onclick="event.stopPropagation(); openProduct('${esc(p.handle)}')">${esc(cta)}</button>
-              </div>
+              <button class="card-cta" aria-label="${esc(cta)}"
+                onclick="event.stopPropagation(); openProduct('${esc(p.handle)}')">${esc(cta)}</button>
             </div>
           </div>
-        </div>`;
-    }).join('');
+        </div>
+      </div>`;
+  }
+
+  function renderDrinks() {
+    const fill = (id, handles) => {
+      document.getElementById(id).innerHTML = handles
+        .map(productByHandle).filter(p => p && inStock(p))
+        .map(drinkCardHTML).join('');
+    };
+    fill('menu-lead', MENU_LEADS);
+    fill('menu-grid', MENU_GRID);
   }
 
   function renderConcepts() {
@@ -1666,7 +1544,7 @@
     }).join('') + renderConcepts();
   }
 
-  initStore({ render: renderProducts }).then(() => { renderMenuLead(); wireMenuOrders(); });
+  initStore({ render: renderProducts }).then(renderDrinks);
 </script>
 </body>
 </html>
