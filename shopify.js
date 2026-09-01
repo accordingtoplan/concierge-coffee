@@ -229,7 +229,7 @@ const CHROME = `
         <button class="qa-back" onclick="closePdp()">&larr; Back</button>
         <!-- rewritten to the product page every time the panel opens; the
              shop is the fallback, because a bare hash jumps to the top -->
-        <a class="qa-details" id="pdp-details" href="shop.html">See Full Details</a>
+        <a class="qa-details" id="pdp-details" href="shop.html">Details</a>
       </div>
       <div class="qa-name" id="pdp-name"></div>
       <div class="qa-price" id="pdp-price"></div>
@@ -410,13 +410,17 @@ function placeQaModal() {
   modal.style.left = '';
   modal.style.top = '';
   modal.style.margin = '';
+  modal.style.width = '';
+  modal.style.maxWidth = '';
   if (!originRect || window.innerWidth <= 768) return;
+  /* The panel takes the card's own width and sits directly above it, held
+     inside the viewport when the card rides high. One place, no jumping to
+     the other side. */
+  modal.style.width = `${Math.round(originRect.width)}px`;
+  modal.style.maxWidth = 'none';
   const m = modal.getBoundingClientRect();
-  let left = originRect.left + originRect.width / 2 - m.width / 2;
-  left = Math.max(16, Math.min(left, window.innerWidth - m.width - 16));
-  let top = originRect.top - m.height - 12;
-  if (top < 16) top = originRect.bottom + 12;
-  top = Math.max(16, Math.min(top, window.innerHeight - m.height - 16));
+  const left = Math.max(16, Math.min(originRect.left, window.innerWidth - m.width - 16));
+  const top = Math.max(16, originRect.top - m.height - 12);
   modal.style.position = 'fixed';
   modal.style.left = `${Math.round(left)}px`;
   modal.style.top = `${Math.round(top)}px`;

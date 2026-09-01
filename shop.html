@@ -585,9 +585,6 @@
   .ft-addr a { color: inherit; transition: color 0.15s; }
   .ft-addr a:hover { color: #111; }
   .ft-city { display: block; margin-top: 14px; }
-  .ft-social { margin-top: 16px; font-size: 11px; }
-  .ft-social a { color: var(--muted); }
-  .ft-social a:hover { color: #111; }
 
   .ft-h {
     font-size: 10px;
@@ -1206,13 +1203,6 @@
   <div class="sp-grid" id="drinks-grid"></div>
 </section>
 
-<section class="shop" id="proposals">
-  <div class="shop-head">
-    <span class="shop-title">Proposals</span>
-  </div>
-  <div class="sp-grid" id="proposal-grid"></div>
-</section>
-
 <section class="shop" id="merch">
   <div class="shop-head">
     <span class="shop-title">Merch</span>
@@ -1230,9 +1220,6 @@
     <div class="ft-addr">
       <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank" rel="noopener">821 Traction Ave<br>Los Angeles, CA 90013</a>
       <a class="ft-city" href="https://maps.google.com/?q=L%C3%BCtzowstra%C3%9Fe+92,+10785+Berlin" target="_blank" rel="noopener">Lützowstraße 92<br>10785 Berlin</a>
-    </div>
-    <div class="ft-social">
-      <a href="https://www.instagram.com/conciergecoffee/" target="_blank" rel="noopener">Instagram &#8599;</a>
     </div>
   </div>
   <div class="ft-col ft-col--shop">
@@ -1282,7 +1269,7 @@
   /* The shop page draws three sections from two sources: the coffee comes
      from Shopify, the proposals and the merch are lists in shopify.js because
      neither is a product yet. */
-  import { initStore, esc, shopCardHTML, allProducts, isDrink, CONCEPTS, MERCH } from './shopify.js';
+  import { initStore, esc, shopCardHTML, allProducts, isDrink, MERCH } from './shopify.js';
 
   function staticCard(item, state, extra) {
     return `
@@ -1303,9 +1290,6 @@
 
     document.getElementById('drinks-grid').innerHTML =
       allProducts().filter(isDrink).map(shopCardHTML).join('');
-
-    document.getElementById('proposal-grid').innerHTML =
-      CONCEPTS.map(c => staticCard(c, c.status)).join('');
 
     document.getElementById('merch-grid').innerHTML =
       MERCH.map((m, i) => staticCard(m, 'Coming soon',
