@@ -748,7 +748,18 @@
     grid-template-columns: repeat(2, 1fr);
     gap: var(--card-gap);
   }
+  /* Square, unlike the 3/4 cards everywhere else: two columns wide, the
+     portrait crop would tower. */
+  .menu-lead .card-img { aspect-ratio: 1/1; }
   .lead-card:hover .card-cta { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .lead-ing {
+    margin-top: 6px;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    line-height: 1.6;
+    max-width: 44ch;
+    opacity: 0.85;
+  }
   .menu-lead-credit {
     padding: 8px 0 0;
     margin-bottom: var(--card-gap);
@@ -1201,13 +1212,15 @@
 <section class="shop" id="menu">
   <div class="menu-head">
     <span class="shop-title">Coffee Specialties</span>
-    <span class="menu-note">Order online for pick-up at 821 Traction Ave</span>
+    <span class="menu-note">Order online for pick-up at 821 Traction Ave, DTLA</span>
   </div>
   <!-- The two iced leads. Rendered from Shopify like the shop cards, so name,
        price and button all come from the store; the markup here is only the
        slot. Two columns, in place of the old Specialty of the Month band. -->
   <div class="menu-lead" id="menu-lead"></div>
   <div class="menu-lead-credit"><a href="https://www.instagram.com/yewonperry/p/C7kHcfRSeL7/" target="_blank" rel="noopener noreferrer">Photograph @yewonperry &#8599;</a></div>
+  <!-- Every card sells. Row order: the signatures and milk drinks first,
+       the ice cream and tea row after. -->
   <div class="menu-grid">
     <div class="card menu-card">
       <div class="card-img">
@@ -1219,44 +1232,6 @@
         <button class="menu-order" data-order="einspanner" hidden>Order</button>
       </div>
     </div>
-    <div class="card menu-card">
-      <div class="card-img">
-        <img src="images/drink-matcha-affogato.jpg" alt="Affogato" loading="lazy" />
-      </div>
-      <div class="card-info">
-        <div class="card-name">Affogato</div>
-        <div class="card-cat">Vanilla ice cream with espresso, matcha or hojicha</div>
-      </div>
-    </div>
-    <a class="card menu-card" href="https://www.instagram.com/conciergecoffee/p/DMOyYk9Jrmt/" target="_blank" rel="noopener noreferrer">
-      <div class="card-img">
-        <img src="images/drink-cardamom-rose-cream.jpg" alt="Cardamom-Rose Cream Top" loading="lazy" />
-        <div class="menu-credit"><span>Photograph @conciergecoffee ↗</span></div>
-      </div>
-      <div class="card-info">
-        <div class="card-name">Cardamom-Rose Cream Top</div>
-        <div class="card-cat">Cardamom, rose, cream top</div>
-      </div>
-    </a>
-    <div class="card menu-card">
-      <div class="card-img">
-        <img src="images/drink-matcha-affogato-02.jpg" alt="Matcha Affogato" loading="lazy" />
-      </div>
-      <div class="card-info">
-        <div class="card-name">Matcha Affogato</div>
-        <div class="card-cat">Vanilla ice cream, matcha</div>
-      </div>
-    </div>
-    <a class="card menu-card" href="https://www.instagram.com/conciergecoffee/p/C3ohqQTL0vT/" target="_blank" rel="noopener noreferrer">
-      <div class="card-img">
-        <img src="images/drink-hojicha.jpg" alt="Hojicha Latte" loading="lazy" />
-        <div class="menu-credit"><span>Photograph @conciergecoffee ↗</span></div>
-      </div>
-      <div class="card-info">
-        <div class="card-name">Hojicha Latte</div>
-        <div class="card-cat">Roasted green tea, milk</div>
-      </div>
-    </a>
     <a class="card menu-card" href="https://www.instagram.com/cafe.planes/p/DV6UxqekjoI/" target="_blank" rel="noopener noreferrer">
       <div class="card-img">
         <img src="images/drink-flat-white.jpg" alt="Flat White" loading="lazy" />
@@ -1277,6 +1252,58 @@
         <div class="card-name">Latte, iced</div>
         <div class="card-cat">Espresso, milk, over ice</div>
         <button class="menu-order" data-order="latte-iced" hidden>Order</button>
+      </div>
+    </a>
+    <div class="card menu-card">
+      <div class="card-img">
+        <img src="images/drink-yuzu-matcha-tonic.jpg" alt="Yuzu Matcha Tonic" loading="lazy" />
+      </div>
+      <div class="card-info">
+        <div class="card-name">Yuzu Matcha Tonic</div>
+        <div class="card-cat">Matcha, yuzu, simple syrup, fresh lime</div>
+        <button class="menu-order" data-order="yuzu-matcha-tonic" hidden>Order</button>
+      </div>
+    </div>
+    <div class="card menu-card">
+      <div class="card-img">
+        <img src="images/drink-matcha-affogato.jpg" alt="Affogato" loading="lazy" />
+      </div>
+      <div class="card-info">
+        <div class="card-name">Affogato</div>
+        <div class="card-cat">Vanilla ice cream with espresso, matcha or hojicha</div>
+        <button class="menu-order" data-order="affogato" hidden>Order</button>
+      </div>
+    </div>
+    <a class="card menu-card" href="https://www.instagram.com/conciergecoffee/p/DMOyYk9Jrmt/" target="_blank" rel="noopener noreferrer">
+      <div class="card-img">
+        <img src="images/drink-cardamom-rose-cream.jpg" alt="Cardamom-Rose Cream Top" loading="lazy" />
+        <div class="menu-credit"><span>Photograph @conciergecoffee ↗</span></div>
+      </div>
+      <div class="card-info">
+        <div class="card-name">Cardamom-Rose Cream Top</div>
+        <div class="card-cat">Cardamom, rose, cream top</div>
+        <button class="menu-order" data-order="cardamom-rose-cream-top" hidden>Order</button>
+      </div>
+    </a>
+    <div class="card menu-card">
+      <div class="card-img">
+        <img src="images/drink-matcha-affogato-02.jpg" alt="Matcha Affogato" loading="lazy" />
+      </div>
+      <div class="card-info">
+        <div class="card-name">Matcha Affogato</div>
+        <div class="card-cat">Vanilla ice cream, matcha</div>
+        <button class="menu-order" data-order="matcha-affogato" hidden>Order</button>
+      </div>
+    </div>
+    <a class="card menu-card" href="https://www.instagram.com/conciergecoffee/p/C3ohqQTL0vT/" target="_blank" rel="noopener noreferrer">
+      <div class="card-img">
+        <img src="images/drink-hojicha.jpg" alt="Hojicha Latte" loading="lazy" />
+        <div class="menu-credit"><span>Photograph @conciergecoffee ↗</span></div>
+      </div>
+      <div class="card-info">
+        <div class="card-name">Hojicha Latte</div>
+        <div class="card-cat">Roasted green tea, milk</div>
+        <button class="menu-order" data-order="hojicha-latte" hidden>Order</button>
       </div>
     </a>
   </div>
@@ -1544,12 +1571,18 @@
       const price = formatPrice(Math.min(...vs.map(v => Number(v.price.amount))));
       const cta = vs.length > 1 ? `Order · from ${price}` : `Order · ${price}`;
       const sizes = productSizes(p).join(' / ');
+      /* The ingredient line is the Shopify description with the pick-up
+         sentence taken off; one source for what is in the glass. */
+      const ing = String(p.description || '').replace(/\.?\s*Pick-up.*$/i, '');
       return `
         <div class="card lead-card" onclick="openProduct('${esc(p.handle)}')">
           <div class="card-img">
             <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}" />
             <div class="card-face">
-              <div class="card-blend">${esc(productName(p))}</div>
+              <div>
+                <div class="card-blend">${esc(productName(p))}</div>
+                <div class="lead-ing">${esc(ing)}</div>
+              </div>
               <div>
                 <div class="card-meta">
                   <span>${esc(sizes)}</span>
