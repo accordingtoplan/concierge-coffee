@@ -739,6 +739,26 @@
     margin-top: 3px;
   }
 
+  /* The two iced leads at the head of the menu. Same language as the shop
+     cards: name on the picture, price and button at the foot, zoom on hover.
+     No bean layer to crossfade to, so the photograph holds through the hover
+     and only the button rises. */
+  .menu-lead {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--card-gap);
+  }
+  .lead-card:hover .card-cta { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .menu-lead-credit {
+    padding: 8px 0 0;
+    margin-bottom: var(--card-gap);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    text-align: right;
+  }
+  .menu-lead-credit a { color: inherit; }
+
   /* The order button on a drink card. Text-sized and below the picture,
      where the menu keeps its words; the white overlay button belongs to the
      shop cards. Hidden until shopify.js finds the matching product, so a
@@ -1183,20 +1203,11 @@
     <span class="shop-title">Coffee Specialties</span>
     <span class="menu-note">Order online for pick-up at 821 Traction Ave</span>
   </div>
-  <!-- Specialty of the Month. Swap the picture, the name and the line each
-       month. At 4/5 the crop is close to the 3/4 source, so no vertical
-       anchor is needed here -- a wider band would want one. -->
-  <div class="feature feature--split">
-    <div class="card-img">
-      <img src="images/drink-yuzu-matcha-tonic.jpg" alt="Yuzu Matcha Tonic" />
-    </div>
-    <div class="feature-face">
-      <div class="feature-kicker">Specialty of the Month</div>
-      <div class="feature-name">Yuzu Matcha Tonic</div>
-      <div class="feature-cat">Matcha, yuzu, simple syrup, fresh lime</div>
-      <div class="feature-note">Served at 821 Traction Ave</div>
-    </div>
-  </div>
+  <!-- The two iced leads. Rendered from Shopify like the shop cards, so name,
+       price and button all come from the store; the markup here is only the
+       slot. Two columns, in place of the old Specialty of the Month band. -->
+  <div class="menu-lead" id="menu-lead"></div>
+  <div class="menu-lead-credit"><a href="https://www.instagram.com/yewonperry/p/C7kHcfRSeL7/" target="_blank" rel="noopener noreferrer">Photograph @yewonperry &#8599;</a></div>
   <div class="menu-grid">
     <div class="card menu-card">
       <div class="card-img">
@@ -1266,26 +1277,6 @@
         <div class="card-name">Latte, iced</div>
         <div class="card-cat">Espresso, milk, over ice</div>
         <button class="menu-order" data-order="latte-iced" hidden>Order</button>
-      </div>
-    </a>
-    <div class="card menu-card">
-      <div class="card-img">
-        <img src="images/drink-iced-filter.jpg" alt="Filter, iced" loading="lazy" />
-      </div>
-      <div class="card-info">
-        <div class="card-name">Filter, iced</div>
-        <div class="card-cat">Batch brew over ice</div>
-        <button class="menu-order" data-order="filter-iced" hidden>Order</button>
-      </div>
-    </div>
-    <a class="card menu-card" href="https://www.instagram.com/yewonperry/p/C7kHcfRSeL7/" target="_blank" rel="noopener noreferrer">
-      <div class="card-img">
-        <img src="images/drink-iced-matcha-latte.jpg" alt="Matcha Latte, iced" loading="lazy" />
-        <div class="menu-credit"><span>Photograph @yewonperry ↗</span></div>
-      </div>
-      <div class="card-info">
-        <div class="card-name">Matcha Latte, iced</div>
-        <div class="card-cat">Matcha, milk, over ice</div>
       </div>
     </a>
   </div>
@@ -1541,6 +1532,38 @@
     });
   }
 
+  /* The two iced leads at the head of the menu. Same card grammar as the
+     shop grid, built from the same Shopify data; no bean layer, so the
+     photograph holds and only the button rises on hover. */
+  const MENU_LEADS = ['filter-iced', 'matcha-latte-iced'];
+  function renderMenuLead() {
+    const slot = document.getElementById('menu-lead');
+    const cards = MENU_LEADS.map(productByHandle).filter(p => p && inStock(p));
+    slot.innerHTML = cards.map(p => {
+      const vs = variants(p).filter(v => v.availableForSale);
+      const price = formatPrice(Math.min(...vs.map(v => Number(v.price.amount))));
+      const cta = vs.length > 1 ? `Order · from ${price}` : `Order · ${price}`;
+      const sizes = productSizes(p).join(' / ');
+      return `
+        <div class="card lead-card" onclick="openProduct('${esc(p.handle)}')">
+          <div class="card-img">
+            <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}" />
+            <div class="card-face">
+              <div class="card-blend">${esc(productName(p))}</div>
+              <div>
+                <div class="card-meta">
+                  <span>${esc(sizes)}</span>
+                  <span>${price}</span>
+                </div>
+                <button class="card-cta" aria-label="${esc(cta)}"
+                  onclick="event.stopPropagation(); openProduct('${esc(p.handle)}')">${esc(cta)}</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
   function renderConcepts() {
     return CONCEPTS.map(c => `
         <div class="card shop-card concept-card">
@@ -1610,7 +1633,7 @@
     }).join('') + renderConcepts();
   }
 
-  initStore({ render: renderProducts }).then(wireMenuOrders);
+  initStore({ render: renderProducts }).then(() => { renderMenuLead(); wireMenuOrders(); });
 </script>
 </body>
 </html>
