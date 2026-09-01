@@ -420,7 +420,8 @@ function placeQaModal() {
   modal.style.maxWidth = 'none';
   const m = modal.getBoundingClientRect();
   const left = Math.max(16, Math.min(originRect.left, window.innerWidth - m.width - 16));
-  const top = Math.max(16, originRect.top - m.height - 12);
+  /* Bottom edge to bottom edge with the card, held inside the viewport. */
+  const top = Math.max(16, originRect.bottom - m.height);
   modal.style.position = 'fixed';
   modal.style.left = `${Math.round(left)}px`;
   modal.style.top = `${Math.round(top)}px`;

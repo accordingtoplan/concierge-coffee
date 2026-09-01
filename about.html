@@ -268,6 +268,11 @@
   .ft-addr a:hover { color: #111; }
   .ft-city { display: block; margin-top: 14px; }
 
+  /* The logo stands alone in the top row; the Shop and Info columns start
+     level with the first address line beside it. 62px of logo plus its
+     20px margin. */
+  .ft-col { padding-top: 82px; }
+
   .ft-h {
     font-size: 10px;
     color: #111;
@@ -559,7 +564,7 @@
   }
   .qa-back:hover { color: #111; }
 
-  .qa-details { color: #111; border-bottom: 1px solid #ddd; padding-bottom: 2px; transition: border-color 0.15s; }
+  .qa-details { color: #111; border-bottom: 1px solid #ddd; padding-bottom: 2px; margin-right: 30px; transition: border-color 0.15s; }
   .qa-details:hover { border-color: #111; }
 
   .qa-name { font-family: var(--serif); font-size: 26px; font-weight: 400; line-height: 1.1; letter-spacing: -0.01em; }
