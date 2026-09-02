@@ -1065,7 +1065,6 @@
      items is a catalogue, and a catalogue wants to be seen at once. The
      sections that hold three cards run three up so neither ends on an orphan. */
   .sp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--card-gap); }
-  #proposal-grid, #merch-grid { grid-template-columns: repeat(3, 1fr); }
 
   .sp-card { display: flex; flex-direction: column; cursor: default; }
   .sp-hit { display: block; color: inherit; }
@@ -1124,13 +1123,13 @@
   .sp-note { font-size: 11px; line-height: 1.8; color: var(--muted); max-width: 46ch; padding-bottom: var(--head-gap); }
 
   @media (max-width: 1024px) {
-    .sp-grid, #proposal-grid, #merch-grid { grid-template-columns: repeat(3, 1fr); }
+    .sp-grid { grid-template-columns: repeat(3, 1fr); }
     .sp-name { font-size: 16px; }
   }
 
   @media (max-width: 768px) {
     .sp-top { padding-top: 28px; padding-bottom: 36px; }
-    .sp-grid, #proposal-grid, #merch-grid { grid-template-columns: repeat(2, 1fr); }
+    .sp-grid { grid-template-columns: repeat(2, 1fr); }
     .sp-sub { display: none; }
     .sp-name { font-size: 15px; margin-top: 10px; }
     .sp-foot { flex-direction: column; gap: 3px; margin-top: 9px; padding-top: 9px; }
@@ -1255,9 +1254,11 @@
     document.getElementById('drinks-grid').innerHTML =
       allProducts().filter(isDrink).map(shopCardHTML).join('');
 
+    /* Four across like the rest of the shop; the Porsche render keeps its
+       white ground and contained fit, but no longer spreads the row. */
     document.getElementById('merch-grid').innerHTML =
       MERCH.map((m, i) => staticCard(m, 'Coming soon',
-        i === 0 ? 'sp-card--lead sp-card--fit' : '')).join('');
+        i === 0 ? 'sp-card--fit' : '')).join('');
   }
 
   initStore({ render });
