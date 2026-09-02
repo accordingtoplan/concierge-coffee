@@ -464,7 +464,10 @@ let originRect = null;
 if (typeof document !== 'undefined') {
   document.addEventListener('pointerdown', e => {
     const card = e.target.closest ? e.target.closest('.card') : null;
-    originRect = card ? card.getBoundingClientRect() : null;
+    /* The buy button is the visual anchor: the panel takes its width and
+       its edges. A card with no button falls back to the card itself. */
+    const btn = card ? card.querySelector('.card-cta, .sp-add') : null;
+    originRect = (btn || card) ? (btn || card).getBoundingClientRect() : null;
   }, true);
 }
 
@@ -477,16 +480,17 @@ function placeQaModal() {
   modal.style.margin = '';
   modal.style.width = '';
   modal.style.maxWidth = '';
-  if (!originRect || window.innerWidth <= 768) return;
-  /* The panel takes the card's own width and sits directly above it, held
-     inside the viewport when the card rides high. One place, no jumping to
-     the other side. */
-  modal.style.width = `${Math.round(originRect.width)}px`;
+  if (!originRect) return;
+  /* The panel takes the button's own width and closes on its bottom edge,
+     at every viewport. A very narrow button (two-up phone cards) gets a
+     300px floor so the form stays usable, centred over the button. */
+  const width = Math.min(Math.max(Math.round(originRect.width), 300), window.innerWidth - 24);
+  modal.style.width = `${width}px`;
   modal.style.maxWidth = 'none';
   const m = modal.getBoundingClientRect();
-  const left = Math.max(16, Math.min(originRect.left, window.innerWidth - m.width - 16));
-  /* Bottom edge to bottom edge with the card, held inside the viewport. */
-  const top = Math.max(16, originRect.bottom - m.height);
+  let left = originRect.left + originRect.width / 2 - m.width / 2;
+  left = Math.max(12, Math.min(left, window.innerWidth - m.width - 12));
+  const top = Math.max(12, originRect.bottom - m.height);
   modal.style.position = 'fixed';
   modal.style.left = `${Math.round(left)}px`;
   modal.style.top = `${Math.round(top)}px`;
