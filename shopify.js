@@ -54,6 +54,53 @@ export function allProducts() { return products; }
    switch: anything tagged `drink` in Shopify stays out of every bean grid
    but can still be opened, bought and bagged like the rest. */
 export function isDrink(p) { return (p.tags || []).includes('drink'); }
+
+/* ── PICK-UP HOURS ──
+   Drinks are made at 821 Traction Ave, so they can only be ordered while
+   the bar is open, on Los Angeles time wherever the customer sits.
+   Mon to Fri 7am to 5pm, Sat and Sun 8am to 5pm; the last named slot
+   leaves the bar half an hour before close. */
+const BAR_TZ = 'America/Los_Angeles';
+const BAR_HOURS = { 0: [8, 17], 1: [7, 17], 2: [7, 17], 3: [7, 17], 4: [7, 17], 5: [7, 17], 6: [8, 17] };
+
+function barNow() {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: BAR_TZ, weekday: 'short', hour: 'numeric', minute: 'numeric', hour12: false,
+  }).formatToParts(new Date());
+  const get = t => parts.find(p => p.type === t)?.value;
+  const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(get('weekday'));
+  return { day, minutes: (parseInt(get('hour'), 10) % 24) * 60 + parseInt(get('minute'), 10) };
+}
+
+export function barOpen() {
+  const { day, minutes } = barNow();
+  const [open, close] = BAR_HOURS[day];
+  return minutes >= open * 60 && minutes < close * 60;
+}
+
+/* "Opens 7am" now, "Opens 8am" before a weekend morning. */
+export function barOpensAt() {
+  const { day, minutes } = barNow();
+  const today = BAR_HOURS[day];
+  const hour = minutes < today[0] * 60 ? today[0] : BAR_HOURS[(day + 1) % 7][0];
+  return `Opens ${hour}am`;
+}
+
+function fmtSlot(min) {
+  const h = Math.floor(min / 60), m = min % 60;
+  return `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')}${h < 12 ? 'am' : 'pm'}`;
+}
+
+/* The choices the panel offers while the bar is open: as soon as possible,
+   then half-hour slots to half an hour before close. */
+export function pickupSlots() {
+  if (!barOpen()) return [];
+  const { day, minutes } = barNow();
+  const close = BAR_HOURS[day][1] * 60;
+  const slots = ['As soon as possible (about 10 min)'];
+  for (let t = Math.ceil((minutes + 30) / 30) * 30; t <= close - 30; t += 30) slots.push(fmtSlot(t));
+  return slots;
+}
 export function productByHandle(handle) { return products.find(p => p.handle === handle) || null; }
 
 /* Grid order. Lower comes first; anything not listed lands in the middle.
@@ -199,7 +246,8 @@ export function shopCardHTML(p) {
   const price = formatPrice(p.priceRange.minVariantPrice.amount, p.priceRange.minVariantPrice.currencyCode);
   const lead = vs.length > 1 ? `From ${price}` : price;
   const sizes = productSizes(p).join(' / ');
-  const sellable = inStock(p);
+  const closed = isDrink(p) && !barOpen();
+  const sellable = inStock(p) && !closed;
   const desc = String(p.description || '').trim();
   return `
     <div class="card sp-card">
@@ -212,7 +260,7 @@ export function shopCardHTML(p) {
       </a>
       <div class="sp-foot"><span class="sp-lead">${lead}</span><span>${esc(sizes)}</span></div>
       <button class="sp-add"${sellable ? '' : ' disabled'} onclick="openProduct('${p.id}')">${
-        sellable ? 'Add to Cart' : 'Sold out'}</button>
+        closed ? `Closed · ${barOpensAt()}` : sellable ? 'Add to Cart' : 'Sold out'}</button>
     </div>`;
 }
 
@@ -236,6 +284,13 @@ const CHROME = `
       <div class="qa-field">
         <label class="qa-lbl" for="pdp-size">Select size</label>
         <select class="qa-sel" id="pdp-size" onchange="selectVariant(this.value)"></select>
+      </div>
+      <!-- Drinks only, and only while the bar is open: when the drink is
+           ready for pick-up. The choice rides on the cart and prints on
+           the order. -->
+      <div class="qa-field" id="pdp-pickup-field" hidden>
+        <label class="qa-lbl" for="pdp-pickup">Pick-up time</label>
+        <select class="qa-sel" id="pdp-pickup"></select>
       </div>
       <div class="qa-field">
         <label class="qa-lbl" for="pdp-qty">Quantity</label>
@@ -278,7 +333,7 @@ function mountChrome() {
 }
 
 /* ── BAG ── */
-export async function addToCartHandler(variantId, quantity = 1) {
+export async function addToCartHandler(variantId, quantity = 1, pickup = null) {
   if (!variantId) return;
   const qty = Math.max(1, parseInt(quantity, 10) || 1);
   updateBagLink('...');
@@ -295,6 +350,16 @@ export async function addToCartHandler(variantId, quantity = 1) {
         cartLinesAdd(cartId: $cartId, lines: $lines) { cart { ${CART_FIELDS} } }
       }`, { cartId: cart.id, lines: [{ merchandiseId: variantId, quantity: qty }] });
     cart = data?.cartLinesAdd?.cart;
+  }
+
+  /* The pick-up time rides on the cart, so it prints on the order and in
+     the confirmation mail. */
+  if (pickup && cart?.id) {
+    const data = await shopifyFetch(`
+      mutation cartAttributesUpdate($cartId: ID!, $attributes: [AttributeInput!]!) {
+        cartAttributesUpdate(cartId: $cartId, attributes: $attributes) { cart { ${CART_FIELDS} } }
+      }`, { cartId: cart.id, attributes: [{ key: 'Pick-up time', value: pickup }] });
+    cart = data?.cartAttributesUpdate?.cart || cart;
   }
 
   rememberCart();
@@ -451,6 +516,12 @@ export function openProduct(key) {
   const qty = document.getElementById('pdp-qty');
   qty.value = '1';
 
+  const pickupField = document.getElementById('pdp-pickup-field');
+  const slots = isDrink(p) ? pickupSlots() : [];
+  pickupField.hidden = !slots.length;
+  document.getElementById('pdp-pickup').innerHTML =
+    slots.map(sl => `<option>${esc(sl)}</option>`).join('');
+
   updatePdpPrice();
   document.getElementById('pdp-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -477,17 +548,21 @@ function updatePdpPrice() {
   if (!selectedVariant) { priceEl.textContent = ''; return; }
   priceEl.textContent = formatPrice(selectedVariant.price.amount);
   const sellable = selectedVariant.availableForSale;
-  btn.disabled = !sellable;
-  btn.textContent = sellable ? 'Add to Cart' : 'Sold out';
+  const closed = currentProduct && isDrink(currentProduct) && !barOpen();
+  btn.disabled = !sellable || closed;
+  btn.textContent = closed ? `Closed · ${barOpensAt()}` : sellable ? 'Add to Cart' : 'Sold out';
 }
 
 export async function pdpAddToCart() {
   if (!selectedVariant || !selectedVariant.availableForSale) return;
+  if (currentProduct && isDrink(currentProduct) && !barOpen()) return;
   const btn = document.getElementById('pdp-atc');
   const qty = document.getElementById('pdp-qty')?.value || 1;
+  const pickup = document.getElementById('pdp-pickup-field').hidden
+    ? null : document.getElementById('pdp-pickup').value;
   btn.disabled = true;
   btn.textContent = 'Adding...';
-  await addToCartHandler(selectedVariant.id, qty);
+  await addToCartHandler(selectedVariant.id, qty, pickup);
   btn.disabled = false;
   btn.textContent = 'Add to Cart';
   closePdp();

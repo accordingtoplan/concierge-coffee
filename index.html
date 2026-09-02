@@ -1392,7 +1392,7 @@
   import {
     initStore, esc, formatPrice, productName, productSizes,
     getProductImage, getBeanImage, variants, CONCEPTS,
-    productByHandle, inStock, openProduct,
+    productByHandle, inStock, openProduct, barOpen, barOpensAt,
   } from './shopify.js';
 
   /* The drinks, leads and grid alike, rendered from Shopify in the shop
@@ -1412,9 +1412,12 @@
   function drinkCardHTML(p) {
     const vs = variants(p).filter(v => v.availableForSale);
     const price = formatPrice(Math.min(...vs.map(v => Number(v.price.amount))));
-    const cta = vs.length > 1 ? `Order for Pick-up · from ${price}` : `Order for Pick-up · ${price}`;
+    const closed = !barOpen();
+    const cta = closed ? `Closed · ${barOpensAt()}`
+      : vs.length > 1 ? `Order for Pick-up · from ${price}` : `Order for Pick-up · ${price}`;
     /* The short form for a two-up phone card; same meaning, less width. */
-    const ctaTight = vs.length > 1 ? `Pick-up · from ${price}` : `Pick-up · ${price}`;
+    const ctaTight = closed ? `Closed · ${barOpensAt()}`
+      : vs.length > 1 ? `Pick-up · from ${price}` : `Pick-up · ${price}`;
     const sizes = productSizes(p).join(' / ');
     /* The ingredient line is the Shopify description with the pick-up
        sentence taken off; one source for what is in the glass. */
@@ -1434,7 +1437,7 @@
                 <span>${esc(sizes)}</span>
                 <span>${price}</span>
               </div>
-              <button class="card-cta" aria-label="${esc(cta)}"
+              <button class="card-cta"${closed ? ' disabled' : ''} aria-label="${esc(cta)}"
                 onclick="event.stopPropagation(); openProduct('${esc(p.handle)}')"><span class="cta-full" aria-hidden="true">${esc(cta)}</span><span class="cta-tight" aria-hidden="true">${esc(ctaTight)}</span></button>
             </div>
           </div>
