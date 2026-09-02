@@ -441,6 +441,37 @@
 
   .arr-rule { height: 1px; background: #f0f0f0; margin: 0 0 56px; }
 
+  /* The Abrazo slider, the homepage frame in colour: the evening is the one
+     part of the page that keeps its light. Copy sits under the headline in
+     the left column. */
+  .abrazo-copy { margin-top: 18px; }
+  .abrazo-slides {
+    position: relative;
+    aspect-ratio: 3/2;
+    overflow: hidden;
+    background: #f7f7f7;
+  }
+  .abrazo-slides .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.1s ease;
+  }
+  .abrazo-slides .slide.on { opacity: 1; }
+  .abrazo-slides .slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .abrazo-arrows { position: absolute; right: 0; bottom: 0; display: flex; z-index: 2; }
+  .abrazo-arrows button {
+    width: 36px; height: 36px;
+    border: 0; padding: 0;
+    background: #fff; color: #111;
+    font: 14px/1 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    cursor: pointer;
+  }
+  .abrazo-arrows button:hover { background: #111; color: #fff; }
+  @media (prefers-reduced-motion: reduce) {
+    .abrazo-slides .slide { transition: none; }
+  }
+
   .arr-cta {
     padding-top: 0;
     padding-bottom: var(--section-gap);
@@ -756,6 +787,9 @@
     <p>
       Bring the room, the date and the number of people.
     </p>
+    <div class="arr-img">
+      <img src="images/abrazo-friends.jpg" alt="Guests at a table on an Abrazo night" loading="lazy" />
+    </div>
   </div>
 </section>
 
@@ -770,6 +804,9 @@
     <p>
       Standing arrangements as well as single days.
     </p>
+    <div class="arr-img">
+      <img src="images/catering-room.jpg" alt="The room at 821 Traction Ave in service" loading="lazy" />
+    </div>
   </div>
 </section>
 
@@ -785,24 +822,38 @@
       what arrives is close to the roast date rather than close to the shelf
       life.
     </p>
+    <div class="arr-img">
+      <img src="images/wholesale-shelf.jpg" alt="Concierge bags on the shelf" loading="lazy" />
+    </div>
+    <div class="arr-img">
+      <img src="images/wholesale-green.jpg" alt="A sack of green coffee from Cajamarca, Peru" loading="lazy" />
+    </div>
   </div>
 </section>
 
 <div class="arr-rule"></div>
 
 <section class="arr-block" id="abrazo">
-  <h2 class="arr-h">Abrazo</h2>
-  <div class="arr-body">
-    <p>
-      Abrazo is the evening. Wine, desserts, records, chess, and whoever is
-      showing work that month. The same room under different light, run with
-      people from the neighbourhood rather than for them.
-    </p>
-    <p class="arr-note">
-      Night markets are announced on Instagram.
-    </p>
-    <div class="arr-img">
-      <img src="images/abrazo-wine.jpg" alt="Bottles on ice behind the bar on an Abrazo night" loading="lazy" />
+  <div>
+    <h2 class="arr-h">Abrazo</h2>
+    <div class="arr-body abrazo-copy">
+      <p>
+        Abrazo is the evening. Wine, desserts, records, chess, and whoever is
+        showing work that month. The same room under different light, run with
+        people from the neighbourhood rather than for them.
+      </p>
+      <p class="arr-note">
+        Night markets are announced on Instagram.
+      </p>
+    </div>
+  </div>
+  <div class="abrazo-slides" id="abrazo-slides">
+    <div class="slide on"><img src="images/abrazo-coasters.jpg" alt="Abrazo coasters on the bar" /></div>
+    <div class="slide"><img src="images/abrazo-room.jpg" alt="The room on an Abrazo night" loading="lazy" /></div>
+    <div class="slide"><img src="images/abrazo-wine.jpg" alt="Wine on ice for an Abrazo night" loading="lazy" /></div>
+    <div class="abrazo-arrows">
+      <button type="button" aria-label="Previous photograph" onclick="abrazoStep(-1)">&larr;</button>
+      <button type="button" aria-label="Next photograph" onclick="abrazoStep(1)">&rarr;</button>
     </div>
   </div>
 </section>
@@ -813,13 +864,38 @@
   <span>Start with an email.</span>
   <a href="mailto:wholesale@conciergecoffee.de">wholesale@conciergecoffee.de</a>
   <a href="tel:+13107287915">(310) 728-7915</a>
-  <a href="https://www.instagram.com/conciergecoffee/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
 </div>
 
 <!-- FOOTER -->
 <!-- Shared across the site: layout.js fills this in. -->
 <footer></footer>
 <script type="module" src="layout.js"></script>
+
+<script>
+  // Abrazo slideshow, as on the homepage: five-second crossfade plus arrows.
+  // A click moves the frame and restarts the clock. Reduced motion keeps the
+  // arrows and drops only the automatic advance.
+  let abrazoStep;
+  (function () {
+    const slides = [...document.querySelectorAll('#abrazo-slides .slide')];
+    if (slides.length < 2) return;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let i = 0, timer = null;
+    const go = (d) => {
+      slides[i].classList.remove('on');
+      i = (i + d + slides.length) % slides.length;
+      slides[i].classList.add('on');
+    };
+    const start = () => { if (!timer && !reduced) timer = setInterval(() => go(1), 5000); };
+    const stop = () => { clearInterval(timer); timer = null; };
+
+    abrazoStep = (d) => { stop(); go(d); start(); };
+
+    document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+    start();
+  })();
+</script>
 
 <script>
 
