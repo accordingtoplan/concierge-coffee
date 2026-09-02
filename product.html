@@ -1256,7 +1256,7 @@
   import {
     initStore, esc, formatPrice, productName, productSizes, usWeight,
     getProductImage, variants, variantSize, shopCardHTML, addToCartHandler,
-    productByHandle,
+    productByHandle, isDrink, barOpen, barOpensAt, pickupSlots,
   } from './shopify.js';
 
   const handle = new URLSearchParams(location.search).get('p');
@@ -1307,6 +1307,11 @@
             <label class="qa-lbl" for="pd-qty">Quantity</label>
             <select class="qa-sel" id="pd-qty">${[1,2,3,4,5,6,7,8,9,10].map(n => `<option>${n}</option>`).join('')}</select>
           </div>
+          ${isDrink(current) && pickupSlots().length ? `
+          <div class="qa-field">
+            <label class="qa-lbl" for="pd-pickup">Pick-up time</label>
+            <select class="qa-sel" id="pd-pickup">${pickupSlots().map(sl => `<option>${esc(sl)}</option>`).join('')}</select>
+          </div>` : ''}
           <button class="atc" id="pd-atc" onclick="pdAdd()">Add to Cart</button>
         </div>
       </div>`;
@@ -1321,8 +1326,13 @@
     const btn = document.getElementById('pd-atc');
     if (!el || !chosen) return;
     el.textContent = formatPrice(chosen.price.amount);
-    btn.disabled = !chosen.availableForSale;
-    btn.textContent = chosen.availableForSale ? 'Add to Cart' : 'Sold out';
+    /* Drinks order for pick-up, and only while the bar is open. */
+    const drink = isDrink(current);
+    const closed = drink && !barOpen();
+    btn.disabled = !chosen.availableForSale || closed;
+    btn.textContent = closed ? `Closed · ${barOpensAt()}`
+      : !chosen.availableForSale ? 'Sold out'
+      : drink ? 'Order for Pick-up' : 'Add to Cart';
   }
 
   function showMore(products, exclude) {
@@ -1336,10 +1346,13 @@
   window.pdSelect = id => { chosen = variants(current).find(v => v.id === id) || chosen; price(); };
   window.pdAdd = async () => {
     if (!chosen || !chosen.availableForSale) return;
+    if (isDrink(current) && !barOpen()) return;
     const btn = document.getElementById('pd-atc');
     btn.disabled = true; btn.textContent = 'Adding...';
-    await addToCartHandler(chosen.id, document.getElementById('pd-qty').value);
-    btn.disabled = false; btn.textContent = 'Add to Cart';
+    await addToCartHandler(chosen.id, document.getElementById('pd-qty').value,
+      document.getElementById('pd-pickup')?.value || null);
+    btn.disabled = false;
+    price();
   };
 
   initStore({ render });
