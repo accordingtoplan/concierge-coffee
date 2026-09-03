@@ -6,1106 +6,19 @@
 <title>Concierge Coffee</title>
 <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="fonts/newsreader-var.woff2" as="font" type="font/woff2" crossorigin>
-<style>
-  /* Newsreader — self-hosted latin subset, optical size pinned to display.
-     Georgia is the fallback: it is the face the wordmark is drawn from. */
-  @font-face {
-    font-family: 'Newsreader';
-    font-style: normal;
-    font-weight: 300 600;
-    font-display: swap;
-    src: url('fonts/newsreader-var.woff2') format('woff2');
-  }
-
-  :root {
-    --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
-    /* Secondary type was #bbb (1.92:1) and #ccc (1.61:1) against white, which
-       is below the 4.5:1 floor by a wide margin -- unreadable rather than
-       quiet. One tone at 5.03:1 for everything subordinate, so it can be
-       tuned in one place. */
-    --muted: #6f6f6f;
-    /* Section rhythm. The page was running 80px between sections and 2px
-       between a section title and its content, which read as one continuous
-       block of grids rather than as parts. Two values, so the whole page
-       breathes or tightens together. */
-    --section-gap: 128px;
-    --head-gap: 26px;
-    /* Cards sat on a 2px hairline gap, which read as one sheet cut into
-       pieces rather than as a set of cards. One token so every grid on the
-       site opens up together. */
-    --card-gap: 16px;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: #fff;
-    color: #111;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 400;
-    font-size: 11px;
-    letter-spacing: 0.02em;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  a { color: inherit; text-decoration: none; }
-
-  /* ── NAV ── */
-  nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: #fff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 32px;
-    height: 48px;
-  }
-
-  /* ── LOGO ── */
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #111;
-  }
-
-  .logo svg { display: block; fill: currentColor; }
-  .logo .lk { width: 25.2px; height: 20px; }
-  .logo .lw { width: 79.4px; height: 17px; }
-
-  .nav-r {
-    display: flex;
-    gap: 32px;
-    font-size: 11px;
-    color: #111;
-  }
-
-  .nav-r a { transition: color 0.15s; cursor: pointer; }
-  .nav-r a:hover { color: var(--muted); }
-
-  /* ── COLLAPSED NAV ──
-     Below 768 the links leave the bar and become a full-height sheet. One set
-     of links, restyled, rather than a second copy: the bag count is written to
-     a single element and duplicating it would need two. */
-  .nav-toggle {
-    display: none;
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    border: 0;
-    background: none;
-    cursor: pointer;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
-    gap: 5px;
-    margin-right: -4px;
-  }
-
-  .nav-toggle span {
-    display: block;
-    width: 20px;
-    height: 1px;
-    background: #111;
-    transition: transform 0.28s ease, opacity 0.2s ease;
-  }
-
-  nav.open .nav-toggle span:first-child { transform: translateY(3px) rotate(45deg); }
-  nav.open .nav-toggle span:last-child  { transform: translateY(-3px) rotate(-45deg); }
-
-
-  /* ── HERO ── */
-  /* ── PAGE CEILING ──
-     The layout had none, so it did not get better on a large display, only
-     bigger: at 2560 a product card measures 612x816 and the hero is 1092
-     tall. Content stops at 1600 and centres. Written as padding rather than
-     max-width so the nav and footer rules still run edge to edge -- capping
-     the elements would have cut those short. Below 1664 the max() picks the
-     32px gutter and nothing changes. */
-  nav, .hero, .shop, footer {
-    padding-left: max(32px, calc((100% - 1600px) / 2));
-    padding-right: max(32px, calc((100% - 1600px) / 2));
-  }
-
-  .hero { padding-top: 24px; padding-bottom: var(--section-gap); }
-
-  .hero-img {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16/7;
-    background: #f2f2f2;
-    overflow: hidden;
-    margin-bottom: 16px;
-  }
-
-  .hero-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-  }
-
-  /* ── HERO SLIDES ──
-     Crossfade rather than slide. The frames share no composition, and a
-     horizontal move would fight that. */
-  .hero-img .slide {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 1.1s ease;
-  }
-
-  .hero-img .slide.on { opacity: 1; }
-
-  /* The new frames are portrait phone photographs, so their subjects sit low
-     in a 16/7 window. Raising the image 50px brings the room into the frame
-     and drops the empty wall above it. */
-  /* A percentage, not a pixel offset. calc(50% - 50px) needs 100px of vertical
-     overflow to stay covered, and below 768 the hero is 3/2 against 3/2
-     originals -- zero overflow -- so the shift pushed the frame off the top
-     and left a 50px band of background at the foot. A percentage is defined
-     against whatever overflow exists, so it cannot expose the box: it moves
-     315px of desktop overflow by the same 50px and does nothing at all when
-     there is nothing to move. */
-  .hero-img img.shift-up,
-  .visit-hero-img img.shift-up { object-position: center 66%; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero-img .slide { transition: none; }
-  }
-
-  .hero-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-
-  .hero-sub {
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding-bottom: 4px;
-  }
-
-  .hero-sub span { display: block; font-size: 11px; color: var(--muted); }
-  .hero-sub a { font-size: 11px; color: #111; cursor: pointer; }
-  .hero-sub a[target] { color: var(--muted); }
-  .hero-sub a:hover { color: #111; }
-
-  .hero-hours {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    text-align: right;
-    align-self: flex-start;
-  }
-
-  .hero-hours span { font-size: 11px; color: var(--muted); }
-
-  /* ── SHOP ── */
-  .shop { padding-top: 0; padding-bottom: var(--section-gap); }
-
-  .shop-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: var(--head-gap);
-  }
-
-  /* Section and product headlines share the serif. Newsreader runs small at
-     a given px against Helvetica, so each of these goes up two. */
-  .shop-title {
-    font-family: var(--serif);
-    font-size: clamp(16px, 1.4vw, 20px);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-  }
-
-  /* A way out of a section without a second headline: the shop head carries
-     the whole catalogue, the About head carries the About page. */
-  .head-link {
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    border-bottom: 1px solid #eee;
-    transition: color 0.15s, border-color 0.15s;
-  }
-  .head-link:hover { color: #111; border-color: #111; }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--card-gap);
-  }
-
-  .card { cursor: pointer; }
-
-  .card-img {
-    width: 100%;
-    aspect-ratio: 3/4;
-    background: #f7f7f7;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .card-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    transition: transform 0.5s ease, opacity 0.4s ease, filter 0.5s ease;
-  }
-
-  .card:hover .card-img img { transform: scale(1.1); }
-
-  /* ── SHOP CARD ──
-     The blend is named at the top of the packshot, the size and price sit at
-     the foot. Hover crossfades to the roasted bean and raises a buy button.
-     Scrims at both ends because the packshots are pale at the top and the
-     bean shots are dark: white has to hold on either. */
-  .shop-card .card-alt {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-  }
-
-  /* Scoped away from the proposals: they carry no bean layer, so fading the
-     packshot out on hover left an empty grey frame. */
-  .shop-card:not(.concept-card):hover .card-base { opacity: 0; }
-  .shop-card:not(.concept-card):hover .card-alt { opacity: 1; }
-
-  .card-face {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 16px;
-    color: #fff;
-    background: linear-gradient(to bottom,
-      rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.22) 20%, rgba(0,0,0,0) 42%,
-      rgba(0,0,0,0) 52%, rgba(0,0,0,0.34) 76%, rgba(0,0,0,0.72) 100%);
-    pointer-events: none;
-  }
-
-  .card-blend {
-    font-family: var(--serif);
-    font-size: clamp(17px, 1.5vw, 22px);
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    line-height: 1.1;
-  }
-
-  .card-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 12px;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: opacity 0.3s ease;
-  }
-
-  /* Two labels, one button. At two-up phone width a card is about 170px wide
-     and the full label measures 334px, so the short form is swapped in by
-     media query rather than by a resize listener. aria-label carries the full
-     sentence either way, and both spans are hidden from the accessibility
-     tree so the button is never announced twice. */
-  .cta-tight { display: none; }
-
-  .card-cta {
-    margin-top: 10px;
-    width: 100%;
-    padding: 11px 12px;
-    border: 0;
-    background: #fff;
-    color: #111;
-    font-family: inherit;
-    font-size: 11px;
-    letter-spacing: 0.04em;
-    cursor: pointer;
-    opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.3s ease, transform 0.3s ease, background 0.15s;
-    pointer-events: none;
-  }
-
-  .shop-card:hover .card-cta { opacity: 1; transform: translateY(0); pointer-events: auto; }
-
-  /* ── CONCEPT CARD ──
-     Blends put up for consideration, not products. Greyscale says unmade
-     before the label does, and nothing about the card invites a click:
-     no zoom, no swap, no button, no price. */
-  .concept-card { cursor: default; }
-  .concept-card:hover .card-img img { transform: none; opacity: 1; }
-  .concept-card .card-status { letter-spacing: 0.08em; }
-  .card-cta:hover { background: #f0f0f0; }
-  .card-cta:disabled { background: rgba(255,255,255,0.35); color: rgba(255,255,255,0.8); cursor: default; }
-
-  .card-info {
-    padding: 10px 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-  }
-
-  .card-name { font-family: var(--serif); font-size: 13px; font-weight: 400; }
-  .card-sub { font-size: 10px; color: var(--muted); margin-top: 3px; }
-  .card-price { font-size: 11px; color: #111; }
-
-  /* ── QUICK ADD ──
-     One picture, the size, the count, one dark button. It replaces a half
-     page product sheet that opened over the grid and still could not carry a
-     tasting note: this is the buy step, and everything else about the coffee
-     is a click away on its own page.
-
-     The markup is injected by shopify.js rather than written into each page,
-     so the panel on the shop cannot drift from the panel on the homepage. */
-  .pdp-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 300;
-    overflow-y: auto;
-    padding: 32px 16px;
-  }
-
-  .pdp-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
-
-  .qa-modal {
-    background: #fff;
-    width: 100%;
-    max-width: 420px;
-    margin: auto;
-    position: relative;
-  }
-
-  .qa-x {
-    position: absolute;
-    top: 8px; right: 8px;
-    z-index: 2;
-    width: 34px; height: 34px;
-    border: 0;
-    background: rgba(255,255,255,0.86);
-    font-size: 17px;
-    line-height: 1;
-    color: #111;
-    cursor: pointer;
-  }
-  .qa-x:hover { background: #fff; }
-
-  .qa-img { aspect-ratio: 1/1; background: #f7f7f7; overflow: hidden; }
-  .qa-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-  .qa-panel { padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 14px; }
-
-  .qa-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .qa-back {
-    border: 0; background: none; padding: 0;
-    font-family: inherit; font-size: 10px;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--muted); cursor: pointer;
-  }
-  .qa-back:hover { color: #111; }
-
-  .qa-details { color: #111; border-bottom: 1px solid #ddd; padding-bottom: 2px; margin-right: 30px; transition: border-color 0.15s; }
-  .qa-details:hover { border-color: #111; }
-
-  .qa-name { font-family: var(--serif); font-size: 26px; font-weight: 400; line-height: 1.1; letter-spacing: -0.01em; }
-  .qa-price { font-size: 11px; color: var(--muted); margin-top: -8px; }
-
-  .qa-field { display: flex; flex-direction: column; gap: 7px; }
-
-  .qa-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-
-  /* Native selects, restyled rather than rebuilt: a listbox written in
-     JavaScript is a keyboard and screen reader problem for no gain, and on a
-     phone the system picker is better than anything drawn here. */
-  .qa-sel {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 100%;
-    padding: 13px 34px 13px 12px;
-    border: 1px solid #e4e4e4;
-    border-radius: 0;
-    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6'%3E%3Cpath d='M1 1l3.5 3.5L8 1' fill='none' stroke='%23111'/%3E%3C/svg%3E") no-repeat right 13px center;
-    font-family: inherit;
-    font-size: 11px;
-    letter-spacing: 0.02em;
-    color: #111;
-    cursor: pointer;
-  }
-  .qa-sel:focus { outline: none; border-color: #111; }
-  .qa-sel:disabled { color: var(--muted); background-image: none; cursor: default; }
-
-  /* ── CART DRAWER ── */
-  .cart-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.15);
-    z-index: 200;
-  }
-
-  .cart-overlay.open { display: block; }
-
-  .cart-drawer {
-    position: fixed;
-    top: 0;
-    right: -400px;
-    width: 360px;
-    height: 100vh;
-    background: #fff;
-    z-index: 201;
-    display: flex;
-    flex-direction: column;
-    transition: right 0.3s ease;
-    padding: 32px 24px;
-  }
-
-  .cart-drawer.open { right: 0; }
-
-  .cart-drawer-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 32px;
-  }
-
-  .cart-drawer-title {
-    font-size: 11px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .cart-close {
-    font-size: 18px;
-    cursor: pointer;
-    color: var(--muted);
-    background: none;
-    border: none;
-    line-height: 1;
-  }
-
-  .cart-close:hover { color: #111; }
-
-  .cart-items { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
-
-  .cart-empty { color: var(--muted); font-size: 11px; padding-top: 8px; }
-
-  .ci {
-    display: grid;
-    grid-template-columns: 56px 1fr auto;
-    gap: 14px;
-    align-items: start;
-  }
-
-  .ci-img { aspect-ratio: 1; background: #f2f2f2; overflow: hidden; }
-  .ci-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .ci-name { font-family: var(--serif); font-size: 12px; }
-  .ci-sub { font-size: 10px; color: var(--muted); margin-top: 4px; }
-  .ci-price { font-size: 11px; }
-
-  .cart-footer { border-top: 1px solid #f0f0f0; padding-top: 24px; margin-top: 24px; display: flex; flex-direction: column; gap: 16px; }
-
-  .cart-total {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-  }
-
-  .cart-total-lbl { color: var(--muted); }
-
-  .atc {
-    background: #111;
-    color: #fff;
-    border: none;
-    padding: 14px 16px;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-    width: 100%;
-    transition: opacity 0.15s;
-    text-align: center;
-  }
-
-  .atc:hover { opacity: 0.75; }
-  .atc:disabled { opacity: 0.4; cursor: default; }
-
-  /* ── FOOTER ── */
-  footer {
-    padding-top: 48px;
-    padding-bottom: 48px;
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 48px;
-    border-top: 1px solid #f0f0f0;
-  }
-
-  .ft-logo {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    color: #111;
-    margin-bottom: 20px;
-  }
-
-  .ft-logo svg { display: block; fill: currentColor; }
-  .ft-logo .lk { width: 35.2px; height: 28px; }
-  .ft-logo .lw { width: 112px; height: 24px; }
-
-  /* Footer type was #bbb on white, which measures 1.92:1 — the quiet was
-     coming from illegibility rather than from restraint. Headings take the
-     black and the links take a mid grey at 5.03:1, so the hierarchy is
-     carried by weight and case instead of by fading everything out. */
-  .ft-addr { font-size: 11px; line-height: 1.9; color: var(--muted); }
-  .ft-addr a { color: inherit; transition: color 0.15s; }
-  .ft-addr a:hover { color: #111; }
-  .ft-city { display: block; margin-top: 14px; }
-
-  /* The logo stands alone in the top row; the Shop and Info columns start
-     level with the first address line beside it. 62px of logo plus its
-     20px margin. */
-  .ft-col { padding-top: 82px; }
-
-  .ft-h {
-    font-size: 10px;
-    color: #111;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 16px;
-  }
-
-  .ft-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-
-  .ft-links a { font-size: 11px; color: var(--muted); cursor: pointer; transition: color 0.15s; }
-  .ft-links a:hover { color: #111; }
-
-  /* The bottom bar shares the footer's own columns, so the Instagram link
-     stands exactly under Shop and the credit under Info's edge, right. */
-  .ft-copy {
-    grid-column: 1 / -1;
-    padding-top: 32px;
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 48px;
-    font-size: 10px;
-    color: var(--muted);
-  }
-  .ft-copy .ft-credit { justify-self: end; }
-
-  /* ── MENU ── */
-  .menu-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding-bottom: var(--head-gap);
-  }
-
-  /* The pick-up promise is the section's one operational fact, so it reads
-     as a line of its own under the headline rather than a footnote, and it
-     stays on phones. */
-  .menu-pickup {
-    margin: -6px 0 var(--head-gap);
-    font-size: 13px;
-    line-height: 1.6;
-    max-width: 52ch;
-  }
-
-  /* ── FEATURE BAND ──
-     One photograph across the width of the section with the type overlaid at
-     the foot. Shared by the Specialty of the Month and by the merch lead, so
-     the two read as the same device rather than as two inventions.
-
-     Every drink and merch photograph is portrait 3/4, so the band ratio is
-     the thing that has to give: 16/9 is the widest crop that still holds a
-     whole cup, and the car survives 2/1 because it is a landscape subject in
-     a portrait frame. The vertical anchor lives inline on each img, because
-     it belongs to that photograph and changes when the photograph does. */
-  .feature {
-    position: relative;
-    display: block;
-    color: inherit;
-    margin-bottom: var(--card-gap);
-    overflow: hidden;
-  }
-  .feature .card-img { aspect-ratio: 16/9; }
-  .feature--wide .card-img { aspect-ratio: 2/1; }
-  /* the render is 16/9 on white, so this crops nothing at all */
-  .feature--onwhite .card-img { aspect-ratio: 16/9; }
-  .feature .card-img img { transition: transform 0.9s cubic-bezier(0.22,1,0.36,1); }
-  .feature:hover .card-img img { transform: scale(1.03); }
-
-  .feature-face {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 32px;
-    color: #fff;
-    background: linear-gradient(to bottom,
-      rgba(0,0,0,0) 42%, rgba(0,0,0,0.30) 68%, rgba(0,0,0,0.74) 100%);
-  }
-  .feature-kicker {
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-  .feature-name {
-    font-family: var(--serif);
-    font-size: clamp(26px, 3.4vw, 46px);
-    font-weight: 400;
-    line-height: 1.04;
-    letter-spacing: -0.01em;
-  }
-  .feature-cat { font-size: 12px; line-height: 1.6; margin-top: 10px; max-width: 42ch; }
-
-  /* ── SPLIT FEATURE ──
-     The Specialty of the Month reads across two columns rather than as a full
-     width band: the picture keeps close to its native portrait crop instead of
-     being cut to 16/9, and at half the page width the 900px source is no
-     longer being upscaled. The merch lead stays full width, so the two
-     sections still open differently. */
-  .feature--split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: stretch;
-    column-gap: var(--card-gap);
-  }
-  /* 4/5 -- the ratio of the picture itself, so cover crops nothing. The file
-     is the original Instagram frame now rather than the 900x1200 crop the site
-     had been carrying, which is why the phone and the sunglasses finally sit
-     inside the frame with air around them instead of running off the edge.
-     Every square or portrait shape tried before this was trimming a picture
-     that was already trimmed. */
-  .feature--split .card-img { aspect-ratio: 1/1; }
-
-  .feature--split .feature-face {
-    position: static;
-    inset: auto;
-    background: none;
-    color: #111;
-    justify-content: center;
-    padding: 0 clamp(18px, 3.5vw, 64px);
-  }
-  .feature--split .feature-kicker { color: var(--muted); }
-  .feature--split .feature-name { font-size: clamp(28px, 3.6vw, 52px); }
-  .feature--split .feature-cat { color: var(--muted); font-size: 13px; line-height: 1.75; max-width: 40ch; }
-  .feature--split .feature-note {
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-top: 26px;
-  }
-
-  /* ── DRINK GRID ──
-     Four up, every card the same size, the row ending exactly on the section
-     gutter. The rail this replaces cut its last card at the edge as a scroll
-     affordance; read as a broken grid instead, which is a fair verdict when
-     every other block on the page ends flush. */
-  .menu-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--card-gap);
-  }
-
-  .menu-sub {
-    font-size: 9px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    padding: 40px 0 12px;
-  }
-
-  .menu-sub:first-of-type { padding-top: 0; }
-
-
-  /* ── MENU CARD ──
-     The drink photography is other people's. Hover credits the photographer
-     and links the post it came from, where that post is known. */
-  .menu-card { cursor: default; }
-  .menu-card .card-info { display: block; padding: 10px 0 20px; }
-  .menu-card .card-cat {
-    font-size: 10px;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-top: 3px;
-  }
-
-  /* Drink cards, leads and grid alike. The shop card language: name on the
-     picture, ingredients under it, price at the foot, the order button
-     rising on hover. No bean layer to crossfade to, so the photograph holds
-     through the hover and only the button rises. */
-  .menu-lead {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--card-gap);
-    margin-bottom: var(--card-gap);
-  }
-  /* Square, unlike the 3/4 cards everywhere else: two columns wide, the
-     portrait crop would tower. */
-  .menu-lead .card-img { aspect-ratio: 1/1; }
-  /* On a phone the two leads stack full width; they lead. */
-  @media (max-width: 480px) {
-    .menu-lead { grid-template-columns: 1fr; }
-  }
-  .drink-card:hover .card-cta { opacity: 1; transform: translateY(0); pointer-events: auto; }
-  .drink-ing {
-    margin-top: 6px;
-    font-size: 11px;
-    letter-spacing: 0.03em;
-    line-height: 1.6;
-    max-width: 44ch;
-    opacity: 0.85;
-  }
-  /* Grid cards carry a smaller ingredient line than the leads. */
-  .menu-grid .drink-ing { font-size: 10px; margin-top: 4px; }
-
-  /* The drink hover: a harder push in and the colour drained, so the grid
-     reads documentary the moment a card is considered. */
-  .drink-card:hover .card-img img { transform: scale(1.22); filter: grayscale(1); }
-
-  /* Part of the drink photography is other people's. The card face belongs
-     to the sale now, so the credits sit in one line under the grid. */
-  .menu-photo-credit {
-    padding: 8px 0 0;
-    font-size: 10px;
-    letter-spacing: 0.04em;
-    color: var(--muted);
-    text-align: right;
-  }
-  .menu-photo-credit a { color: inherit; }
-
-  .card-img--empty {
-    display: flex;
-    align-items: flex-end;
-    padding: 12px;
-  }
-
-  .card-img--empty span {
-    font-size: 9px;
-    color: #ddd;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-  }
-
-
-  .card-img--slide { position: relative; overflow: hidden; }
-
-  .slide-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
-
-  .slide-img--1 { opacity: 1; transform: translateX(0); }
-  .slide-img--2 { opacity: 0; transform: translateX(8px); }
-
-  .card:hover .slide-img--1 { opacity: 0; transform: translateX(-8px); }
-  .card:hover .slide-img--2 { opacity: 1; transform: translateX(0); }
-
-  /* loading skeleton */
-  .skeleton {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.2s infinite;
-    border-radius: 2px;
-  }
-
-  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-  /* ── STORY ──
-     Facts left, one square picture right. The two founder frames that were
-     here moved to the About page: on the homepage this block is a summary
-     with a way in, not a gallery. */
-  .story-split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--card-gap);
-    align-items: center;
-  }
-
-  /* ── RESPONSIVE ──
-     1024 tablet, 768 phone landscape, 480 phone. Gutters step 32 → 24 → 16.
-     Below 768 the nav collapses to a sheet, and every grid on the page runs
-     two up: shop, merch and drinks alike. Eight products stacked one to a row
-     is 3,000px of scrolling and no overview at all; two up you can see the
-     range. The card contents are what had to give — the buy label shortens,
-     the size and price stack — not the column count. */
-
-  @media (max-width: 1024px) {
-    :root { --section-gap: 104px; --head-gap: 22px; --card-gap: 14px; }
-    nav, .hero, .shop, footer { padding-left: 24px; padding-right: 24px; }
-    .grid { grid-template-columns: repeat(3, 1fr); }
-    .menu-grid { grid-template-columns: repeat(3, 1fr); }
-    .feature .card-img { aspect-ratio: 3/2; }
-    /* restated, not inherited: .feature .card-img sits later in the file at
-       the same specificity, so without this it becomes 3/2 here */
-    .feature--split .card-img { aspect-ratio: 1/1; }
-    .feature--wide .card-img { aspect-ratio: 16/9; }
-    .feature--onwhite .card-img { aspect-ratio: 3/2; }
-    .feature-face { padding: 26px 24px; }
-    .feature--split .feature-face { padding: 0 24px; }
-    footer { grid-template-columns: 1fr 1fr; gap: 36px; }
-  }
-
-  @media (max-width: 768px) {
-    :root { --section-gap: 76px; --head-gap: 18px; --card-gap: 10px; }
-    nav, .hero, .shop, footer { padding-left: 16px; padding-right: 16px; }
-    /* the links leave the bar and become a sheet */
-    .nav-toggle { display: flex; }
-
-    .nav-r {
-      position: fixed;
-      left: 0; right: 0; top: 48px; bottom: 0;
-      background: #fff;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: stretch;
-      gap: 0;
-      padding: 4px 16px 40px;
-      overflow-y: auto;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-8px);
-      transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
-      z-index: 95;
-    }
-
-    nav.open .nav-r { opacity: 1; visibility: visible; transform: none; }
-
-    .nav-r a {
-      font-family: var(--serif);
-      font-size: 22px;
-      letter-spacing: -0.01em;
-      padding: 18px 0;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    .nav-r a:last-child { border-bottom: 0; }
-
-    .hero { padding-bottom: var(--section-gap); }
-    .hero-img { aspect-ratio: 3/2; margin-bottom: 14px; }
-    .hero-meta { flex-direction: column; align-items: flex-start; gap: 14px; }
-    .hero-sub { text-align: left; padding-bottom: 0; }
-    .hero-hours { text-align: left; align-self: flex-start; }
-    .shop { padding-bottom: var(--section-gap); }
-    .grid { grid-template-columns: repeat(2, 1fr); }
-    .menu-grid { grid-template-columns: repeat(2, 1fr); }
-    /* a feature on a phone wants height, not width, and 4/5 is close to
-       the native crop so it barely crops at all */
-    .feature .card-img { aspect-ratio: 4/5; }
-    /* restated here too, for the same reason */
-    .feature--split .card-img { aspect-ratio: 1/1; }
-    .feature--wide .card-img { aspect-ratio: 4/3; }
-    .feature--onwhite .card-img { aspect-ratio: 4/3; }
-    .feature-face { padding: 18px 16px; }
-    .feature-cat { max-width: none; }
-    /* stacked: picture, then type under it on white. Capped, because at 736
-       wide an uncropped 4/5 picture is 920 tall -- a whole screen for one
-       drink. The cap sizes it without cropping anything back off. */
-    .feature--split { grid-template-columns: 1fr; }
-    /* stacked, picture first: the section should open with an image like the
-       ones above it, and the facts read better under it than over it */
-    .story-split { grid-template-columns: 1fr; gap: 18px; }
-    .story-img, .abrazo-slides { order: -1; }
-    /* Doubled selector on purpose: the base --wide rule sits later in the
-       file, so the mobile override needs the extra weight to win. */
-    .story-split.story-split--wide { grid-template-columns: 1fr; }
-    .feature--split .card-img { max-width: 640px; }
-    .feature--split .feature-face { padding: 16px 0 0; }
-    .feature--split .feature-cat { max-width: none; margin-top: 8px; }
-    .feature--split .feature-note { margin-top: 14px; }
-    .menu-head { padding-bottom: var(--head-gap); }
-    .pdp-overlay { padding: 12px; }
-    .qa-modal { max-width: 460px; }
-    .cart-drawer { width: 100%; right: -100%; padding: 24px 16px; }
-    footer { padding-top: 36px; gap: 28px; }
-    .ft-copy { flex-direction: column; gap: 8px; padding-top: 24px; }
-  }
-
-  @media (max-width: 480px) {
-    :root { --section-gap: 64px; --head-gap: 16px; --card-gap: 8px; }
-    nav, .hero, .shop, footer { padding-left: 14px; padding-right: 14px; }
-    .logo { gap: 7px; }
-    .logo .lk { width: 20.1px; height: 16px; }
-    .logo .lw { width: 60.7px; height: 13px; }
-    .shop-head { padding-bottom: var(--head-gap); }
-    .menu-grid { grid-template-columns: repeat(2, 1fr); }
-
-    /* Shop card at two up. The face has to carry a name, a size, a price and
-       a button in about 145px of usable width. */
-    .card-face { padding: 11px; }
-    .card-blend { font-size: 16px; }
-    .card-meta { flex-direction: column; align-items: flex-start; gap: 2px; }
-    .card-cta { font-size: 11px; padding: 12px 8px; margin-top: 9px; }
-    .cta-full { display: none; }
-    .cta-tight { display: inline; }
-
-    /* the panel takes the width of the phone, less a hairline of backdrop */
-    .pdp-overlay { padding: 10px; }
-    .qa-modal { max-width: none; }
-    .qa-panel { padding: 16px 16px 20px; gap: 12px; }
-    .qa-name { font-size: 23px; }
-
-    /* ── FOOTER ON A PHONE ──
-       Three stacked lists of 11px grey ran 728px, most of a screen, with
-       nothing to hold the eye and no target a thumb could hit. Same links,
-       given a shape: brand band, then Shop across the full width with its
-       products two up, then Merch and Info side by side. Hairlines between
-       the bands rather than gaps, so it reads as sections rather than drift. */
-    footer { grid-template-columns: 1fr 1fr; column-gap: 18px; row-gap: 0; padding-top: 40px; padding-bottom: 40px; }
-
-    .ft-brand { grid-column: 1 / -1; padding-bottom: 26px; border-bottom: 1px solid #f0f0f0; }
-    .ft-logo { margin-bottom: 16px; }
-
-    .ft-col--shop { grid-column: 1 / -1; padding: 22px 0; border-bottom: 1px solid #f0f0f0; }
-    /* Multicol rather than a two-column grid: it runs down the first column
-       and then across, which is how a list is read, and it balances itself as
-       the catalogue grows or shrinks. A grid would go across-then-down and
-       would need the product count hard-coded. */
-    /* Three links stack; the two-column split was for a full product list. */
-    .ft-col--shop .ft-links li { break-inside: avoid; }
-    .ft-col--info { padding-top: 22px; }
-
-    .ft-h { margin-bottom: 2px; }
-    .ft-links { gap: 0; }
-    .ft-links a { font-size: 13px; }
-    .ft-copy { margin-top: 24px; padding-top: 20px; border-top: 1px solid #f0f0f0; }
-  }
-
-  /* Merch is a lead plus three accessories, so the grid is three across at
-     every width. #merch .grid outranks the .grid breakpoint rules on
-     specificity, so it holds without being repeated per query. */
-  #merch .grid { grid-template-columns: repeat(3, 1fr); }
-  #merch .card-name { font-size: 13px; }
-  #merch .card-info { display: block; }
-
-  @media (max-width: 480px) {
-    #merch .card-name { font-size: 11px; }
-    #merch .card-sub { display: none; }
-    #merch .card-info { padding: 8px 0 0; }
-  }
-
-
-  .story-facts { display: flex; flex-direction: column; gap: 26px; }
-  .story-fact-h {
-    font-family: var(--serif);
-    font-size: 15px;
-    margin-bottom: 6px;
-  }
-  .story-fact p { font-size: 12px; line-height: 1.85; color: var(--muted); max-width: 42ch; }
-  .story-more {
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    border-bottom: 1px solid #eee;
-    align-self: flex-start;
-    transition: border-color 0.15s;
-  }
-  .story-more:hover { border-color: #111; }
-
-  /* ── ABRAZO ──
-     Same split as the story block, but the picture takes two thirds: a night
-     reads as a room, not a thumbnail. One 3/2 frame running a crossfade of
-     five photographs, arrows in the corner, same grayscale as every
-     photograph on this page. */
-  .story-split--wide { grid-template-columns: 1fr 2fr; }
-  .abrazo-slides {
-    position: relative;
-    aspect-ratio: 3/2;
-    overflow: hidden;
-    background: #f7f7f7;
-  }
-  .abrazo-slides .slide {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 1.1s ease;
-  }
-  .abrazo-slides .slide.on { opacity: 1; }
-  .abrazo-slides .slide img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
-    filter: grayscale(1);
-  }
-  .abrazo-arrows { position: absolute; right: 0; bottom: 0; display: flex; z-index: 2; }
-  .abrazo-arrows button {
-    width: 36px; height: 36px;
-    border: 0; padding: 0;
-    background: #fff; color: #111;
-    font: 14px/1 var(--sans, 'Helvetica Neue', Helvetica, Arial, sans-serif);
-    cursor: pointer;
-  }
-  .abrazo-arrows button:hover { background: #111; color: #fff; }
-  @media (prefers-reduced-motion: reduce) {
-    .abrazo-slides .slide { transition: none; }
-  }
-
-  .story-img { aspect-ratio: 1/1; overflow: hidden; background: #f7f7f7; }
-  .story-img img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
-    /* black and white, as a filter: the colour original stays in the repo */
-    filter: grayscale(1);
-  }
-
-  /* A studio render on white cannot carry white type over a scrim, so this
-     variant drops the overlay and sets the name beneath the picture. */
-  .feature--onwhite .feature-face {
-    position: static;
-    background: none;
-    color: #111;
-    padding: 14px 0 0;
-  }
-  .feature--onwhite .feature-cat { color: var(--muted); max-width: none; }
-
-  /* ── TOUCH ──
-     There is no hover on a phone, so anything that only appears on hover would
-     never appear at all. The buy button and the photo credits are shown
-     outright, and the bean layer is dropped rather than downloaded to sit
-     invisible behind the packshot. */
-  @media (hover: none) {
-    .card-cta { opacity: 1; transform: none; pointer-events: auto; min-height: 44px; }
-    .shop-card .card-alt { display: none; }
-
-    /* A footer link was a 24x12 target. A thumb needs 44px, and that is a
-       fact about fingers rather than about viewport width, so it hangs off
-       the touch query rather than off a breakpoint. */
-    .ft-links a { display: flex; align-items: center; min-height: 44px; }
-    /* block, not inline-block: inline-block let the phone number ride up onto
-       the end of the address line. width:max-content keeps the tap box on the
-       text rather than spanning the column. */
-    .ft-addr a { display: block; width: max-content; max-width: 100%; padding: 6px 0; }
-  }
-</style>
+<meta name="description" content="Straight-forward specialty coffee, roasted in Los Angeles and Berlin. Buy coffee, order drinks for pick-up at 821 Traction Ave in the Arts District.">
+<!-- Absolute URLs below point at the preview domain; swap to the real domain at cutover. -->
+<link rel="canonical" href="https://concierge-coffee.accordingtoplan.co/">
+<meta property="og:site_name" content="Concierge Coffee">
+<meta property="og:title" content="Concierge Coffee">
+<meta property="og:description" content="Straight-forward specialty coffee, roasted in Los Angeles and Berlin. Buy coffee, order drinks for pick-up at 821 Traction Ave in the Arts District.">
+<meta property="og:url" content="https://concierge-coffee.accordingtoplan.co/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://concierge-coffee.accordingtoplan.co/images/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -1141,6 +54,7 @@
 
 <!-- HERO -->
 <section class="hero">
+  <h1 class="sr-only">Concierge Coffee, Los Angeles and Berlin</h1>
   <div class="hero-img" id="hero-slides">
     <img class="slide on" src="images/hero.jpeg" alt="Concierge Coffee, the bar at 821 Traction Ave" />
     <img class="slide shift-up" src="images/hero-courtyard.jpg" alt="The courtyard" loading="lazy" />
@@ -1162,7 +76,7 @@
 <!-- SHOP -->
 <section class="shop" id="shop">
   <div class="shop-head">
-    <span class="shop-title">Buy Coffee</span>
+    <h2 class="shop-title">Buy Coffee</h2>
     <a class="head-link" href="shop.html">Shop all &rarr;</a>
   </div>
   <div class="grid" id="product-grid">
@@ -1180,7 +94,7 @@
 <!-- MENU -->
 <section class="shop" id="menu">
   <div class="menu-head">
-    <span class="shop-title">Drinks</span>
+    <h2 class="shop-title">Drinks</h2>
   </div>
   <p class="menu-pickup">Order online, pick up at the bar. 821 Traction Ave, Arts District, Downtown LA.</p>
   <!-- The two iced leads. Rendered from Shopify like the shop cards, so name,
@@ -1203,21 +117,21 @@
 <!-- ABRAZO -->
 <section class="shop" id="abrazo">
   <div class="shop-head">
-    <span class="shop-title">Abrazo</span>
+    <h2 class="shop-title">Abrazo</h2>
   </div>
   <div class="story-split story-split--wide">
     <div class="story-facts">
       <div class="story-fact">
-        <div class="story-fact-h">The evening</div>
+        <h3 class="story-fact-h">The evening</h3>
         <p>Abrazo is Concierge after dark. The espresso machine goes quiet, the bar pours wine, someone plays records, and the room belongs to the neighbourhood for a night. Something to eat, chess, and whoever is showing work that month.</p>
       </div>
       <div class="story-fact">
-        <div class="story-fact-h">Night markets</div>
+        <h3 class="story-fact-h">Night markets</h3>
         <p>One or two a month, announced on Instagram.</p>
       </div>
       <a class="story-more" href="arrangements.html#abrazo">Abrazo &rarr;</a>
     </div>
-    <div class="abrazo-slides" id="abrazo-slides">
+    <div class="abrazo-slides abrazo-slides--bw" id="abrazo-slides">
       <div class="slide on"><img src="images/abrazo-coasters.jpg" alt="Abrazo coasters on the bar" /></div>
       <div class="slide"><img src="images/abrazo-room.jpg" alt="The room on an Abrazo night" loading="lazy" /></div>
       <div class="slide"><img src="images/abrazo-wine.jpg" alt="Wine on ice for an Abrazo night" loading="lazy" /></div>
@@ -1232,7 +146,7 @@
 <!-- MERCH -->
 <section class="shop" id="merch">
   <div class="shop-head">
-    <span class="shop-title">Merch</span>
+    <h2 class="shop-title">Merch</h2>
   </div>
   <!-- The Concierge livery render, 1672x941. Exactly 16/9, so the band crops
        nothing at desktop; the narrower ratios below only take white off the
@@ -1287,20 +201,20 @@
 <!-- STORY -->
 <section class="shop" id="story">
   <div class="shop-head">
-    <span class="shop-title">About</span>
+    <h2 class="shop-title">About</h2>
   </div>
   <div class="story-split">
     <div class="story-facts">
       <div class="story-fact">
-        <div class="story-fact-h">Los Angeles</div>
+        <h3 class="story-fact-h">Los Angeles</h3>
         <p>821 Traction Ave, in the Arts District.</p>
       </div>
       <div class="story-fact">
-        <div class="story-fact-h">Berlin</div>
+        <h3 class="story-fact-h">Berlin</h3>
         <p>A neighborhood place with underground roots.</p>
       </div>
       <div class="story-fact">
-        <div class="story-fact-h">Roasting</div>
+        <h3 class="story-fact-h">Roasting</h3>
         <p>Espresso and a single origin filter in both cities.</p>
       </div>
       <a class="story-more" href="about.html">About &rarr;</a>
@@ -1390,7 +304,7 @@
   import {
     initStore, esc, formatPrice, productName, productSizes,
     getProductImage, getBeanImage, variants, CONCEPTS,
-    productByHandle, inStock, openProduct, barOpen, barOpensAt,
+    productByHandle, inStock, openProduct, barOpen, barOpensAt, storeOffline,
   } from './shopify.js';
 
   /* The drinks, leads and grid alike, rendered from Shopify in the shop
@@ -1448,9 +362,14 @@
       document.getElementById(id).innerHTML = handles
         .map(productByHandle).filter(p => p && inStock(p))
         .map(drinkCardHTML).join('');
+      return document.getElementById(id).innerHTML !== '';
     };
-    fill('menu-lead', MENU_LEADS);
-    fill('menu-grid', MENU_GRID);
+    const anyLead = fill('menu-lead', MENU_LEADS);
+    const anyGrid = fill('menu-grid', MENU_GRID);
+    /* No drinks -- Shopify down, or everything unstocked. A headline, a
+       pick-up promise and a credits line over nothing is worse than no
+       section at all. */
+    document.getElementById('menu').hidden = !(anyLead || anyGrid);
   }
 
   function renderConcepts() {
@@ -1475,7 +394,10 @@
   function renderProducts(products) {
     const grid = document.getElementById('product-grid');
     if (!products.length) {
-      grid.innerHTML = '<p style="color:#6f6f6f;font-size:11px;grid-column:1/-1;padding:24px 0">No products found.</p>'
+      const line = storeOffline()
+        ? 'The shop is not answering just now. Try again in a moment.'
+        : 'No products found.';
+      grid.innerHTML = `<p style="color:#6f6f6f;font-size:11px;grid-column:1/-1;padding:24px 0">${line}</p>`
                      + renderConcepts();
       return;
     }

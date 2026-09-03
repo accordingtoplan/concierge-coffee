@@ -17,18 +17,32 @@ const API_URL = `https://${SHOPIFY_DOMAIN}/api/2026-04/graphql.json`;
    Shopify keeps the cart; this is only the ticket for it. */
 const CART_KEY = 'cc_cart_id';
 
+/* Shopify not answering must not take the page with it: a thrown fetch used
+   to stop initStore before render ran, leaving the grids as skeletons that
+   shimmer forever. A failed call returns null instead, every caller already
+   handles null, and the pages can say what happened. */
+let offline = false;
+export function storeOffline() { return offline; }
+
 export async function shopifyFetch(query, variables = {}) {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Shopify-Storefront-Access-Token': STOREFRONT_TOKEN,
-    },
-    body: JSON.stringify({ query, variables }),
-  });
-  const json = await res.json();
-  if (json.errors) console.error('Shopify:', json.errors);
-  return json.data;
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': STOREFRONT_TOKEN,
+      },
+      body: JSON.stringify({ query, variables }),
+    });
+    const json = await res.json();
+    if (json.errors) console.error('Shopify:', json.errors);
+    offline = false;
+    return json.data;
+  } catch (e) {
+    console.error('Shopify unreachable:', e);
+    offline = true;
+    return null;
+  }
 }
 
 const PRODUCT_FIELDS = `
@@ -200,8 +214,17 @@ const FALLBACK_IMAGES = {
 };
 
 
-export function getProductImage(p) {
-  return p.images.edges[0]?.node?.url || FALLBACK_IMAGES[p.handle] || 'images/espresso.jpeg';
+/* Shopify serves the original upload unless a width is asked for, so a 380px
+   card could pull a photograph measured in megabytes. Every CDN url gets a
+   width; repo fallbacks pass through untouched. */
+export function sized(url, width = 800) {
+  if (!url || !/cdn\.shopify\.com/.test(url)) return url;
+  return url + (url.includes('?') ? '&' : '?') + 'width=' + width;
+}
+
+export function getProductImage(p, width = 800) {
+  const url = p.images.edges[0]?.node?.url || FALLBACK_IMAGES[p.handle] || 'images/espresso.jpeg';
+  return sized(url, width);
 }
 
 /* Hover layer: the roasted bean, darker for the espresso roasts and lighter
@@ -362,6 +385,10 @@ export async function addToCartHandler(variantId, quantity = 1, pickup = null) {
     cart = data?.cartAttributesUpdate?.cart || cart;
   }
 
+  /* The add failed -- offline, or the cart id died mid-call. Put the count
+     back rather than leaving the bag reading "..." forever. */
+  if (!cart) { updateBagLink(bagCount); return; }
+
   rememberCart();
   renderCart();
   openCart();
@@ -387,11 +414,14 @@ async function restoreCart() {
   renderCart();
 }
 
+let bagCount = 0;
+
 export function renderCart() {
   if (!cart) return;
   const lines = cart.lines.edges.map(e => e.node);
   const total = cart.cost.totalAmount;
-  updateBagLink(lines.reduce((s, l) => s + l.quantity, 0));
+  bagCount = lines.reduce((s, l) => s + l.quantity, 0);
+  updateBagLink(bagCount);
 
   const itemsEl = document.getElementById('cart-items');
   if (!lines.length) {
@@ -399,7 +429,7 @@ export function renderCart() {
   } else {
     itemsEl.innerHTML = lines.map(line => {
       const m = line.merchandise;
-      const img = m.image?.url;
+      const img = sized(m.image?.url, 120);
       return `
         <div class="ci">
           <div class="ci-img">${img ? `<img src="${esc(img)}" alt="${esc(m.product.title)}">` : ''}</div>
@@ -575,7 +605,7 @@ export async function pdpAddToCart() {
 /* ── INIT ──
    The page passes what it wants drawn. Everything else is the same on every
    page that sells. */
-export async function initStore({ render } = {}) {
+function mountBagAndPanel() {
   mountChrome();
 
   Object.assign(window, {
@@ -588,10 +618,22 @@ export async function initStore({ render } = {}) {
     closePdp();
     closeCart();
   });
+}
 
+export async function initStore({ render } = {}) {
+  mountBagAndPanel();
   await loadProducts();
   render?.(products.filter(p => !isDrink(p)));
   renderFooterLinks();
   await restoreCart();
   return products;
+}
+
+/* For the pages that tell rather than sell: About, Visit, Arrangements need
+   the bag behind the nav link and nothing else. The catalogue call they were
+   making bought them nothing. */
+export async function initBag() {
+  mountBagAndPanel();
+  renderFooterLinks();
+  await restoreCart();
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Domain is the preview; swap to the real domain at cutover, with robots.txt. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://concierge-coffee.accordingtoplan.co/</loc></url>
+  <url><loc>https://concierge-coffee.accordingtoplan.co/shop.html</loc></url>
+  <url><loc>https://concierge-coffee.accordingtoplan.co/about.html</loc></url>
+  <url><loc>https://concierge-coffee.accordingtoplan.co/visit.html</loc></url>
+  <url><loc>https://concierge-coffee.accordingtoplan.co/arrangements.html</loc></url>
+</urlset>
