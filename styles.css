@@ -254,7 +254,19 @@
     gap: var(--card-gap);
   }
 
-  .card { cursor: pointer; }
+  .card { cursor: pointer; position: relative; }
+
+  /* ── KEYBOARD ──
+     The homepage cards were divs with onclick: nothing a keyboard or a
+     screen reader could reach. Each card now carries a real link stretched
+     over it -- same click, same look, and a product page underneath it if
+     script is gone. The buy button reveals on focus exactly as it does on
+     hover, so tabbing shows the same card a mouse sees. */
+  .card-hit { position: absolute; inset: 0; z-index: 1; }
+  .card-hit:focus-visible { outline: 2px solid #111; outline-offset: 2px; }
+  .card-face { z-index: 2; }
+  .shop-card:focus-within .card-cta,
+  .drink-card:focus-within .card-cta { opacity: 1; transform: none; pointer-events: auto; }
 
   .card-img {
     width: 100%;

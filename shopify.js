@@ -293,7 +293,7 @@ export function shopCardHTML(p) {
    something opens them. */
 const CHROME = `
 <div class="pdp-overlay" id="pdp-overlay" role="dialog" aria-modal="true" aria-labelledby="pdp-name">
-  <div class="qa-modal" id="qa-modal">
+  <div class="qa-modal" id="qa-modal" tabindex="-1">
     <button class="qa-x" onclick="closePdp()" aria-label="Close">&times;</button>
     <div class="qa-panel">
       <div class="qa-top">
@@ -327,7 +327,7 @@ const CHROME = `
 </div>
 
 <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
-<div class="cart-drawer" id="cart-drawer">
+<div class="cart-drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-label="Bag" tabindex="-1">
   <div class="cart-drawer-head">
     <span class="cart-drawer-title">Bag</span>
     <button class="cart-close" onclick="closeCart()" aria-label="Close">&times;</button>
@@ -353,7 +353,30 @@ function mountChrome() {
   document.getElementById('pdp-overlay').addEventListener('click', e => {
     if (e.target.id === 'pdp-overlay') closePdp();
   });
+
+  /* ── FOCUS ──
+     Both overlays are dialogs: focus moves in when they open, Tab cycles
+     inside rather than escaping into the page behind, and closing hands
+     focus back to whatever opened them. Escape already closes both. */
+  const trap = (container) => (e) => {
+    if (e.key !== 'Tab') return;
+    const els = [...container.querySelectorAll(
+      'a[href], button:not([disabled]), select:not([disabled]), input, [tabindex]:not([tabindex="-1"])'
+    )].filter(el => el.offsetParent !== null);
+    if (!els.length) return;
+    const first = els[0], last = els[els.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  };
+  const modal = document.getElementById('qa-modal');
+  document.getElementById('pdp-overlay').addEventListener('keydown', trap(modal));
+  const drawer = document.getElementById('cart-drawer');
+  drawer.addEventListener('keydown', trap(drawer));
 }
+
+/* Where focus came from, per overlay, so closing returns it there. */
+let pdpOpener = null;
+let cartOpener = null;
 
 /* ── BAG ── */
 export async function addToCartHandler(variantId, quantity = 1, pickup = null) {
@@ -466,13 +489,17 @@ function renderFooterLinks() {
 }
 
 export function openCart() {
+  const drawer = document.getElementById('cart-drawer');
+  const wasOpen = drawer.classList.contains('open');
   document.getElementById('cart-overlay').classList.add('open');
-  document.getElementById('cart-drawer').classList.add('open');
+  drawer.classList.add('open');
+  if (!wasOpen) { cartOpener = document.activeElement; drawer.focus(); }
 }
 
 export function closeCart() {
   document.getElementById('cart-overlay').classList.remove('open');
   document.getElementById('cart-drawer').classList.remove('open');
+  if (cartOpener) { cartOpener.focus?.(); cartOpener = null; }
 }
 
 export function goToCheckout() {
@@ -557,15 +584,18 @@ export function openProduct(key) {
     slots.map(sl => `<option>${esc(sl)}</option>`).join('');
 
   updatePdpPrice();
+  pdpOpener = document.activeElement;
   document.getElementById('pdp-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
   placeQaModal();
+  document.getElementById('qa-modal').focus();
 }
 
 export function closePdp(e) {
   if (e && e.target && e.target.id !== 'pdp-overlay') return;
   document.getElementById('pdp-overlay').classList.remove('open');
   document.body.style.overflow = '';
+  if (pdpOpener) { pdpOpener.focus?.(); pdpOpener = null; }
 }
 
 export function selectVariant(variantId) {

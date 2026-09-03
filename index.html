@@ -305,6 +305,7 @@
     initStore, esc, formatPrice, productName, productSizes,
     getProductImage, getBeanImage, variants, CONCEPTS,
     productByHandle, inStock, openProduct, barOpen, barOpensAt, storeOffline,
+    productHref,
   } from './shopify.js';
 
   /* The drinks, leads and grid alike, rendered from Shopify in the shop
@@ -335,7 +336,9 @@
        sentence taken off; one source for what is in the glass. */
     const ing = String(p.description || '').replace(/\.?\s*Pick-up.*$/i, '');
     return `
-      <div class="card drink-card" onclick="openProduct('${esc(p.handle)}')">
+      <div class="card drink-card">
+        <a class="card-hit" href="${productHref(p)}" aria-label="${esc(productName(p))}"
+          onclick="event.preventDefault(); openProduct('${esc(p.handle)}')"></a>
         <div class="card-img">
           <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}"${
             IMAGE_POSITION[p.handle] ? ` style="object-position:${IMAGE_POSITION[p.handle]}"` : ''} />
@@ -423,7 +426,9 @@
       const action = only ? `addToCartHandler('${only.id}')` : `openProduct('${p.id}')`;
 
       return `
-        <div class="card shop-card" onclick="openProduct('${p.id}')">
+        <div class="card shop-card">
+          <a class="card-hit" href="${productHref(p)}" aria-label="${esc(name)}"
+            onclick="event.preventDefault(); openProduct('${p.id}')"></a>
           <div class="card-img">
             <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}" />
             <img class="card-alt" src="${getBeanImage(p)}" alt="" aria-hidden="true" loading="lazy" />

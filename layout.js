@@ -16,7 +16,7 @@ const NAV = `
     <a href="arrangements.html">Arrangements</a>
     <a href="about.html">About</a>
     <a href="visit.html">Visit</a>
-    <a onclick="openCart()" id="bag-link">Bag (0)</a>
+    <a href="#" role="button" onclick="event.preventDefault(); openCart()" id="bag-link">Bag (0)</a>
   </div>
   <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" onclick="toggleNav()">
     <span></span><span></span>
