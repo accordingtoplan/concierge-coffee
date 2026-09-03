@@ -483,6 +483,7 @@
     right: -400px;
     width: 360px;
     height: 100vh;
+    height: 100dvh;
     background: #fff;
     z-index: 201;
     display: flex;

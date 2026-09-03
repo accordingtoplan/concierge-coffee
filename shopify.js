@@ -203,14 +203,14 @@ export function inStock(p) { return variants(p).some(v => v.availableForSale); }
    in the repo, keyed on handle so a photograph uploaded to Shopify silently
    takes over. */
 const FALLBACK_IMAGES = {
-  'espresso-roast': 'images/product-blank.jpg',
-  'espresso-blend-250g': 'images/product-espresso.jpg',
-  'filter-single-origin-250g': 'images/product-colombia.jpg',
-  'decaf-roast': 'images/product-blank-overhead.jpg',
-  'seasonal-limited': 'images/product-peru.jpg',
+  'espresso-roast': 'images/concierge-coffee-espresso-roast-bag.webp',
+  'espresso-blend-250g': 'images/concierge-coffee-espresso-blend-bag.webp',
+  'filter-single-origin-250g': 'images/concierge-coffee-filter-single-origin-bag.webp',
+  'decaf-roast': 'images/concierge-coffee-decaf-roast-bag.webp',
+  'seasonal-limited': 'images/concierge-coffee-seasonal-limited-bag.webp',
   /* Saffron Latte has no photograph in Shopify yet; the crop from the Local
      Lens feature carries the card until one is uploaded. */
-  'saffron-latte': 'images/drink-saffron-latte.jpg',
+  'saffron-latte': 'images/concierge-coffee-saffron-latte.webp',
 };
 
 
@@ -223,21 +223,21 @@ export function sized(url, width = 800) {
 }
 
 export function getProductImage(p, width = 800) {
-  const url = p.images.edges[0]?.node?.url || FALLBACK_IMAGES[p.handle] || 'images/espresso.jpeg';
+  const url = p.images.edges[0]?.node?.url || FALLBACK_IMAGES[p.handle] || 'images/concierge-coffee-espresso.webp';
   return sized(url, width);
 }
 
 /* Hover layer: the roasted bean, darker for the espresso roasts and lighter
    for the filters, so the swap says something about the coffee. */
 const BEANS = {
-  'espresso-blend-250g': 'images/beans-dark.jpg',
-  'espresso-roast': 'images/beans-dark.jpg',
-  'filter-single-origin-250g': 'images/beans-medium.jpg',
-  'decaf-roast': 'images/beans-medium.jpg',
-  'seasonal-limited': 'images/beans-medium.jpg',
+  'espresso-blend-250g': 'images/concierge-coffee-espresso-roast-beans.webp',
+  'espresso-roast': 'images/concierge-coffee-espresso-roast-beans.webp',
+  'filter-single-origin-250g': 'images/concierge-coffee-filter-roast-beans.webp',
+  'decaf-roast': 'images/concierge-coffee-filter-roast-beans.webp',
+  'seasonal-limited': 'images/concierge-coffee-filter-roast-beans.webp',
 };
 
-export function getBeanImage(p) { return BEANS[p.handle] || 'images/beans-dark.jpg'; }
+export function getBeanImage(p) { return BEANS[p.handle] || 'images/concierge-coffee-espresso-roast-beans.webp'; }
 
 export function productHref(p) { return `product.html?p=${encodeURIComponent(p.handle)}`; }
 
@@ -252,10 +252,10 @@ export const CONCEPTS = [];  // Doorman, Valet, Night Porter removed Aug 2026
    say so rather than carrying a price that does not exist. */
 export const MERCH = [
   { name: 'Porsche 911 Carrera RSR', sub: 'TAMIYA · Concierge Limited Special Edition · Handmade',
-    img: 'images/merch-rc-car-1.jpg', fit: 'contain', bg: '#fff' },
-  { name: 'Water Bottle', sub: 'Limited Edition · KINTO', img: 'images/merch-waterbottle.webp' },
-  { name: 'T-Shirt',      sub: 'Limited Edition',         img: 'images/merch-tshirt.jpg' },
-  { name: 'Sweater',      sub: 'Limited Edition · Reverse Weave', img: 'images/merch-sweater.jpg' },
+    img: 'images/concierge-coffee-tamiya-porsche-911-rsr-livery.webp', fit: 'contain', bg: '#fff' },
+  { name: 'Water Bottle', sub: 'Limited Edition · KINTO', img: 'images/concierge-coffee-kinto-water-bottle.webp' },
+  { name: 'T-Shirt',      sub: 'Limited Edition',         img: 'images/concierge-coffee-t-shirt.webp' },
+  { name: 'Sweater',      sub: 'Limited Edition · Reverse Weave', img: 'images/concierge-coffee-reverse-weave-sweater.webp' },
 ];
 
 /* ── SHOP CARD ──
