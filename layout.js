@@ -44,7 +44,6 @@ const FOOTER = `
     <div class="ft-h">Shop</div>
     <ul class="ft-links" id="footer-links">
       <li><a href="shop.html">Coffee</a></li>
-      <li><a href="index.html#menu">Drinks</a></li>
     </ul>
   </div>
   <div class="ft-col ft-col--info">
