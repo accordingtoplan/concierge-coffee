@@ -91,25 +91,6 @@
 <!-- The quick add panel and the bag are injected by shopify.js, so every page
      that sells carries the same two. -->
 
-<!-- MENU -->
-<section class="shop" id="menu">
-  <div class="menu-head">
-    <h2 class="shop-title">Drinks</h2>
-  </div>
-  <!-- Rewritten by renderDrinks() while pick-up ordering lives in Square
-       Online; this text is the wording for when the site sells drinks again. -->
-  <p class="menu-pickup" id="menu-pickup">Order online, pick up at the bar. 821 Traction Ave, Arts District, Downtown LA.</p>
-  <!-- The two iced leads. Rendered from Shopify like the shop cards, so name,
-       price and button all come from the store; the markup here is only the
-       slot. Two columns, in place of the old Specialty of the Month band. -->
-  <div class="menu-lead" id="menu-lead"></div>
-  <!-- Two rows of four, rendered from Shopify like the leads above: the
-       signatures and milk drinks first, the ice cream and tea row after.
-       Empty in menu mode. -->
-  <div class="menu-grid" id="menu-grid"></div>
-
-</section>
-
 <!-- ABRAZO -->
 <section class="shop" id="abrazo">
   <div class="shop-head">
@@ -240,124 +221,9 @@
      the product pages load as well. */
   import {
     initStore, esc, formatPrice, productName, productSizes,
-    getProductImage, getBeanImage, variants, CONCEPTS,
-    productByHandle, inStock, openProduct, barOpen, barOpensAt, storeOffline,
-    productHref, DRINKS_ORDERABLE, ORDER_URL, hasPhoto, menuStub,
+    getProductImage, getBeanImage, variants, CONCEPTS, storeOffline,
+    productHref,
   } from './shopify.js';
-
-  /* The drinks, leads and grid alike, rendered from Shopify in the shop
-     card language. The handle lists are the only layout decision the page
-     keeps: which drinks lead, and the row order below. Everything else,
-     name, ingredients, price, sizes, photograph, comes from the store. */
-  const MENU_LEADS = ['filter-iced', 'yuzu-matcha-tonic'];
-  const MENU_GRID = [
-    'einspanner', 'flat-white', 'latte-iced', 'matcha-latte-iced',
-    'affogato', 'cardamom-rose-cream-top', 'matcha-affogato', 'hojicha-latte',
-  ];
-
-  /* Menu mode, while pick-up ordering lives in Square Online: the four
-     photographed drinks make a row, and that row is the whole section.
-     Benjamin's four photographs, 11 Sep 2026; the rest of the menu is on
-     the wall at the bar. Name, ingredients and price still come from the
-     store. */
-  const MENU_PHOTOS = ['einspanner', 'yuzu-matcha-tonic', 'latte-iced', 'saffron-latte'];
-
-  /* Where the 3/4 crop should sit per photograph, when centre cuts the
-     drink. */
-  const IMAGE_POSITION = {};
-
-
-  function drinkCardHTML(p) {
-    /* A menu prints the price whether or not the glass is for sale here. */
-    const vs = variants(p).filter(v => !DRINKS_ORDERABLE || v.availableForSale);
-    const price = formatPrice(Math.min(...vs.map(v => Number(v.price.amount))));
-    const closed = !barOpen();
-    const cta = closed ? `Closed · ${barOpensAt()}`
-      : vs.length > 1 ? `Order for Pick-up · from ${price}` : `Order for Pick-up · ${price}`;
-    /* The short form for a two-up phone card; same meaning, less width. */
-    const ctaTight = closed ? `Closed · ${barOpensAt()}`
-      : vs.length > 1 ? `Pick-up · from ${price}` : `Pick-up · ${price}`;
-    const sizes = productSizes(p).join(' / ');
-    /* The ingredient line is the Shopify description with the pick-up
-       sentence taken off; one source for what is in the glass. */
-    const ing = String(p.description || '').replace(/\.?\s*Pick-up.*$/i, '');
-    /* Menu mode (DRINKS_ORDERABLE false): the same card without anything to
-       click. No link over it, no button, no closed state; name, what is in
-       the glass, sizes and price. */
-    if (!DRINKS_ORDERABLE) return `
-      <div class="card drink-card drink-card--menu">
-        <div class="card-img">
-          <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}"${
-            IMAGE_POSITION[p.handle] ? ` style="object-position:${IMAGE_POSITION[p.handle]}"` : ''} />
-          <div class="card-face">
-            <div>
-              <div class="card-blend">${esc(productName(p))}</div>
-              <div class="drink-ing">${esc(ing)}</div>
-            </div>
-            <div class="card-meta">
-              <span>${esc(sizes)}</span>
-              <span>${price}</span>
-            </div>
-          </div>
-        </div>
-      </div>`;
-    return `
-      <div class="card drink-card">
-        <a class="card-hit" href="${productHref(p)}" aria-label="${esc(productName(p))}"
-          onclick="event.preventDefault(); openProduct('${esc(p.handle)}')"></a>
-        <div class="card-img">
-          <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}"${
-            IMAGE_POSITION[p.handle] ? ` style="object-position:${IMAGE_POSITION[p.handle]}"` : ''} />
-          <div class="card-face">
-            <div>
-              <div class="card-blend">${esc(productName(p))}</div>
-              <div class="drink-ing">${esc(ing)}</div>
-            </div>
-            <div>
-              <div class="card-meta">
-                <span>${esc(sizes)}</span>
-                <span>${price}</span>
-              </div>
-              <button class="card-cta"${closed ? ' disabled' : ''} aria-label="${esc(cta)}"
-                onclick="event.stopPropagation(); openProduct('${esc(p.handle)}')"><span class="cta-full" aria-hidden="true">${esc(cta)}</span><span class="cta-tight" aria-hidden="true">${esc(ctaTight)}</span></button>
-            </div>
-          </div>
-        </div>
-      </div>`;
-  }
-
-  function renderMenu() {
-    const lead = document.getElementById('menu-lead');
-    lead.classList.add('menu-lead--photos');
-    /* Stock does not matter on a menu. The grid under the row stays empty
-       in this mode; it is the shop grid's slot for when the site sells. */
-    const photos = MENU_PHOTOS.map(h => productByHandle(h) || menuStub(h)).filter(p => p && hasPhoto(p));
-    lead.innerHTML = photos.map(drinkCardHTML).join('');
-    document.getElementById('menu-grid').innerHTML = '';
-    /* The line under the headline. Ordering lives in Square Online: link
-       there once order.conciergecoffee.com exists, and until then say
-       where the bar is. The markup keeps the wording for selling again. */
-    document.getElementById('menu-pickup').innerHTML = ORDER_URL
-      ? `<a href="${esc(ORDER_URL)}" target="_blank" rel="noopener">Order ahead for pick-up</a>. 821 Traction Ave, Arts District, Downtown LA.`
-      : 'Drinks at the bar, 821 Traction Ave, Arts District, Downtown LA.';
-    document.getElementById('menu').hidden = !photos.length;
-  }
-
-  function renderDrinks() {
-    if (!DRINKS_ORDERABLE) { renderMenu(); return; }
-    const fill = (id, handles) => {
-      document.getElementById(id).innerHTML = handles
-        .map(productByHandle).filter(p => p && inStock(p))
-        .map(drinkCardHTML).join('');
-      return document.getElementById(id).innerHTML !== '';
-    };
-    const anyLead = fill('menu-lead', MENU_LEADS);
-    const anyGrid = fill('menu-grid', MENU_GRID);
-    /* No drinks -- Shopify down, or everything unstocked. A headline, a
-       pick-up promise and a credits line over nothing is worse than no
-       section at all. */
-    document.getElementById('menu').hidden = !(anyLead || anyGrid);
-  }
 
   function renderConcepts() {
     return CONCEPTS.map(c => `
@@ -433,7 +299,7 @@
     }).join('') + renderConcepts();
   }
 
-  initStore({ render: renderProducts }).then(renderDrinks);
+  initStore({ render: renderProducts });
 </script>
 </body>
 </html>

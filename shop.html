@@ -67,14 +67,6 @@
   </div>
 </section>
 
-<section class="shop" id="drinks">
-  <div class="shop-head">
-    <h2 class="shop-title">Drinks</h2>
-  </div>
-  <p class="sp-note">Ordered online, picked up at the bar. 821 Traction Ave, Arts District, Downtown LA.</p>
-  <div class="sp-grid" id="drinks-grid"></div>
-</section>
-
 <!-- FOOTER -->
 <!-- Shared across the site: layout.js fills this in. -->
 <footer></footer>
@@ -101,21 +93,15 @@
 </script>
 
 <script type="module">
-  /* The shop page draws from Shopify: the coffee, and the drinks while
-     they are for sale here. Merch came off the site 11 Sep 2026. */
-  import { initStore, shopCardHTML, allProducts, isDrink, DRINKS_ORDERABLE } from './shopify.js';
+  /* The shop page is the coffee, from Shopify. Drinks and merch came off
+     the site 11 Sep 2026; drinks are ordered through Square Online. */
+  import { initStore, shopCardHTML } from './shopify.js';
 
   function render(products) {
     document.getElementById('coffee-grid').innerHTML = products.length
       ? products.map(shopCardHTML).join('')
       : '<p class="sp-note" style="grid-column:1/-1">The shop is not answering just now. Try again in a moment.</p>';
 
-    /* Drinks sell here only while the site takes pick-up orders. In menu
-       mode they live on the homepage as a menu and this section stays
-       hidden. No drinks -- Shopify down, or everything unstocked -- same. */
-    const drinks = DRINKS_ORDERABLE ? allProducts().filter(isDrink) : [];
-    document.getElementById('drinks-grid').innerHTML = drinks.map(shopCardHTML).join('');
-    document.getElementById('drinks').hidden = !drinks.length;
   }
 
   initStore({ render });

@@ -125,7 +125,6 @@
   nav.open .nav-toggle span:first-child { transform: translateY(3px) rotate(45deg); }
   nav.open .nav-toggle span:last-child  { transform: translateY(-3px) rotate(-45deg); }
 
-
   /* ── HERO ── */
   /* ── PAGE CEILING ──
      The layout had none, so it did not get better on a large display, only
@@ -265,8 +264,7 @@
   .card-hit { position: absolute; inset: 0; z-index: 1; }
   .card-hit:focus-visible { outline: 2px solid #111; outline-offset: 2px; }
   .card-face { z-index: 2; }
-  .shop-card:focus-within .card-cta,
-  .drink-card:focus-within .card-cta { opacity: 1; transform: none; pointer-events: auto; }
+  .shop-card:focus-within .card-cta { opacity: 1; transform: none; pointer-events: auto; }
 
   .card-img {
     width: 100%;
@@ -372,15 +370,6 @@
   .card-cta:hover { background: #f0f0f0; }
   .card-cta:disabled { background: rgba(255,255,255,0.35); color: rgba(255,255,255,0.8); cursor: default; }
 
-  .card-info {
-    padding: 10px 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-  }
-
-  .card-name { font-family: var(--serif); font-size: 13px; font-weight: 400; }
-  .card-sub { font-size: 10px; color: var(--muted); margin-top: 3px; }
   .card-price { font-size: 11px; color: #111; }
 
   /* ── QUICK ADD ──
@@ -638,231 +627,6 @@
   }
   .ft-copy .ft-credit { justify-self: end; }
 
-  /* ── MENU ── */
-  .menu-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding-bottom: var(--head-gap);
-  }
-
-  /* The pick-up promise is the section's one operational fact, so it reads
-     as a line of its own under the headline rather than a footnote, and it
-     stays on phones. */
-  .menu-pickup {
-    margin: -6px 0 var(--head-gap);
-    font-size: 13px;
-    line-height: 1.6;
-    max-width: 52ch;
-  }
-
-  /* ── FEATURE BAND ──
-     One photograph across the width of the section with the type overlaid at
-     the foot. Shared by the Specialty of the Month and by the merch lead, so
-     the two read as the same device rather than as two inventions.
-
-     Every drink and merch photograph is portrait 3/4, so the band ratio is
-     the thing that has to give: 16/9 is the widest crop that still holds a
-     whole cup, and the car survives 2/1 because it is a landscape subject in
-     a portrait frame. The vertical anchor lives inline on each img, because
-     it belongs to that photograph and changes when the photograph does. */
-  .feature {
-    position: relative;
-    display: block;
-    color: inherit;
-    margin-bottom: var(--card-gap);
-    overflow: hidden;
-  }
-  .feature .card-img { aspect-ratio: 16/9; }
-  .feature--wide .card-img { aspect-ratio: 2/1; }
-  /* the render is 16/9 on white, so this crops nothing at all */
-  .feature--onwhite .card-img { aspect-ratio: 16/9; }
-  .feature .card-img img { transition: transform 0.9s cubic-bezier(0.22,1,0.36,1); }
-  .feature:hover .card-img img { transform: scale(1.03); }
-
-  .feature-face {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 32px;
-    color: #fff;
-    background: linear-gradient(to bottom,
-      rgba(0,0,0,0) 42%, rgba(0,0,0,0.30) 68%, rgba(0,0,0,0.74) 100%);
-  }
-  .feature-kicker {
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-  .feature-name {
-    font-family: var(--serif);
-    font-size: clamp(26px, 3.4vw, 46px);
-    font-weight: 400;
-    line-height: 1.04;
-    letter-spacing: -0.01em;
-  }
-  .feature-cat { font-size: 12px; line-height: 1.6; margin-top: 10px; max-width: 42ch; }
-
-  /* ── SPLIT FEATURE ──
-     The Specialty of the Month reads across two columns rather than as a full
-     width band: the picture keeps close to its native portrait crop instead of
-     being cut to 16/9, and at half the page width the 900px source is no
-     longer being upscaled. The merch lead stays full width, so the two
-     sections still open differently. */
-  .feature--split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: stretch;
-    column-gap: var(--card-gap);
-  }
-  /* 4/5 -- the ratio of the picture itself, so cover crops nothing. The file
-     is the original Instagram frame now rather than the 900x1200 crop the site
-     had been carrying, which is why the phone and the sunglasses finally sit
-     inside the frame with air around them instead of running off the edge.
-     Every square or portrait shape tried before this was trimming a picture
-     that was already trimmed. */
-  .feature--split .card-img { aspect-ratio: 1/1; }
-
-  .feature--split .feature-face {
-    position: static;
-    inset: auto;
-    background: none;
-    color: #111;
-    justify-content: center;
-    padding: 0 clamp(18px, 3.5vw, 64px);
-  }
-  .feature--split .feature-kicker { color: var(--muted); }
-  .feature--split .feature-name { font-size: clamp(28px, 3.6vw, 52px); }
-  .feature--split .feature-cat { color: var(--muted); font-size: 13px; line-height: 1.75; max-width: 40ch; }
-  .feature--split .feature-note {
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-top: 26px;
-  }
-
-  /* ── DRINK GRID ──
-     Four up, every card the same size, the row ending exactly on the section
-     gutter. The rail this replaces cut its last card at the edge as a scroll
-     affordance; read as a broken grid instead, which is a fair verdict when
-     every other block on the page ends flush. */
-  .menu-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--card-gap);
-  }
-
-  .menu-sub {
-    font-size: 9px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    padding: 40px 0 12px;
-  }
-
-  .menu-sub:first-of-type { padding-top: 0; }
-
-
-  /* ── MENU CARD ──
-     The drink photography is other people's. Hover credits the photographer
-     and links the post it came from, where that post is known. */
-  .menu-card { cursor: default; }
-  .menu-card .card-info { display: block; padding: 10px 0 20px; }
-  .menu-card .card-cat {
-    font-size: 10px;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-top: 3px;
-  }
-
-  /* Drink cards, leads and grid alike. The shop card language: name on the
-     picture, ingredients under it, price at the foot, the order button
-     rising on hover. No bean layer to crossfade to, so the photograph holds
-     through the hover and only the button rises. */
-  .menu-lead {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--card-gap);
-    margin-bottom: var(--card-gap);
-  }
-  /* Square, unlike the 3/4 cards everywhere else: two columns wide, the
-     portrait crop would tower. */
-  .menu-lead .card-img { aspect-ratio: 1/1; }
-  /* On a phone the two leads stack full width; they lead. */
-  @media (max-width: 480px) {
-    .menu-lead { grid-template-columns: 1fr; }
-  }
-  .drink-card:hover .card-cta { opacity: 1; transform: translateY(0); pointer-events: auto; }
-  /* ── MENU MODE ──
-     Pick-up ordering lives in Square Online (11 Sep 2026), so the drinks
-     read as a menu: the four photographed drinks make a row, as many
-     columns as there are photographs, and that row is the section. Doubled
-     selector on purpose: .menu-lead has its own phone breakpoint later in
-     the file. */
-  .drink-card--menu { cursor: default; }
-  .menu-pickup a { border-bottom: 1px solid #eee; transition: border-color 0.15s; }
-  .menu-pickup a:hover { border-color: #111; }
-  .menu-lead.menu-lead--photos {
-    grid-template-columns: none;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-  }
-  .menu-lead.menu-lead--photos .card-img { aspect-ratio: 3/4; }
-  @media (max-width: 640px) {
-    .menu-lead.menu-lead--photos { grid-auto-flow: row; grid-template-columns: repeat(2, 1fr); }
-  }
-  .drink-ing {
-    margin-top: 6px;
-    font-size: 11px;
-    letter-spacing: 0.03em;
-    line-height: 1.6;
-    max-width: 44ch;
-    opacity: 0.85;
-  }
-  /* Grid cards carry a smaller ingredient line than the leads. */
-  .menu-grid .drink-ing { font-size: 10px; margin-top: 4px; }
-
-  /* The drink hover: a harder push in and the colour drained, so the grid
-     reads documentary the moment a card is considered. */
-  .drink-card:hover .card-img img { transform: scale(1.22); filter: grayscale(1); }
-
-  .card-img--empty {
-    display: flex;
-    align-items: flex-end;
-    padding: 12px;
-  }
-
-  .card-img--empty span {
-    font-size: 9px;
-    color: #ddd;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-  }
-
-
-  .card-img--slide { position: relative; overflow: hidden; }
-
-  .slide-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
-
-  .slide-img--1 { opacity: 1; transform: translateX(0); }
-  .slide-img--2 { opacity: 0; transform: translateX(8px); }
-
-  .card:hover .slide-img--1 { opacity: 0; transform: translateX(-8px); }
-  .card:hover .slide-img--2 { opacity: 1; transform: translateX(0); }
-
   /* loading skeleton */
   .skeleton {
     background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
@@ -896,15 +660,7 @@
     :root { --section-gap: 104px; --head-gap: 22px; --card-gap: 14px; }
     nav, .hero, .shop, footer { padding-left: 24px; padding-right: 24px; }
     .grid { grid-template-columns: repeat(3, 1fr); }
-    .menu-grid { grid-template-columns: repeat(3, 1fr); }
-    .feature .card-img { aspect-ratio: 3/2; }
-    /* restated, not inherited: .feature .card-img sits later in the file at
-       the same specificity, so without this it becomes 3/2 here */
-    .feature--split .card-img { aspect-ratio: 1/1; }
-    .feature--wide .card-img { aspect-ratio: 16/9; }
-    .feature--onwhite .card-img { aspect-ratio: 3/2; }
-    .feature-face { padding: 26px 24px; }
-    .feature--split .feature-face { padding: 0 24px; }
+
     footer { grid-template-columns: 1fr 1fr; gap: 36px; }
   }
 
@@ -950,20 +706,7 @@
     .hero-hours { text-align: left; align-self: flex-start; }
     .shop { padding-bottom: var(--section-gap); }
     .grid { grid-template-columns: repeat(2, 1fr); }
-    .menu-grid { grid-template-columns: repeat(2, 1fr); }
-    /* a feature on a phone wants height, not width, and 4/5 is close to
-       the native crop so it barely crops at all */
-    .feature .card-img { aspect-ratio: 4/5; }
-    /* restated here too, for the same reason */
-    .feature--split .card-img { aspect-ratio: 1/1; }
-    .feature--wide .card-img { aspect-ratio: 4/3; }
-    .feature--onwhite .card-img { aspect-ratio: 4/3; }
-    .feature-face { padding: 18px 16px; }
-    .feature-cat { max-width: none; }
-    /* stacked: picture, then type under it on white. Capped, because at 736
-       wide an uncropped 4/5 picture is 920 tall -- a whole screen for one
-       drink. The cap sizes it without cropping anything back off. */
-    .feature--split { grid-template-columns: 1fr; }
+
     /* stacked, picture first: the section should open with an image like the
        ones above it, and the facts read better under it than over it */
     .story-split { grid-template-columns: 1fr; gap: 18px; }
@@ -971,11 +714,7 @@
     /* Doubled selector on purpose: the base --wide rule sits later in the
        file, so the mobile override needs the extra weight to win. */
     .story-split.story-split--wide { grid-template-columns: 1fr; }
-    .feature--split .card-img { max-width: 640px; }
-    .feature--split .feature-face { padding: 16px 0 0; }
-    .feature--split .feature-cat { max-width: none; margin-top: 8px; }
-    .feature--split .feature-note { margin-top: 14px; }
-    .menu-head { padding-bottom: var(--head-gap); }
+
     .pdp-overlay { padding: 12px; }
     .qa-modal { max-width: 460px; }
     .cart-drawer { width: 100%; right: -100%; padding: 24px 16px; }
@@ -990,7 +729,6 @@
     .logo .lk { width: 20.1px; height: 16px; }
     .logo .lw { width: 60.7px; height: 13px; }
     .shop-head { padding-bottom: var(--head-gap); }
-    .menu-grid { grid-template-columns: repeat(2, 1fr); }
 
     /* Shop card at two up. The face has to carry a name, a size, a price and
        a button in about 145px of usable width. */
@@ -1032,7 +770,6 @@
     .ft-links a { font-size: 13px; }
     .ft-copy { margin-top: 24px; padding-top: 20px; border-top: 1px solid #f0f0f0; }
   }
-
 
   .story-facts { display: flex; flex-direction: column; gap: 26px; }
   .story-fact-h {
@@ -1097,16 +834,6 @@
     filter: grayscale(1);
   }
 
-  /* A studio render on white cannot carry white type over a scrim, so this
-     variant drops the overlay and sets the name beneath the picture. */
-  .feature--onwhite .feature-face {
-    position: static;
-    background: none;
-    color: #111;
-    padding: 14px 0 0;
-  }
-  .feature--onwhite .feature-cat { color: var(--muted); max-width: none; }
-
   /* ── TOUCH ──
      There is no hover on a phone, so anything that only appears on hover would
      never appear at all. The buy button and the photo credits are shown
@@ -1124,38 +851,6 @@
        the end of the address line. width:max-content keeps the tap box on the
        text rather than spanning the column. */
     .ft-addr a { display: block; width: max-content; max-width: 100%; padding: 6px 0; }
-  }
-
-
-  /* ── SHOP PAGE EXTRAS ──
-     Rules the shop page carried on top of the shared core. */
-  .menu-note { font-size: 10px; color: var(--muted); }
-  .menu-card .card-img img { transition: transform 0.7s cubic-bezier(0.22,1,0.36,1); }
-  .menu-card:hover .card-img img { transform: scale(1.06); }
-  a.menu-card { cursor: pointer; display: block; color: inherit; }
-  .menu-credit {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: flex-end;
-    padding: 14px;
-    background: linear-gradient(to top,
-      rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.16) 34%, rgba(0,0,0,0) 62%);
-    opacity: 0;
-    transition: opacity 0.35s ease;
-    pointer-events: none;
-  }
-  .menu-card:hover .menu-credit { opacity: 1; }
-  .menu-credit span {
-    font-size: 10px;
-    color: #fff;
-    letter-spacing: 0.06em;
-  }
-  @media (max-width: 768px) {
-    .menu-note { display: none; }
-  }
-  @media (hover: none) {
-    .menu-credit { opacity: 1; }
   }
 
   /* ── SHOP PAGE ──
@@ -1215,23 +910,11 @@
   .sp-add:hover { background: #111; color: #fff; }
   .sp-add:disabled { border-color: #ececec; color: var(--muted); background: #fff; cursor: default; }
 
-  /* Not for sale: the proposals are not products yet and none of the merch is
-     in the shop, so those cards carry a state where the button would be
-     rather than a button that cannot do anything. */
-  .sp-state {
-    margin-top: 12px; padding: 13px 0 0;
-    border-top: 1px solid #f0f0f0;
-    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
-  }
-  .sp-card--static { cursor: default; }
-
   /* The Porsche is a landscape render on white and the lead of the section, so
      it takes two columns at its own ratio instead of being cropped into a
      portrait card. */
   .sp-card--lead { grid-column: 1 / -1; }
   .sp-card--lead .card-img { aspect-ratio: 16/9; }
-  .sp-card--fit .card-img { background: #fff; }
-  .sp-card--fit .card-img img { object-fit: contain; }
 
   .sp-note { font-size: 11px; line-height: 1.8; color: var(--muted); max-width: 46ch; padding-bottom: var(--head-gap); }
 
