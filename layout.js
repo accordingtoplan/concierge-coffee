@@ -5,6 +5,8 @@
    lives here and only here. The crossed keys and the wordmark reference the
    SVG symbols every page already defines. */
 
+import { ORDER_URL } from './shopify.js';
+
 const NAV = `
   <a href="index.html" class="logo" aria-label="Concierge Coffee &mdash; home">
     <svg class="lk" viewBox="0 0 151.07 120.06" aria-hidden="true"><use href="#cc-keys"/></svg>
@@ -59,6 +61,15 @@ const FOOTER = `
 
 document.querySelectorAll('nav').forEach(n => { n.innerHTML = NAV; });
 document.querySelectorAll('footer').forEach(f => { f.innerHTML = FOOTER; });
+
+/* Pick-up orders live in Square Online. The footer carries the link once
+   the ordering subdomain exists; until then the Shop column is as above. */
+if (ORDER_URL) {
+  document.querySelectorAll('#footer-links').forEach(ul => {
+    ul.insertAdjacentHTML('beforeend',
+      `<li><a href="${ORDER_URL}" target="_blank" rel="noopener">Order for pick-up</a></li>`);
+  });
+}
 
 /* The current page gets its nav link marked, read from the address rather
    than written six times into six files. */

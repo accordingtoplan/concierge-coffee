@@ -69,6 +69,20 @@ export function allProducts() { return products; }
    but can still be opened, bought and bagged like the rest. */
 export function isDrink(p) { return (p.tags || []).includes('drink'); }
 
+/* ── DRINKS: MENU OR SHOP ──
+   Decided with Benjamin, 11 Sep 2026: pick-up orders live in Square Online,
+   not here. The drinks still render from Shopify, but as a menu: name,
+   ingredients, price, no buy control, no time slot, no bar-hours gating, no
+   product page and no quick add panel. Flip this to true and all of that
+   comes back; nothing below it is deleted, because the decision is to
+   compare notes a few weeks after Square Online is live. */
+export const DRINKS_ORDERABLE = false;
+
+/* Where "order ahead" points once order.conciergecoffee.com exists (item 8
+   of the September handover). Empty until then, and the pages say where the
+   bar is instead of linking anywhere. */
+export const ORDER_URL = '';
+
 /* ── PICK-UP HOURS ──
    Drinks are made at 821 Traction Ave, so they can only be ordered while
    the bar is open, on Los Angeles time wherever the customer sits.
@@ -220,6 +234,13 @@ const FALLBACK_IMAGES = {
 export function sized(url, width = 800) {
   if (!url || !/cdn\.shopify\.com/.test(url)) return url;
   return url + (url.includes('?') ? '&' : '?') + 'width=' + width;
+}
+
+/* Whether a card can show this product honestly: a photograph in Shopify,
+   or a frame in the repo for it. Without either, getProductImage() hands
+   back the espresso bag, which a drink must never wear. */
+export function hasPhoto(p) {
+  return (p.images?.edges?.length || 0) > 0 || p.handle in FALLBACK_IMAGES;
 }
 
 export function getProductImage(p, width = 800) {
@@ -557,6 +578,8 @@ function placeQaModal() {
 export function openProduct(key) {
   const p = products.find(x => x.id === key || x.handle === key);
   if (!p) return;
+  /* A drink on the menu is not for sale here; the panel stays shut. */
+  if (isDrink(p) && !DRINKS_ORDERABLE) return;
   currentProduct = p;
 
   const vs = variants(p);

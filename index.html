@@ -96,7 +96,9 @@
   <div class="menu-head">
     <h2 class="shop-title">Drinks</h2>
   </div>
-  <p class="menu-pickup">Order online, pick up at the bar. 821 Traction Ave, Arts District, Downtown LA.</p>
+  <!-- Rewritten by renderDrinks() while pick-up ordering lives in Square
+       Online; this text is the wording for when the site sells drinks again. -->
+  <p class="menu-pickup" id="menu-pickup">Order online, pick up at the bar. 821 Traction Ave, Arts District, Downtown LA.</p>
   <!-- The two iced leads. Rendered from Shopify like the shop cards, so name,
        price and button all come from the store; the markup here is only the
        slot. Two columns, in place of the old Specialty of the Month band. -->
@@ -121,10 +123,6 @@
   </div>
   <div class="story-split story-split--wide">
     <div class="story-facts">
-      <div class="story-fact">
-        <h3 class="story-fact-h">The evening</h3>
-        <p>Abrazo is Concierge after dark. The espresso machine goes quiet, the bar pours wine, someone plays records, and the room belongs to the neighbourhood for a night. Something to eat, chess, and whoever is showing work that month.</p>
-      </div>
       <div class="story-fact">
         <h3 class="story-fact-h">Night markets</h3>
         <p>One or two a month, announced on Instagram.</p>
@@ -220,7 +218,7 @@
       <a class="story-more" href="about.html">About &rarr;</a>
     </div>
     <div class="story-img">
-      <img src="images/concierge-coffee-mid-century-espresso-bar.webp" alt="An espresso bar, mid century" loading="lazy" />
+      <img src="images/concierge-coffee-benjamin-espresso-machine-berlin.webp" alt="Benjamin behind the machine in Berlin" loading="lazy" />
     </div>
   </div>
 </section>
@@ -305,7 +303,7 @@
     initStore, esc, formatPrice, productName, productSizes,
     getProductImage, getBeanImage, variants, CONCEPTS,
     productByHandle, inStock, openProduct, barOpen, barOpensAt, storeOffline,
-    productHref,
+    productHref, DRINKS_ORDERABLE, ORDER_URL, allProducts, isDrink, hasPhoto,
   } from './shopify.js';
 
   /* The drinks, leads and grid alike, rendered from Shopify in the shop
@@ -318,9 +316,42 @@
     'affogato', 'cardamom-rose-cream-top', 'matcha-affogato', 'hojicha-latte',
   ];
 
+  /* Menu mode, while pick-up ordering lives in Square Online: the
+     photographed drinks make a row, and every drink is a line in the list
+     under it. Benjamin's four photographs, 11 Sep 2026; the saffron one
+     joins when its product goes live. The list is the menu order; any drink
+     tagged in Shopify but not named here lands at the end, so a new drink
+     shows without a code change. */
+  const MENU_PHOTOS = ['einspanner', 'yuzu-matcha-tonic', 'latte-iced', 'saffron-latte'];
+  const MENU_LIST = [
+    'flat-white', 'latte-iced', 'filter-iced', 'einspanner',
+    'cardamom-rose-cream-top', 'saffron-latte', 'yuzu-matcha-tonic',
+    'matcha-latte-iced', 'hojicha-latte', 'affogato', 'matcha-affogato',
+  ];
+
   /* Where the 3/4 crop should sit per photograph, when centre cuts the
      drink. */
   const IMAGE_POSITION = {};
+
+  /* One line of the menu: name and what is in the glass on the left, sizes
+     and prices on the right, in the same order. */
+  function menuRowHTML(p) {
+    const vs = variants(p);
+    const ing = String(p.description || '').replace(/\.?\s*Pick-up.*$/i, '');
+    const sizes = productSizes(p).join(' / ');
+    const prices = vs.map(v => formatPrice(v.price.amount)).join(' / ');
+    return `
+      <div class="menu-row" role="listitem">
+        <div>
+          <div class="menu-row-name">${esc(productName(p))}</div>
+          ${ing ? `<div class="menu-row-ing">${esc(ing)}</div>` : ''}
+        </div>
+        <div class="menu-row-price">
+          ${sizes ? `<span>${esc(sizes)}</span>` : ''}
+          <span>${prices}</span>
+        </div>
+      </div>`;
+  }
 
   function drinkCardHTML(p) {
     const vs = variants(p).filter(v => v.availableForSale);
@@ -335,6 +366,26 @@
     /* The ingredient line is the Shopify description with the pick-up
        sentence taken off; one source for what is in the glass. */
     const ing = String(p.description || '').replace(/\.?\s*Pick-up.*$/i, '');
+    /* Menu mode (DRINKS_ORDERABLE false): the same card without anything to
+       click. No link over it, no button, no closed state; name, what is in
+       the glass, sizes and price. */
+    if (!DRINKS_ORDERABLE) return `
+      <div class="card drink-card drink-card--menu">
+        <div class="card-img">
+          <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}"${
+            IMAGE_POSITION[p.handle] ? ` style="object-position:${IMAGE_POSITION[p.handle]}"` : ''} />
+          <div class="card-face">
+            <div>
+              <div class="card-blend">${esc(productName(p))}</div>
+              <div class="drink-ing">${esc(ing)}</div>
+            </div>
+            <div class="card-meta">
+              <span>${esc(sizes)}</span>
+              <span>${price}</span>
+            </div>
+          </div>
+        </div>
+      </div>`;
     return `
       <div class="card drink-card">
         <a class="card-hit" href="${productHref(p)}" aria-label="${esc(productName(p))}"
@@ -360,7 +411,29 @@
       </div>`;
   }
 
+  function renderMenu() {
+    const lead = document.getElementById('menu-lead');
+    const grid = document.getElementById('menu-grid');
+    lead.classList.add('menu-lead--photos');
+    grid.classList.add('menu-grid--list');
+    grid.setAttribute('role', 'list');
+    /* A menu lists what the bar makes, in stock or not. */
+    const photos = MENU_PHOTOS.map(productByHandle).filter(p => p && hasPhoto(p));
+    const named = MENU_LIST.map(productByHandle).filter(Boolean);
+    const rest = allProducts().filter(p => isDrink(p) && !MENU_LIST.includes(p.handle));
+    lead.innerHTML = photos.map(drinkCardHTML).join('');
+    grid.innerHTML = [...named, ...rest].map(menuRowHTML).join('');
+    /* The line under the headline. Ordering lives in Square Online: link
+       there once order.conciergecoffee.com exists, and until then say
+       where the bar is. The markup keeps the wording for selling again. */
+    document.getElementById('menu-pickup').innerHTML = ORDER_URL
+      ? `<a href="${esc(ORDER_URL)}" target="_blank" rel="noopener">Order ahead for pick-up</a>. 821 Traction Ave, Arts District, Downtown LA.`
+      : 'Drinks at the bar, 821 Traction Ave, Arts District, Downtown LA.';
+    document.getElementById('menu').hidden = !(photos.length || named.length || rest.length);
+  }
+
   function renderDrinks() {
+    if (!DRINKS_ORDERABLE) { renderMenu(); return; }
     const fill = (id, handles) => {
       document.getElementById(id).innerHTML = handles
         .map(productByHandle).filter(p => p && inStock(p))

@@ -797,6 +797,62 @@
     .menu-lead { grid-template-columns: 1fr; }
   }
   .drink-card:hover .card-cta { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  /* ── MENU MODE ──
+     Pick-up ordering lives in Square Online (11 Sep 2026), so the drinks
+     read as a menu: the photographed ones make a row, as many columns as
+     there are photographs, and every drink is a line in the two-column list
+     under it. The list is the menu; the photographs are the room. Doubled
+     selectors on purpose: the .menu-grid breakpoints later in the file
+     would otherwise turn the list back into a card grid. */
+  .drink-card--menu { cursor: default; }
+  .menu-pickup a { border-bottom: 1px solid #eee; transition: border-color 0.15s; }
+  .menu-pickup a:hover { border-color: #111; }
+  .menu-lead.menu-lead--photos {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
+  .menu-lead.menu-lead--photos .card-img { aspect-ratio: 3/4; }
+  .menu-grid.menu-grid--list {
+    grid-template-columns: 1fr 1fr;
+    gap: 0 var(--card-gap);
+    align-items: start;
+  }
+  .menu-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 18px;
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+  }
+  .menu-row-name {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  .menu-row-ing {
+    margin-top: 3px;
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 40ch;
+  }
+  .menu-row-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  @media (max-width: 640px) {
+    .menu-lead.menu-lead--photos { grid-auto-flow: row; grid-template-columns: repeat(2, 1fr); }
+    .menu-grid.menu-grid--list { grid-template-columns: 1fr; }
+  }
   .drink-ing {
     margin-top: 6px;
     font-size: 11px;
