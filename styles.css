@@ -1033,19 +1033,6 @@
     .ft-copy { margin-top: 24px; padding-top: 20px; border-top: 1px solid #f0f0f0; }
   }
 
-  /* Merch is a lead plus three accessories, so the grid is three across at
-     every width. #merch .grid outranks the .grid breakpoint rules on
-     specificity, so it holds without being repeated per query. */
-  #merch .grid { grid-template-columns: repeat(3, 1fr); }
-  #merch .card-name { font-size: 13px; }
-  #merch .card-info { display: block; }
-
-  @media (max-width: 480px) {
-    #merch .card-name { font-size: 11px; }
-    #merch .card-sub { display: none; }
-    #merch .card-info { padding: 8px 0 0; }
-  }
-
 
   .story-facts { display: flex; flex-direction: column; gap: 26px; }
   .story-fact-h {

@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shop — Concierge Coffee</title>
-<meta name="description" content="Every coffee Concierge roasts in Los Angeles and Berlin, the blends still under discussion, and the merch.">
+<meta name="description" content="Every coffee Concierge roasts in Los Angeles and Berlin.">
 <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="fonts/newsreader-var.woff2" as="font" type="font/woff2" crossorigin>
 <!-- Absolute URLs below point at the preview domain; swap to the real domain at cutover. -->
 <link rel="canonical" href="https://concierge-coffee.accordingtoplan.co/shop.html">
 <meta property="og:site_name" content="Concierge Coffee">
 <meta property="og:title" content="Shop — Concierge Coffee">
-<meta property="og:description" content="Every coffee Concierge roasts in Los Angeles and Berlin, the drinks, and the merch.">
+<meta property="og:description" content="Every coffee Concierge roasts in Los Angeles and Berlin.">
 <meta property="og:url" content="https://concierge-coffee.accordingtoplan.co/shop.html">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://concierge-coffee.accordingtoplan.co/images/og.jpg">
@@ -75,13 +75,6 @@
   <div class="sp-grid" id="drinks-grid"></div>
 </section>
 
-<section class="shop" id="merch">
-  <div class="shop-head">
-    <h2 class="shop-title">Merch</h2>
-  </div>
-  <div class="sp-grid" id="merch-grid"></div>
-</section>
-
 <!-- FOOTER -->
 <!-- Shared across the site: layout.js fills this in. -->
 <footer></footer>
@@ -108,38 +101,21 @@
 </script>
 
 <script type="module">
-  /* The shop page draws three sections from two sources: the coffee comes
-     from Shopify, the proposals and the merch are lists in shopify.js because
-     neither is a product yet. */
-  import { initStore, esc, shopCardHTML, allProducts, isDrink, MERCH } from './shopify.js';
-
-  function staticCard(item, state, extra) {
-    return `
-      <div class="card sp-card sp-card--static ${extra || ''}">
-        <div class="card-img"${item.bg ? ` style="background:${item.bg}"` : ''}>
-          <img class="card-base" src="${esc(item.img)}" alt="${esc(item.name)}" loading="lazy" />
-        </div>
-        <div class="sp-name">${esc(item.name)}</div>
-        <p class="sp-sub">${esc(item.sub || item.note || '')}</p>
-        <div class="sp-state">${esc(state)}</div>
-      </div>`;
-  }
+  /* The shop page draws from Shopify: the coffee, and the drinks while
+     they are for sale here. Merch came off the site 11 Sep 2026. */
+  import { initStore, shopCardHTML, allProducts, isDrink, DRINKS_ORDERABLE } from './shopify.js';
 
   function render(products) {
     document.getElementById('coffee-grid').innerHTML = products.length
       ? products.map(shopCardHTML).join('')
       : '<p class="sp-note" style="grid-column:1/-1">The shop is not answering just now. Try again in a moment.</p>';
 
-    const drinks = allProducts().filter(isDrink);
+    /* Drinks sell here only while the site takes pick-up orders. In menu
+       mode they live on the homepage as a menu and this section stays
+       hidden. No drinks -- Shopify down, or everything unstocked -- same. */
+    const drinks = DRINKS_ORDERABLE ? allProducts().filter(isDrink) : [];
     document.getElementById('drinks-grid').innerHTML = drinks.map(shopCardHTML).join('');
-    /* No drinks -- Shopify down, or everything unstocked -- no section. */
     document.getElementById('drinks').hidden = !drinks.length;
-
-    /* Four across like the rest of the shop; the Porsche render keeps its
-       white ground and contained fit, but no longer spreads the row. */
-    document.getElementById('merch-grid').innerHTML =
-      MERCH.map((m, i) => staticCard(m, 'Coming soon',
-        i === 0 ? 'sp-card--fit' : '')).join('');
   }
 
   initStore({ render });

@@ -297,17 +297,6 @@ export function menuStub(handle) {
    doorman, maître d'. No "blend" in any name, per the naming note. */
 export const CONCEPTS = [];  // Doorman, Valet, Night Porter removed Aug 2026
 
-/* ── MERCH ──
-   None of it is in Shopify, so none of it can be bought here yet. The cards
-   say so rather than carrying a price that does not exist. */
-export const MERCH = [
-  { name: 'Porsche 911 Carrera RSR', sub: 'TAMIYA · Concierge Limited Special Edition · Handmade',
-    img: 'images/concierge-coffee-tamiya-porsche-911-rsr-livery.webp', fit: 'contain', bg: '#fff' },
-  { name: 'Water Bottle', sub: 'Limited Edition · KINTO', img: 'images/concierge-coffee-kinto-water-bottle.webp' },
-  { name: 'T-Shirt',      sub: 'Limited Edition',         img: 'images/concierge-coffee-t-shirt.webp' },
-  { name: 'Sweater',      sub: 'Limited Edition · Reverse Weave', img: 'images/concierge-coffee-reverse-weave-sweater.webp' },
-];
-
 /* ── SHOP CARD ──
    The card the shop page and the product page both use: picture, name, the
    line Shopify carries if there is one, price and size, and the button that
@@ -534,8 +523,7 @@ function renderFooterLinks() {
   if (!ul || ul.children.length > 1) return;
   ul.innerHTML = `
     <li><a href="shop.html">Coffee</a></li>
-    <li><a href="index.html#menu">Drinks</a></li>
-    <li><a href="shop.html#merch">Merch</a></li>`;
+    <li><a href="index.html#menu">Drinks</a></li>`;
 }
 
 export function openCart() {
