@@ -1161,6 +1161,9 @@
 
   .arr-img { margin-top: 24px; aspect-ratio: 3/2; overflow: hidden; background: #f7f7f7; }
   .arr-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* Four photographs two up, square, under the wholesale form. */
+  .arr-img-grid { margin-top: 24px; display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--card-gap); }
+  .arr-img-grid .arr-img { margin-top: 0; aspect-ratio: 1/1; }
   .arr-rule { height: 1px; background: #f0f0f0; margin: 0 0 56px; }
   .abrazo-copy { margin-top: 18px; }
 
