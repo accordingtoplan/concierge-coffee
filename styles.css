@@ -641,8 +641,10 @@
     margin: -6px 0 var(--head-gap);
     font-size: 13px;
     line-height: 1.6;
-    max-width: 52ch;
+    /* One line on anything wider than a phone; the 52ch measure it had
+       broke "Downtown LA" onto a second line on desktop. */
   }
+  @media (min-width: 769px) { .menu-pickup { white-space: nowrap; } }
 
   /* ── DRINK GRID ──
      Four up, every card the same size, the row ending exactly on the section
