@@ -303,7 +303,7 @@
     initStore, esc, formatPrice, productName, productSizes,
     getProductImage, getBeanImage, variants, CONCEPTS,
     productByHandle, inStock, openProduct, barOpen, barOpensAt, storeOffline,
-    productHref, DRINKS_ORDERABLE, ORDER_URL, allProducts, isDrink, hasPhoto,
+    productHref, DRINKS_ORDERABLE, ORDER_URL, hasPhoto,
   } from './shopify.js';
 
   /* The drinks, leads and grid alike, rendered from Shopify in the shop
@@ -316,42 +316,17 @@
     'affogato', 'cardamom-rose-cream-top', 'matcha-affogato', 'hojicha-latte',
   ];
 
-  /* Menu mode, while pick-up ordering lives in Square Online: the
-     photographed drinks make a row, and every drink is a line in the list
-     under it. Benjamin's four photographs, 11 Sep 2026; the saffron one
-     joins when its product goes live. The list is the menu order; any drink
-     tagged in Shopify but not named here lands at the end, so a new drink
-     shows without a code change. */
+  /* Menu mode, while pick-up ordering lives in Square Online: the four
+     photographed drinks make a row, and that row is the whole section.
+     Benjamin's four photographs, 11 Sep 2026; the rest of the menu is on
+     the wall at the bar. Name, ingredients and price still come from the
+     store. */
   const MENU_PHOTOS = ['einspanner', 'yuzu-matcha-tonic', 'latte-iced', 'saffron-latte'];
-  const MENU_LIST = [
-    'flat-white', 'latte-iced', 'filter-iced', 'einspanner',
-    'cardamom-rose-cream-top', 'saffron-latte', 'yuzu-matcha-tonic',
-    'matcha-latte-iced', 'hojicha-latte', 'affogato', 'matcha-affogato',
-  ];
 
   /* Where the 3/4 crop should sit per photograph, when centre cuts the
      drink. */
   const IMAGE_POSITION = {};
 
-  /* One line of the menu: name and what is in the glass on the left, sizes
-     and prices on the right, in the same order. */
-  function menuRowHTML(p) {
-    const vs = variants(p);
-    const ing = String(p.description || '').replace(/\.?\s*Pick-up.*$/i, '');
-    const sizes = productSizes(p).join(' / ');
-    const prices = vs.map(v => formatPrice(v.price.amount)).join(' / ');
-    return `
-      <div class="menu-row" role="listitem">
-        <div>
-          <div class="menu-row-name">${esc(productName(p))}</div>
-          ${ing ? `<div class="menu-row-ing">${esc(ing)}</div>` : ''}
-        </div>
-        <div class="menu-row-price">
-          ${sizes ? `<span>${esc(sizes)}</span>` : ''}
-          <span>${prices}</span>
-        </div>
-      </div>`;
-  }
 
   function drinkCardHTML(p) {
     const vs = variants(p).filter(v => v.availableForSale);
@@ -413,23 +388,19 @@
 
   function renderMenu() {
     const lead = document.getElementById('menu-lead');
-    const grid = document.getElementById('menu-grid');
     lead.classList.add('menu-lead--photos');
-    grid.classList.add('menu-grid--list');
-    grid.setAttribute('role', 'list');
-    /* A menu lists what the bar makes, in stock or not. */
+    /* Stock does not matter on a menu. The grid under the row stays empty
+       in this mode; it is the shop grid's slot for when the site sells. */
     const photos = MENU_PHOTOS.map(productByHandle).filter(p => p && hasPhoto(p));
-    const named = MENU_LIST.map(productByHandle).filter(Boolean);
-    const rest = allProducts().filter(p => isDrink(p) && !MENU_LIST.includes(p.handle));
     lead.innerHTML = photos.map(drinkCardHTML).join('');
-    grid.innerHTML = [...named, ...rest].map(menuRowHTML).join('');
+    document.getElementById('menu-grid').innerHTML = '';
     /* The line under the headline. Ordering lives in Square Online: link
        there once order.conciergecoffee.com exists, and until then say
        where the bar is. The markup keeps the wording for selling again. */
     document.getElementById('menu-pickup').innerHTML = ORDER_URL
       ? `<a href="${esc(ORDER_URL)}" target="_blank" rel="noopener">Order ahead for pick-up</a>. 821 Traction Ave, Arts District, Downtown LA.`
       : 'Drinks at the bar, 821 Traction Ave, Arts District, Downtown LA.';
-    document.getElementById('menu').hidden = !(photos.length || named.length || rest.length);
+    document.getElementById('menu').hidden = !photos.length;
   }
 
   function renderDrinks() {

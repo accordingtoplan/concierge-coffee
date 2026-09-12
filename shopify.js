@@ -222,8 +222,8 @@ const FALLBACK_IMAGES = {
   'filter-single-origin-250g': 'images/concierge-coffee-filter-single-origin-bag.webp',
   'decaf-roast': 'images/concierge-coffee-decaf-roast-bag.webp',
   'seasonal-limited': 'images/concierge-coffee-seasonal-limited-bag.webp',
-  /* Saffron Latte has no photograph in Shopify yet; the crop from the Local
-     Lens feature carries the card until one is uploaded. */
+  /* Saffron Latte: Benjamin's photograph of the two glasses on the stoop,
+     11 Sep 2026, carried in the repo rather than uploaded to Shopify. */
   'saffron-latte': 'images/concierge-coffee-saffron-latte.webp',
 };
 
