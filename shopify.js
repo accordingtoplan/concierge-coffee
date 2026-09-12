@@ -262,6 +262,35 @@ export function getBeanImage(p) { return BEANS[p.handle] || 'images/concierge-co
 
 export function productHref(p) { return `product.html?p=${encodeURIComponent(p.handle)}`; }
 
+/* ── MENU STUBS ──
+   A drink on the wall that the store does not return: a draft in Shopify,
+   or not entered yet. The Storefront API skips drafts, so the menu row
+   would lose its photograph. The stub carries only what the card prints,
+   shaped like a Storefront product so every helper reads it. The moment
+   the product is Active in Shopify, the store's record silently takes
+   over, as a photograph uploaded there does. */
+const MENU_STUBS = {
+  'saffron-latte': {
+    title: 'Saffron Latte',
+    description: 'Saffron, honey, cinnamon, cardamom, vanilla, double espresso, crushed pistachio, milk.',
+    price: '8.25',
+  },
+};
+
+export function menuStub(handle) {
+  const s = MENU_STUBS[handle];
+  if (!s) return null;
+  return {
+    id: `stub:${handle}`, handle, title: s.title, description: s.description, tags: ['drink'],
+    images: { edges: [] },
+    priceRange: { minVariantPrice: { amount: s.price, currencyCode: 'USD' } },
+    variants: { edges: [{ node: {
+      id: null, title: 'Default Title', price: { amount: s.price },
+      availableForSale: false, selectedOptions: [],
+    } }] },
+  };
+}
+
 /* ── PROPOSALS ──
    Blends put to Benjamin and Namy rather than products. Named from the hotel
    world the crossed keys already point at, which extends: valet, porter,

@@ -105,14 +105,8 @@
   <div class="menu-lead" id="menu-lead"></div>
   <!-- Two rows of four, rendered from Shopify like the leads above: the
        signatures and milk drinks first, the ice cream and tea row after.
-       The photography is partly other people's; the credits sit in one
-       line under the grid, since the card face now belongs to the sale. -->
+       Empty in menu mode. -->
   <div class="menu-grid" id="menu-grid"></div>
-  <div class="menu-photo-credit">Photographs
-    <a href="https://www.instagram.com/cafe.planes/p/DV6UxqekjoI/" target="_blank" rel="noopener noreferrer">@cafe.planes</a>,
-    <a href="https://www.instagram.com/mnml.nomad/p/DU_hb_-Eot9/" target="_blank" rel="noopener noreferrer">@mnml.nomad</a>,
-    <a href="https://www.instagram.com/yewonperry/p/C7kHcfRSeL7/" target="_blank" rel="noopener noreferrer">@yewonperry</a> and
-    <a href="https://www.instagram.com/conciergecoffee/" target="_blank" rel="noopener noreferrer">@conciergecoffee</a> &#8599;</div>
 
 </section>
 
@@ -303,7 +297,7 @@
     initStore, esc, formatPrice, productName, productSizes,
     getProductImage, getBeanImage, variants, CONCEPTS,
     productByHandle, inStock, openProduct, barOpen, barOpensAt, storeOffline,
-    productHref, DRINKS_ORDERABLE, ORDER_URL, hasPhoto,
+    productHref, DRINKS_ORDERABLE, ORDER_URL, hasPhoto, menuStub,
   } from './shopify.js';
 
   /* The drinks, leads and grid alike, rendered from Shopify in the shop
@@ -329,7 +323,8 @@
 
 
   function drinkCardHTML(p) {
-    const vs = variants(p).filter(v => v.availableForSale);
+    /* A menu prints the price whether or not the glass is for sale here. */
+    const vs = variants(p).filter(v => !DRINKS_ORDERABLE || v.availableForSale);
     const price = formatPrice(Math.min(...vs.map(v => Number(v.price.amount))));
     const closed = !barOpen();
     const cta = closed ? `Closed · ${barOpensAt()}`
@@ -391,7 +386,7 @@
     lead.classList.add('menu-lead--photos');
     /* Stock does not matter on a menu. The grid under the row stays empty
        in this mode; it is the shop grid's slot for when the site sells. */
-    const photos = MENU_PHOTOS.map(productByHandle).filter(p => p && hasPhoto(p));
+    const photos = MENU_PHOTOS.map(h => productByHandle(h) || menuStub(h)).filter(p => p && hasPhoto(p));
     lead.innerHTML = photos.map(drinkCardHTML).join('');
     document.getElementById('menu-grid').innerHTML = '';
     /* The line under the headline. Ordering lives in Square Online: link
