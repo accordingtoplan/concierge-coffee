@@ -69,14 +69,13 @@ export function allProducts() { return products; }
    but can still be opened, bought and bagged like the rest. */
 export function isDrink(p) { return (p.tags || []).includes('drink'); }
 
-/* ── DRINKS ──
+/* ── DRINKS: MENU OR SHOP ──
    Decided with Benjamin, 11 Sep 2026: pick-up orders live in Square Online,
-   not here, and the drinks are off the site altogether (Frederik, same
-   day). The drink products stay in Shopify and stay out of every grid.
-   This switch guards the product page and the quick add panel; the
-   pick-up slot code below it stays, because the decision is to compare
-   notes a few weeks after Square Online is live. The drinks markup on the
-   homepage and the shop is in git history, commit 11ca8df and before. */
+   not here. The drinks still render from Shopify, but as a menu: name,
+   ingredients, price, no buy control, no time slot, no bar-hours gating, no
+   product page and no quick add panel. Flip this to true and all of that
+   comes back; nothing below it is deleted, because the decision is to
+   compare notes a few weeks after Square Online is live. */
 export const DRINKS_ORDERABLE = false;
 
 /* Where "order ahead" points once order.conciergecoffee.com exists (item 8
@@ -237,6 +236,13 @@ export function sized(url, width = 800) {
   return url + (url.includes('?') ? '&' : '?') + 'width=' + width;
 }
 
+/* Whether a card can show this product honestly: a photograph in Shopify,
+   or a frame in the repo for it. Without either, getProductImage() hands
+   back the espresso bag, which a drink must never wear. */
+export function hasPhoto(p) {
+  return (p.images?.edges?.length || 0) > 0 || p.handle in FALLBACK_IMAGES;
+}
+
 export function getProductImage(p, width = 800) {
   const url = p.images.edges[0]?.node?.url || FALLBACK_IMAGES[p.handle] || 'images/concierge-coffee-espresso.webp';
   return sized(url, width);
@@ -256,6 +262,34 @@ export function getBeanImage(p) { return BEANS[p.handle] || 'images/concierge-co
 
 export function productHref(p) { return `product.html?p=${encodeURIComponent(p.handle)}`; }
 
+/* ── MENU STUBS ──
+   A drink on the wall that the store does not return: a draft in Shopify,
+   or not entered yet. The Storefront API skips drafts, so the menu row
+   would lose its photograph. The stub carries only what the card prints,
+   shaped like a Storefront product so every helper reads it. The moment
+   the product is Active in Shopify, the store's record silently takes
+   over, as a photograph uploaded there does. */
+const MENU_STUBS = {
+  'saffron-latte': {
+    title: 'Saffron Latte',
+    description: 'Saffron, honey, cinnamon, cardamom, vanilla, double espresso, crushed pistachio, milk.',
+    price: '8.25',
+  },
+};
+
+export function menuStub(handle) {
+  const s = MENU_STUBS[handle];
+  if (!s) return null;
+  return {
+    id: `stub:${handle}`, handle, title: s.title, description: s.description, tags: ['drink'],
+    images: { edges: [] },
+    priceRange: { minVariantPrice: { amount: s.price, currencyCode: 'USD' } },
+    variants: { edges: [{ node: {
+      id: null, title: 'Default Title', price: { amount: s.price },
+      availableForSale: false, selectedOptions: [],
+    } }] },
+  };
+}
 
 /* ── PROPOSALS ──
    Blends put to Benjamin and Namy rather than products. Named from the hotel
@@ -488,7 +522,8 @@ function renderFooterLinks() {
   const ul = document.getElementById('footer-links');
   if (!ul || ul.children.length > 1) return;
   ul.innerHTML = `
-    <li><a href="shop.html">Coffee</a></li>`;
+    <li><a href="shop.html">Coffee</a></li>
+    <li><a href="index.html#menu">Drinks</a></li>`;
 }
 
 export function openCart() {

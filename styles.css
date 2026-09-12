@@ -264,7 +264,8 @@
   .card-hit { position: absolute; inset: 0; z-index: 1; }
   .card-hit:focus-visible { outline: 2px solid #111; outline-offset: 2px; }
   .card-face { z-index: 2; }
-  .shop-card:focus-within .card-cta { opacity: 1; transform: none; pointer-events: auto; }
+  .shop-card:focus-within .card-cta,
+  .drink-card:focus-within .card-cta { opacity: 1; transform: none; pointer-events: auto; }
 
   .card-img {
     width: 100%;
@@ -370,8 +371,6 @@
   .card-cta:hover { background: #f0f0f0; }
   .card-cta:disabled { background: rgba(255,255,255,0.35); color: rgba(255,255,255,0.8); cursor: default; }
 
-  .card-price { font-size: 11px; color: #111; }
-
   /* ── QUICK ADD ──
      One picture, the size, the count, one dark button. It replaces a half
      page product sheet that opened over the grid and still could not carry a
@@ -413,9 +412,6 @@
     cursor: pointer;
   }
   .qa-x:hover { background: #fff; }
-
-  .qa-img { aspect-ratio: 1/1; background: #f7f7f7; overflow: hidden; }
-  .qa-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
   .qa-panel { padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 14px; }
 
@@ -627,6 +623,86 @@
   }
   .ft-copy .ft-credit { justify-self: end; }
 
+  /* ── MENU ── */
+  .menu-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: var(--head-gap);
+  }
+
+  /* The pick-up promise is the section's one operational fact, so it reads
+     as a line of its own under the headline rather than a footnote, and it
+     stays on phones. */
+  .menu-pickup {
+    margin: -6px 0 var(--head-gap);
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 52ch;
+  }
+
+  /* ── DRINK GRID ──
+     Four up, every card the same size, the row ending exactly on the section
+     gutter. The rail this replaces cut its last card at the edge as a scroll
+     affordance; read as a broken grid instead, which is a fair verdict when
+     every other block on the page ends flush. */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--card-gap);
+  }
+
+  /* Drink cards, leads and grid alike. The shop card language: name on the
+     picture, ingredients under it, price at the foot, the order button
+     rising on hover. No bean layer to crossfade to, so the photograph holds
+     through the hover and only the button rises. */
+  .menu-lead {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--card-gap);
+    margin-bottom: var(--card-gap);
+  }
+  /* Square, unlike the 3/4 cards everywhere else: two columns wide, the
+     portrait crop would tower. */
+  .menu-lead .card-img { aspect-ratio: 1/1; }
+  /* On a phone the two leads stack full width; they lead. */
+  @media (max-width: 480px) {
+    .menu-lead { grid-template-columns: 1fr; }
+  }
+  .drink-card:hover .card-cta { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  /* ── MENU MODE ──
+     Pick-up ordering lives in Square Online (11 Sep 2026), so the drinks
+     read as a menu: the four photographed drinks make a row, as many
+     columns as there are photographs, and that row is the section. Doubled
+     selector on purpose: .menu-lead has its own phone breakpoint later in
+     the file. */
+  .drink-card--menu { cursor: default; }
+  .menu-pickup a { border-bottom: 1px solid #eee; transition: border-color 0.15s; }
+  .menu-pickup a:hover { border-color: #111; }
+  .menu-lead.menu-lead--photos {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
+  .menu-lead.menu-lead--photos .card-img { aspect-ratio: 3/4; }
+  @media (max-width: 640px) {
+    .menu-lead.menu-lead--photos { grid-auto-flow: row; grid-template-columns: repeat(2, 1fr); }
+  }
+  .drink-ing {
+    margin-top: 6px;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    line-height: 1.6;
+    max-width: 44ch;
+    opacity: 0.85;
+  }
+  /* Grid cards carry a smaller ingredient line than the leads. */
+  .menu-grid .drink-ing { font-size: 10px; margin-top: 4px; }
+
+  /* The drink hover: a harder push in and the colour drained, so the grid
+     reads documentary the moment a card is considered. */
+  .drink-card:hover .card-img img { transform: scale(1.22); filter: grayscale(1); }
+
   /* loading skeleton */
   .skeleton {
     background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
@@ -660,6 +736,7 @@
     :root { --section-gap: 104px; --head-gap: 22px; --card-gap: 14px; }
     nav, .hero, .shop, footer { padding-left: 24px; padding-right: 24px; }
     .grid { grid-template-columns: repeat(3, 1fr); }
+    .menu-grid { grid-template-columns: repeat(3, 1fr); }
 
     footer { grid-template-columns: 1fr 1fr; gap: 36px; }
   }
@@ -706,6 +783,7 @@
     .hero-hours { text-align: left; align-self: flex-start; }
     .shop { padding-bottom: var(--section-gap); }
     .grid { grid-template-columns: repeat(2, 1fr); }
+    .menu-grid { grid-template-columns: repeat(2, 1fr); }
 
     /* stacked, picture first: the section should open with an image like the
        ones above it, and the facts read better under it than over it */
@@ -715,6 +793,7 @@
        file, so the mobile override needs the extra weight to win. */
     .story-split.story-split--wide { grid-template-columns: 1fr; }
 
+    .menu-head { padding-bottom: var(--head-gap); }
     .pdp-overlay { padding: 12px; }
     .qa-modal { max-width: 460px; }
     .cart-drawer { width: 100%; right: -100%; padding: 24px 16px; }
@@ -729,6 +808,7 @@
     .logo .lk { width: 20.1px; height: 16px; }
     .logo .lw { width: 60.7px; height: 13px; }
     .shop-head { padding-bottom: var(--head-gap); }
+    .menu-grid { grid-template-columns: repeat(2, 1fr); }
 
     /* Shop card at two up. The face has to carry a name, a size, a price and
        a button in about 145px of usable width. */
@@ -909,12 +989,6 @@
   }
   .sp-add:hover { background: #111; color: #fff; }
   .sp-add:disabled { border-color: #ececec; color: var(--muted); background: #fff; cursor: default; }
-
-  /* The Porsche is a landscape render on white and the lead of the section, so
-     it takes two columns at its own ratio instead of being cropped into a
-     portrait card. */
-  .sp-card--lead { grid-column: 1 / -1; }
-  .sp-card--lead .card-img { aspect-ratio: 16/9; }
 
   .sp-note { font-size: 11px; line-height: 1.8; color: var(--muted); max-width: 46ch; padding-bottom: var(--head-gap); }
 

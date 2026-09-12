@@ -124,9 +124,9 @@
        receives: the drinks live on this page too, they just skip the grids. */
     current = productByHandle(handle);
     if (!current) { missing(); showMore(products, null); return; }
-    /* Drinks are ordered through Square Online, not here: a drink handle
-       goes home rather than to a page that sells. */
-    if (isDrink(current) && !DRINKS_ORDERABLE) { location.replace('index.html'); return; }
+    /* Drinks are a menu while pick-up ordering lives in Square Online: a
+       drink handle goes back to the menu rather than to a page that sells. */
+    if (isDrink(current) && !DRINKS_ORDERABLE) { location.replace('index.html#menu'); return; }
 
     document.title = `${productName(current)} \u2014 Concierge Coffee`;
 
