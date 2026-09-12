@@ -1118,6 +1118,30 @@
   .arr-body { max-width: 54ch; font-size: 13px; line-height: 1.9; color: #111; }
   .arr-body p + p { margin-top: 14px; }
   .arr-body .arr-note { color: var(--muted); font-size: 11px; line-height: 1.8; }
+  /* ── WHOLESALE FORM ──
+     The quick add panel's field, label and select, plus a text input in the
+     same measure. Two columns for the short answers, one for the long. */
+  .ws-form { margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 18px; }
+  .ws-wide { grid-column: 1 / -1; }
+  .ws-in {
+    width: 100%;
+    padding: 13px 12px;
+    border: 1px solid #e4e4e4;
+    border-radius: 0;
+    background: #fff;
+    font-family: inherit;
+    font-size: 11px;
+    color: #111;
+  }
+  .ws-in::placeholder { color: #b5b5b5; }
+  .ws-in:focus { outline: none; border-color: #111; }
+  textarea.ws-in { resize: vertical; line-height: 1.6; min-height: 96px; }
+  .ws-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .ws-note { grid-column: 1 / -1; font-size: 11px; line-height: 1.8; color: var(--muted); }
+  .ws-done { margin-top: 24px; padding-top: 18px; border-top: 1px solid #eee; }
+  .ws-done:focus { outline: none; }
+  @media (max-width: 480px) { .ws-form { grid-template-columns: 1fr; } }
+
   .arr-img { margin-top: 24px; aspect-ratio: 3/2; overflow: hidden; background: #f7f7f7; }
   .arr-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .arr-rule { height: 1px; background: #f0f0f0; margin: 0 0 56px; }

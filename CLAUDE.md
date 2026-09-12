@@ -17,6 +17,7 @@ Headless Shopify. Plain HTML, one `styles.css`, two ES modules. No build step, n
 | `styles.css` | The one stylesheet. Two variant classes carry the only intentional page differences (homepage Abrazo strip, About hero) |
 | `images/` | All local, WebP, named `concierge-coffee-<what-it-shows>.webp`, sized to the slot |
 | `CNAME`, `robots.txt`, `sitemap.xml`, `404.html` | Hosting files. URLs point at the preview domain until cutover |
+| `functions/api/wholesale.js` | Cloudflare Pages Function: mails the wholesale form to orders@ through Resend (`RESEND_API_KEY` in the Pages project). Inert on GitHub Pages, where the page falls back to a `mailto:` |
 
 Store: `concierge-coffee-2245.myshopify.com`, Basic plan. Product handles are load-bearing: the frontend keys fallback images on `p.handle`. Never rename a handle in Shopify without the paired change here.
 

@@ -121,6 +121,61 @@
     <p>
       Roasted weekly in both cities.
     </p>
+    <p>
+      Send the form and we answer within a working day: prices, a delivery
+      day, and a sample if you want one. From there, orders go by email and
+      arrive with an invoice.
+    </p>
+
+    <!-- Posts to the Pages Function at api/wholesale (functions/api/wholesale.js),
+         which mails orders@conciergecoffee.com. Where there is no function,
+         the script below hands the request to the visitor's mail app. -->
+    <form class="ws-form" id="ws-form" method="post" action="api/wholesale" novalidate>
+      <div class="qa-field">
+        <label class="qa-lbl" for="ws-business">Business</label>
+        <input class="ws-in" id="ws-business" name="business" type="text" required autocomplete="organization" placeholder="The shop, office, restaurant or hotel" />
+      </div>
+      <div class="qa-field">
+        <label class="qa-lbl" for="ws-name">Your name</label>
+        <input class="ws-in" id="ws-name" name="name" type="text" required autocomplete="name" />
+      </div>
+      <div class="qa-field">
+        <label class="qa-lbl" for="ws-email">Email</label>
+        <input class="ws-in" id="ws-email" name="email" type="email" required autocomplete="email" />
+      </div>
+      <div class="qa-field">
+        <label class="qa-lbl" for="ws-phone">Phone</label>
+        <input class="ws-in" id="ws-phone" name="phone" type="tel" autocomplete="tel" />
+      </div>
+      <div class="qa-field ws-wide">
+        <label class="qa-lbl" for="ws-coffees">Coffees, and roughly how many kilos a month</label>
+        <input class="ws-in" id="ws-coffees" name="coffees" type="text" placeholder="Espresso 10 kg, a filter 3 kg" />
+      </div>
+      <div class="qa-field ws-wide">
+        <label class="qa-lbl" for="ws-method">Delivery or pick-up</label>
+        <select class="qa-sel" id="ws-method" name="method">
+          <option>Delivery</option>
+          <option>Pick-up at 821 Traction Ave</option>
+          <option>Not decided yet</option>
+        </select>
+      </div>
+      <div class="qa-field ws-wide">
+        <label class="qa-lbl" for="ws-notes">Anything else</label>
+        <textarea class="ws-in" id="ws-notes" name="notes" rows="4" placeholder="Machine and grinder, opening date, questions"></textarea>
+      </div>
+      <!-- Honeypot. No person sees it; a bot fills it and the request is dropped. -->
+      <div class="ws-hp" aria-hidden="true">
+        <label for="ws-website">Website</label>
+        <input id="ws-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+      <p class="ws-note" id="ws-error" hidden></p>
+      <div class="ws-wide">
+        <button class="atc" type="submit">Send request</button>
+      </div>
+      <p class="ws-note">Lands at orders@conciergecoffee.com and nowhere else.</p>
+    </form>
+    <p class="ws-done" id="ws-done" tabindex="-1" hidden></p>
+
     <div class="arr-img">
       <img src="images/concierge-coffee-bags-on-shelf-wholesale.webp" alt="Concierge bags on the shelf" loading="lazy" />
     </div>
@@ -217,6 +272,57 @@
   matchMedia('(min-width: 769px)').addEventListener('change', e => { if (e.matches) toggleNav(false); });
 </script>
 
+
+<script>
+  // Wholesale form. Posts to the Pages Function at api/wholesale; where there
+  // is none (GitHub Pages), hands the request to the visitor's mail app, so
+  // the form never dead-ends. A plain post with script off comes back with
+  // ?sent=1 or ?error=, read here.
+  (function () {
+    const form = document.getElementById('ws-form');
+    if (!form) return;
+    const done = document.getElementById('ws-done');
+    const err = document.getElementById('ws-error');
+    const btn = form.querySelector('button[type="submit"]');
+    const TO = 'orders@conciergecoffee.com';
+    const THANKS = `Thank you. The request is on its way to ${TO}. You hear from us within a working day.`;
+    const MAILAPP = `Your mail app should open with the request filled in. If it does not, write to ${TO}.`;
+
+    const finish = (msg) => { form.hidden = true; done.textContent = msg; done.hidden = false; done.focus(); };
+    const fail = (msg) => { err.textContent = msg; err.hidden = false; btn.disabled = false; btn.textContent = 'Send request'; };
+
+    const params = new URLSearchParams(location.search);
+    if (params.get('sent') === '1') finish(THANKS);
+    else if (params.get('error')) fail(params.get('error'));
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      err.hidden = true;
+      if (!form.reportValidity()) return;
+      btn.disabled = true; btn.textContent = 'Sending...';
+      const data = Object.fromEntries(new FormData(form).entries());
+      let res = null, body = {};
+      try {
+        res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+        });
+        body = await res.json().catch(() => ({}));
+      } catch (_) { res = null; }
+      if (res && res.ok && body.ok) { finish(THANKS); return; }
+      // The function answered and said no: show why, keep the form.
+      if (res && (res.status === 400 || res.status === 502) && body.error) { fail(body.error); return; }
+      // Nothing behind the form on this host: the mail app instead.
+      const lines = [
+        ['Business', data.business], ['Contact', data.name], ['Email', data.email], ['Phone', data.phone],
+        ['Coffees and kilos a month', data.coffees], ['Delivery or pick-up', data.method], ['Notes', data.notes],
+      ].filter(([, v]) => v && String(v).trim()).map(([k, v]) => `${k}: ${String(v).trim()}`);
+      location.href = `mailto:${TO}?subject=${encodeURIComponent('Wholesale request: ' + data.business)}&body=${encodeURIComponent(lines.join('\n'))}`;
+      finish(MAILAPP);
+    });
+  })();
+</script>
 
 <script type="module">
   /* Nothing on this page is for sale, and it still carries the bag: the bar
