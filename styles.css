@@ -1126,6 +1126,12 @@
   .arr-block { padding-top: 0; padding-bottom: var(--section-gap); display: grid; grid-template-columns: 1fr 2fr; gap: 32px; align-items: start; }
   .arr-h { font-family: var(--serif); font-size: clamp(20px, 2.1vw, 28px); font-weight: 400; letter-spacing: -0.01em; line-height: 1.1; }
   .arr-body { max-width: 54ch; font-size: 13px; line-height: 1.9; color: #111; }
+  /* A block with photographs: the text on the left in its measure, the
+     photographs beside it on the right, stacked, square. On a phone the
+     photographs follow the text. */
+  .arr-body:has(> .arr-media) { max-width: none; display: grid; grid-template-columns: minmax(0, 54ch) minmax(0, 1fr); gap: 32px; align-items: start; }
+  .arr-media .arr-img { margin-top: 0; aspect-ratio: 1/1; }
+  .arr-media .arr-img + .arr-img { margin-top: var(--card-gap); }
   .arr-body p + p { margin-top: 14px; }
   .arr-body .arr-note { color: var(--muted); font-size: 11px; line-height: 1.8; }
   /* ── WHOLESALE FORM ──
@@ -1154,9 +1160,6 @@
 
   .arr-img { margin-top: 24px; aspect-ratio: 3/2; overflow: hidden; background: #f7f7f7; }
   .arr-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  /* Four photographs two up, square, under the wholesale form. */
-  .arr-img-grid { margin-top: 24px; display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--card-gap); }
-  .arr-img-grid .arr-img { margin-top: 0; aspect-ratio: 1/1; }
   .arr-rule { height: 1px; background: #f0f0f0; margin: 0 0 56px; }
   .abrazo-copy { margin-top: 18px; }
 
@@ -1189,6 +1192,7 @@
     .photo-grid .wide { grid-column: span 1; }
     .photo-cell.wide img { aspect-ratio: 3/4; }
     .arr-block { grid-template-columns: 1fr; gap: 12px; }
+    .arr-body:has(> .arr-media) { grid-template-columns: 1fr; gap: 24px; }
   }
   @media (max-width: 480px) {
     .visit-hero, .details, .photo-grid, .arr-intro, .arr-block, .arr-cta, .arr-pair { padding-left: 14px; padding-right: 14px; }
