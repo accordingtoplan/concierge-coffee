@@ -52,6 +52,8 @@ const FOOTER = `
       <li><a href="visit.html">Visit</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="arrangements.html">Arrangements</a></li>
+      <li><a href="policies.html#shipping">Shipping &amp; Returns</a></li>
+      <li><a href="policies.html#privacy">Privacy</a></li>
     </ul>
   </div>
   <div class="ft-copy">
@@ -63,6 +65,49 @@ const FOOTER = `
 
 document.querySelectorAll('nav').forEach(n => { n.innerHTML = NAV; });
 document.querySelectorAll('footer').forEach(f => { f.innerHTML = FOOTER; });
+
+/* Structured data for the two shops, once, from here rather than pasted
+   into six heads. Hours as on Google Maps, 11 Sep 2026. */
+const LOCAL = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CafeOrCoffeeShop', '@id': 'https://conciergecoffee.com/#la',
+      name: 'Concierge Coffee', url: 'https://conciergecoffee.com/', telephone: '+1-310-728-7915',
+      email: 'hello@conciergecoffee.com', servesCuisine: 'Coffee', priceRange: '$$',
+      image: 'https://conciergecoffee.com/images/og.jpg',
+      address: { '@type': 'PostalAddress', streetAddress: '821 Traction Ave', addressLocality: 'Los Angeles', addressRegion: 'CA', postalCode: '90013', addressCountry: 'US' },
+      openingHoursSpecification: [
+        { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '07:00', closes: '17:00' },
+        { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Saturday', 'Sunday'], opens: '08:00', closes: '17:00' },
+      ],
+      sameAs: ['https://www.instagram.com/conciergecoffee/'],
+      parentOrganization: { '@id': 'https://conciergecoffee.com/#org' },
+    },
+    {
+      '@type': 'CafeOrCoffeeShop', '@id': 'https://conciergecoffee.com/#berlin',
+      name: 'Concierge Coffee Berlin', servesCuisine: 'Coffee',
+      address: { '@type': 'PostalAddress', streetAddress: 'L\u00fctzowstra\u00dfe 92', addressLocality: 'Berlin', postalCode: '10785', addressCountry: 'DE' },
+      openingHoursSpecification: [
+        { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '08:00', closes: '17:00' },
+        { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Saturday', 'Sunday'], opens: '09:00', closes: '17:00' },
+      ],
+      parentOrganization: { '@id': 'https://conciergecoffee.com/#org' },
+    },
+    {
+      '@type': 'Organization', '@id': 'https://conciergecoffee.com/#org',
+      name: 'Concierge Coffee', legalName: 'Concierge Coffee LLC', url: 'https://conciergecoffee.com/',
+      logo: 'https://conciergecoffee.com/images/og.jpg', foundingDate: '2013',
+      sameAs: ['https://www.instagram.com/conciergecoffee/'],
+    },
+  ],
+};
+if (!document.querySelector('script[data-ld="local"]')) {
+  const ld = document.createElement('script');
+  ld.type = 'application/ld+json'; ld.dataset.ld = 'local';
+  ld.textContent = JSON.stringify(LOCAL);
+  document.head.appendChild(ld);
+}
 
 /* Pick-up orders live in Square Online. The footer carries the link once
    the ordering subdomain exists; until then the Shop column is as above. */

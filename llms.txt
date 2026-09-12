@@ -1,0 +1,25 @@
+# Concierge Coffee
+
+> Specialty coffee roasters in Los Angeles and Berlin. Straightforward coffee, a room worth sitting in, service that treats each drink as something to share rather than sell.
+
+Los Angeles: 821 Traction Ave, Arts District, Los Angeles, CA 90013. Open Monday to Friday 7am to 5pm, Saturday and Sunday 8am to 5pm. Phone (310) 728-7915. hello@conciergecoffee.com.
+Berlin: Lützowstraße 92, 10785 Berlin. Open Monday to Friday 8am to 5pm, Saturday and Sunday 9am to 5pm.
+
+## What is sold online
+
+Coffee, roasted in Los Angeles, shipped anywhere in the United States, or picked up at the bar for free. Current coffees and prices are on the shop page; each is a single origin filter roast or the house espresso, in 300g and 1kg bags. Drinks are made at the bar and are not sold online. Wholesale, events and catering are arranged by email or through the form on the arrangements page.
+
+## Pages
+
+- Home: https://conciergecoffee.com/
+- Shop: https://conciergecoffee.com/shop
+- Arrangements (events, catering, wholesale, Abrazo): https://conciergecoffee.com/arrangements
+- About: https://conciergecoffee.com/about
+- Visit: https://conciergecoffee.com/visit
+- Policies (shipping, returns, privacy): https://conciergecoffee.com/policies
+
+## Contact
+
+Orders and wholesale: orders@conciergecoffee.com. Everything else: hello@conciergecoffee.com. Instagram: @conciergecoffee.
+
+Operated by Concierge Coffee LLC.

@@ -145,6 +145,7 @@
           <div class="pd-price" id="pd-price"></div>
           ${desc ? `<p class="pd-desc">${esc(usWeight(desc))}</p>` : ''}
           <div class="pd-sizes">${esc(productSizes(current).join(' / '))}</div>
+          <p class="pd-ship">Ships anywhere in the US from Los Angeles. Ordered before noon Pacific, it goes out the same day. Pick-up at 821 Traction Ave is free. <a href="policies.html#shipping">Shipping and returns</a></p>
           <div class="qa-field">
             <label class="qa-lbl" for="pd-size">Select size</label>
             <select class="qa-sel" id="pd-size" onchange="pdSelect(this.value)">
@@ -168,6 +169,31 @@
     if (vs.length < 2) document.getElementById('pd-size').disabled = true;
     price();
     showMore(products, current);
+    productData(current, vs);
+  }
+
+  /* Structured data for the coffee: name, picture, one offer per size with
+     price and availability, so search and anything else reading the page
+     sees what is for sale without running the store. */
+  function productData(p, vs) {
+    document.querySelector('script[data-ld="product"]')?.remove();
+    const base = location.origin + location.pathname.replace(/[^/]*$/, '');
+    const ld = {
+      '@context': 'https://schema.org', '@type': 'Product',
+      name: productName(p), description: String(p.description || ''), sku: p.handle,
+      image: getProductImage(p, 1200), url: location.href,
+      brand: { '@type': 'Brand', name: 'Concierge Coffee' },
+      offers: vs.map(v => ({
+        '@type': 'Offer', name: variantSize(v) === 'Default Title' ? productName(p) : `${productName(p)} ${variantSize(v)}`,
+        price: Number(v.price.amount).toFixed(2), priceCurrency: 'USD',
+        availability: v.availableForSale ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+        url: location.href, seller: { '@type': 'Organization', name: 'Concierge Coffee' },
+        shippingDetails: { '@type': 'OfferShippingDetails', shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'US' } },
+      })),
+    };
+    const el = document.createElement('script');
+    el.type = 'application/ld+json'; el.dataset.ld = 'product'; el.textContent = JSON.stringify(ld);
+    document.head.appendChild(el);
   }
 
   function price() {

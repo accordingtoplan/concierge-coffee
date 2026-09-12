@@ -1044,6 +1044,9 @@
   .pd-price { font-size: 12px; }
   .pd-desc { font-size: 12px; line-height: 1.9; color: var(--muted); }
   .pd-sizes { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .pd-ship { font-size: 11px; line-height: 1.8; color: var(--muted); max-width: 44ch; }
+  .pd-ship a { border-bottom: 1px solid #eee; transition: border-color 0.15s; }
+  .pd-ship a:hover { border-color: #111; }
   .pd-missing { padding: 60px 0 100px; }
   /* three coffees under the one being read, so the row fills */
   #more-grid { grid-template-columns: repeat(3, 1fr); }
