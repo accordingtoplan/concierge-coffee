@@ -281,7 +281,7 @@
     if (!DRINKS_ORDERABLE) return `
       <div class="card drink-card drink-card--menu">
         <div class="card-img">
-          <img class="card-base" src="${getProductImage(p)}"${srcsetAttr(p, '(max-width: 640px) 50vw, 25vw')} alt="${esc(p.title)}" loading="lazy" decoding="async" />
+          <img class="card-base" src="${getProductImage(p)}"${srcsetAttr(p, '50vw')} alt="${esc(p.title)}" loading="lazy" decoding="async" />
           <div class="card-face">
             <div>
               <div class="card-blend">${esc(productName(p))}</div>

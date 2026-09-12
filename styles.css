@@ -676,21 +676,14 @@
   /* ── MENU MODE ──
      Pick-up ordering lives in Square Online (11 Sep 2026), so the drinks
      read as a menu: the four photographed drinks make a row, as many
-     columns as there are photographs, and that row is the section. Doubled
-     selector on purpose: .menu-lead has its own phone breakpoint later in
-     the file. */
+     photographs make a two-column grid at every width (Frederik, 11 Sep),
+     square like the old two-up leads, and that grid is the section.
+     Doubled selector on purpose: .menu-lead has its own phone breakpoint
+     later in the file. */
   .drink-card--menu { cursor: default; }
   .menu-pickup a { border-bottom: 1px solid #eee; transition: border-color 0.15s; }
   .menu-pickup a:hover { border-color: #111; }
-  .menu-lead.menu-lead--photos {
-    grid-template-columns: none;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-  }
-  .menu-lead.menu-lead--photos .card-img { aspect-ratio: 3/4; }
-  @media (max-width: 640px) {
-    .menu-lead.menu-lead--photos { grid-auto-flow: row; grid-template-columns: repeat(2, 1fr); }
-  }
+  .menu-lead.menu-lead--photos { grid-template-columns: repeat(2, 1fr); }
   .drink-ing {
     margin-top: 6px;
     font-size: 11px;
