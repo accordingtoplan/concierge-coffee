@@ -5,7 +5,11 @@
    lives here and only here. The crossed keys and the wordmark reference the
    SVG symbols every page already defines. */
 
-import { ORDER_URL } from './shopify.js';
+/* Where "order ahead" points once order.conciergecoffee.com exists (item 8
+   of the September handover). Empty until then, and the pages say where the
+   bar is instead of linking anywhere. Lives here rather than in shopify.js
+   so the content pages get it without loading the storefront. */
+export const ORDER_URL = '';
 
 const NAV = `
   <a href="index.html" class="logo" aria-label="Concierge Coffee &mdash; home">
@@ -71,8 +75,16 @@ if (ORDER_URL) {
 }
 
 /* The current page gets its nav link marked, read from the address rather
-   than written six times into six files. */
-const here = location.pathname.split('/').pop() || 'index.html';
+   than written six times into six files. Cloudflare Pages serves
+   /shop.html at /shop, so the comparison drops the extension on both sides. */
+const clean = s => (s.replace(/\.html$/, '') || 'index');
+const here = clean(location.pathname.split('/').pop());
 document.querySelectorAll('.nav-r a[href]').forEach(a => {
-  if (a.getAttribute('href') === here) a.setAttribute('aria-current', 'page');
+  if (clean(a.getAttribute('href')) === here) a.setAttribute('aria-current', 'page');
 });
+
+/* A tap on a link in the open sheet closes the sheet. This has to run
+   here, after the nav exists: the page scripts ran before it did and
+   found nothing to listen to. toggleNav is each page's own. */
+document.querySelectorAll('.nav-r a').forEach(a =>
+  a.addEventListener('click', () => window.toggleNav?.(false)));

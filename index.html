@@ -56,9 +56,9 @@
 <section class="hero">
   <h1 class="sr-only">Concierge Coffee, Los Angeles and Berlin</h1>
   <div class="hero-img" id="hero-slides">
-    <img class="slide on" fetchpriority="high" src="images/concierge-coffee-espresso-bar-821-traction-ave.webp" alt="Concierge Coffee, the bar at 821 Traction Ave" />
-    <img class="slide shift-up" src="images/concierge-coffee-courtyard-arts-district-los-angeles.webp" alt="The courtyard" loading="lazy" />
-    <img class="slide shift-up" src="images/concierge-coffee-front-room-821-traction-ave.webp" alt="The front room" loading="lazy" />
+    <img class="slide on" fetchpriority="high" src="images/concierge-coffee-espresso-bar-821-traction-ave.webp" srcset="images/concierge-coffee-espresso-bar-821-traction-ave-800.webp 800w, images/concierge-coffee-espresso-bar-821-traction-ave.webp 1920w" sizes="100vw" alt="Concierge Coffee, the bar at 821 Traction Ave" />
+    <img class="slide shift-up" src="images/concierge-coffee-courtyard-arts-district-los-angeles.webp" srcset="images/concierge-coffee-courtyard-arts-district-los-angeles-800.webp 800w, images/concierge-coffee-courtyard-arts-district-los-angeles.webp 1920w" sizes="100vw" alt="The courtyard" loading="lazy" />
+    <img class="slide shift-up" src="images/concierge-coffee-front-room-821-traction-ave.webp" srcset="images/concierge-coffee-front-room-821-traction-ave-800.webp 800w, images/concierge-coffee-front-room-821-traction-ave.webp 1920w" sizes="100vw" alt="The front room" loading="lazy" />
   </div>
   <div class="hero-meta">
     <div class="hero-sub">
@@ -124,9 +124,9 @@
       <a class="story-more" href="arrangements.html#abrazo">Abrazo &rarr;</a>
     </div>
     <div class="abrazo-slides abrazo-slides--bw" id="abrazo-slides">
-      <div class="slide on"><img src="images/concierge-coffee-abrazo-coasters.webp" alt="Abrazo coasters on the bar" /></div>
-      <div class="slide"><img src="images/concierge-coffee-abrazo-evening-room.webp" alt="The room on an Abrazo night" loading="lazy" /></div>
-      <div class="slide"><img src="images/concierge-coffee-abrazo-wine-on-ice.webp" alt="Wine on ice for an Abrazo night" loading="lazy" /></div>
+      <div class="slide on"><img src="images/concierge-coffee-abrazo-coasters.webp" srcset="images/concierge-coffee-abrazo-coasters-800.webp 800w, images/concierge-coffee-abrazo-coasters.webp 1280w" sizes="(max-width: 768px) 100vw, 66vw" alt="Abrazo coasters on the bar" /></div>
+      <div class="slide"><img src="images/concierge-coffee-abrazo-evening-room.webp" srcset="images/concierge-coffee-abrazo-evening-room-800.webp 800w, images/concierge-coffee-abrazo-evening-room.webp 1280w" sizes="(max-width: 768px) 100vw, 66vw" alt="The room on an Abrazo night" loading="lazy" /></div>
+      <div class="slide"><img src="images/concierge-coffee-abrazo-wine-on-ice.webp" srcset="images/concierge-coffee-abrazo-wine-on-ice-800.webp 800w, images/concierge-coffee-abrazo-wine-on-ice.webp 1280w" sizes="(max-width: 768px) 100vw, 66vw" alt="Wine on ice for an Abrazo night" loading="lazy" /></div>
       <div class="abrazo-arrows">
         <button type="button" aria-label="Previous photograph" onclick="abrazoStep(-1)">&larr;</button>
         <button type="button" aria-label="Next photograph" onclick="abrazoStep(1)">&rarr;</button>
@@ -157,7 +157,7 @@
       <a class="story-more" href="about.html">About &rarr;</a>
     </div>
     <div class="story-img">
-      <img src="images/concierge-coffee-benjamin-espresso-machine-berlin.webp" alt="Benjamin behind the machine in Berlin" loading="lazy" />
+      <img src="images/concierge-coffee-benjamin-espresso-machine-berlin.webp" srcset="images/concierge-coffee-benjamin-espresso-machine-berlin-800.webp 800w, images/concierge-coffee-benjamin-espresso-machine-berlin.webp 1200w" sizes="(max-width: 768px) 100vw, 33vw" alt="Benjamin behind the machine in Berlin" loading="lazy" />
     </div>
   </div>
 </section>
@@ -194,7 +194,7 @@
   // A click moves the frame and restarts the clock, so the automatic step
   // never lands right after a manual one. Reduced motion keeps the arrows
   // and drops only the automatic advance.
-  let abrazoStep;
+  let abrazoStep = () => {};  // the arrows exist before the slider decides it has enough slides
   (function () {
     const slides = [...document.querySelectorAll('#abrazo-slides .slide')];
     if (slides.length < 2) return;
@@ -225,9 +225,6 @@
     document.body.style.overflow = open ? 'hidden' : '';
   }
 
-  document.querySelectorAll('.nav-r a').forEach(a =>
-    a.addEventListener('click', () => toggleNav(false)));
-
   document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleNav(false); });
 
   // Leaving the breakpoint with the sheet open would strand the scroll lock.
@@ -240,10 +237,11 @@
      the product pages load as well. */
   import {
     initStore, esc, formatPrice, productName, productSizes,
-    getProductImage, getBeanImage, variants, CONCEPTS,
-    productByHandle, inStock, openProduct, barOpen, barOpensAt, storeOffline,
-    productHref, DRINKS_ORDERABLE, ORDER_URL, hasPhoto, menuStub,
+    getProductImage, getBeanImage, variants,
+    productByHandle, inStock, barOpen, barOpensAt, storeOffline,
+    productHref, DRINKS_ORDERABLE, hasPhoto, menuStub, srcsetAttr,
   } from './shopify.js';
+  import { ORDER_URL } from './layout.js';
 
   /* The drinks, leads and grid alike, rendered from Shopify in the shop
      card language. The handle lists are the only layout decision the page
@@ -261,10 +259,6 @@
      the wall at the bar. Name, ingredients and price still come from the
      store. */
   const MENU_PHOTOS = ['einspanner', 'yuzu-matcha-tonic', 'latte-iced', 'saffron-latte'];
-
-  /* Where the 3/4 crop should sit per photograph, when centre cuts the
-     drink. */
-  const IMAGE_POSITION = {};
 
 
   function drinkCardHTML(p) {
@@ -287,8 +281,7 @@
     if (!DRINKS_ORDERABLE) return `
       <div class="card drink-card drink-card--menu">
         <div class="card-img">
-          <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}"${
-            IMAGE_POSITION[p.handle] ? ` style="object-position:${IMAGE_POSITION[p.handle]}"` : ''} />
+          <img class="card-base" src="${getProductImage(p)}"${srcsetAttr(p, '(max-width: 640px) 50vw, 25vw')} alt="${esc(p.title)}" loading="lazy" decoding="async" />
           <div class="card-face">
             <div>
               <div class="card-blend">${esc(productName(p))}</div>
@@ -306,8 +299,7 @@
         <a class="card-hit" href="${productHref(p)}" aria-label="${esc(productName(p))}"
           onclick="event.preventDefault(); openProduct('${esc(p.handle)}')"></a>
         <div class="card-img">
-          <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}"${
-            IMAGE_POSITION[p.handle] ? ` style="object-position:${IMAGE_POSITION[p.handle]}"` : ''} />
+          <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}" />
           <div class="card-face">
             <div>
               <div class="card-blend">${esc(productName(p))}</div>
@@ -359,33 +351,13 @@
     document.getElementById('menu').hidden = !(anyLead || anyGrid);
   }
 
-  function renderConcepts() {
-    return CONCEPTS.map(c => `
-        <div class="card shop-card concept-card">
-          <div class="card-img">
-            <img class="card-base" src="${c.img}" alt="${esc(c.name)}" loading="lazy" />
-            <div class="card-face">
-              <div class="card-blend">${esc(c.name)}</div>
-              <div>
-                <div class="card-meta">
-                  <span>${esc(c.note)}</span>
-                  <span class="card-status">${esc(c.status)}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      `).join('');
-  }
-
   function renderProducts(products) {
     const grid = document.getElementById('product-grid');
     if (!products.length) {
       const line = storeOffline()
         ? 'The shop is not answering just now. Try again in a moment.'
         : 'No products found.';
-      grid.innerHTML = `<p style="color:#6f6f6f;font-size:11px;grid-column:1/-1;padding:24px 0">${line}</p>`
-                     + renderConcepts();
+      grid.innerHTML = `<p style="color:#6f6f6f;font-size:11px;grid-column:1/-1;padding:24px 0">${line}</p>`;
       return;
     }
 
@@ -414,8 +386,8 @@
           <a class="card-hit" href="${productHref(p)}" aria-label="${esc(name)}"
             onclick="event.preventDefault(); openProduct('${p.id}')"></a>
           <div class="card-img">
-            <img class="card-base" src="${getProductImage(p)}" alt="${esc(p.title)}" />
-            <img class="card-alt" src="${getBeanImage(p)}" alt="" aria-hidden="true" loading="lazy" />
+            <img class="card-base" src="${getProductImage(p)}"${srcsetAttr(p, '(max-width: 480px) 50vw, (max-width: 768px) 33vw, 25vw')} alt="${esc(p.title)}" decoding="async" />
+            <img class="card-alt" src="${getBeanImage(p)}" alt="" aria-hidden="true" loading="lazy" decoding="async" />
             <div class="card-face">
               <div class="card-blend">${esc(name)}</div>
               <div>
@@ -430,7 +402,7 @@
           </div>
         </div>
       `;
-    }).join('') + renderConcepts();
+    }).join('');
   }
 
   initStore({ render: renderProducts }).then(renderDrinks);

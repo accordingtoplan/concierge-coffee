@@ -56,13 +56,11 @@ const CART_FIELDS = `
   id checkoutUrl
   cost { totalAmount { amount currencyCode } }
   lines(first: 50) { edges { node { id quantity merchandise { ... on ProductVariant {
-    id title price { amount } image { url } product { title handle } } } } } }
+    id title price { amount } image { url } product { title handle tags } } } } } }
 `;
 
 let products = [];
 let cart = null;
-
-export function allProducts() { return products; }
 
 /* Drinks are orderable from the menu grid, not the shop grid. The tag is the
    switch: anything tagged `drink` in Shopify stays out of every bean grid
@@ -78,10 +76,9 @@ export function isDrink(p) { return (p.tags || []).includes('drink'); }
    compare notes a few weeks after Square Online is live. */
 export const DRINKS_ORDERABLE = false;
 
-/* Where "order ahead" points once order.conciergecoffee.com exists (item 8
-   of the September handover). Empty until then, and the pages say where the
-   bar is instead of linking anywhere. */
-export const ORDER_URL = '';
+/* ORDER_URL, where "order ahead" will point, lives in layout.js: the nav
+   and footer need it on every page, and the content pages should not have
+   to load the storefront to get it. */
 
 /* ── PICK-UP HOURS ──
    Drinks are made at 821 Traction Ave, so they can only be ordered while
@@ -248,6 +245,15 @@ export function getProductImage(p, width = 800) {
   return sized(url, width);
 }
 
+/* Width candidates for the same photograph, so a phone at two-up pulls a
+   400px file rather than the 800px one a desktop card wants. Only the CDN
+   can resize; a repo fallback has one size and gets no srcset. */
+export function productSrcset(p) {
+  const url = p.images.edges[0]?.node?.url;
+  if (!url || !/cdn\.shopify\.com/.test(url)) return '';
+  return [400, 800, 1200].map(w => `${sized(url, w)} ${w}w`).join(', ');
+}
+
 /* Hover layer: the roasted bean, darker for the espresso roasts and lighter
    for the filters, so the swap says something about the coffee. */
 const BEANS = {
@@ -259,6 +265,12 @@ const BEANS = {
 };
 
 export function getBeanImage(p) { return BEANS[p.handle] || 'images/concierge-coffee-espresso-roast-beans.webp'; }
+
+/* The two attributes as one string, or nothing when there is no srcset. */
+export function srcsetAttr(p, sizes) {
+  const set = productSrcset(p);
+  return set ? ` srcset="${esc(set)}" sizes="${sizes}"` : '';
+}
 
 export function productHref(p) { return `product.html?p=${encodeURIComponent(p.handle)}`; }
 
@@ -291,11 +303,12 @@ export function menuStub(handle) {
   };
 }
 
-/* ── PROPOSALS ──
+/* ── PROPOSALS (retired) ──
    Blends put to Benjamin and Namy rather than products. Named from the hotel
    world the crossed keys already point at, which extends: valet, porter,
    doorman, maître d'. No "blend" in any name, per the naming note. */
-export const CONCEPTS = [];  // Doorman, Valet, Night Porter removed Aug 2026
+/* Doorman, Valet and Night Porter came off in Aug 2026; the list and its
+   card went with them (Sep 2026). */
 
 /* ── SHOP CARD ──
    The card the shop page and the product page both use: picture, name, the
@@ -315,7 +328,7 @@ export function shopCardHTML(p) {
     <div class="card sp-card">
       <a class="sp-hit" href="${productHref(p)}">
         <div class="card-img">
-          <img class="card-base" src="${esc(getProductImage(p))}" alt="${esc(p.title)}" loading="lazy" />
+          <img class="card-base" src="${esc(getProductImage(p))}"${srcsetAttr(p, '(max-width: 480px) 50vw, (max-width: 768px) 33vw, 25vw')} alt="${esc(p.title)}" loading="lazy" decoding="async" />
         </div>
         <div class="sp-name">${esc(productName(p))}</div>
         ${desc ? `<p class="sp-sub">${esc(usWeight(desc))}</p>` : ''}
@@ -404,8 +417,11 @@ function mountChrome() {
     )].filter(el => el.offsetParent !== null);
     if (!els.length) return;
     const first = els[0], last = els[els.length - 1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    /* Right after opening, focus sits on the container itself; the first
+       Tab has to land inside rather than in the page behind. */
+    const onBox = document.activeElement === container;
+    if (e.shiftKey && (onBox || document.activeElement === first)) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && (onBox || document.activeElement === last)) { e.preventDefault(); first.focus(); }
   };
   const modal = document.getElementById('qa-modal');
   document.getElementById('pdp-overlay').addEventListener('keydown', trap(modal));
@@ -417,25 +433,55 @@ function mountChrome() {
 let pdpOpener = null;
 let cartOpener = null;
 
-/* ── BAG ── */
+/* ── BAG ──
+   Returns { ok, error }: the panel and the product page keep their button
+   and say what happened when ok is false, instead of closing as if the add
+   went through. The bag in hand is never replaced by nothing: a failed call
+   leaves it as it was. */
+const OFFLINE_MSG = 'The shop is not answering. Try again in a moment.';
+
+async function createCart(lines) {
+  const data = await shopifyFetch(`
+    mutation cartCreate($input: CartInput!) {
+      cartCreate(input: $input) { cart { ${CART_FIELDS} } userErrors { code message } }
+    }`, { input: { lines } });
+  return data?.cartCreate ?? null;
+}
+
 export async function addToCartHandler(variantId, quantity = 1, pickup = null) {
-  if (!variantId) return;
+  if (!variantId) return { ok: false, error: 'Nothing to add.' };
   const qty = Math.max(1, parseInt(quantity, 10) || 1);
   updateBagLink('...');
+  const prev = cart;
+  const lines = [{ merchandiseId: variantId, quantity: qty }];
+  let result;
 
   if (!cart) {
-    const data = await shopifyFetch(`
-      mutation cartCreate($input: CartInput!) {
-        cartCreate(input: $input) { cart { ${CART_FIELDS} } }
-      }`, { input: { lines: [{ merchandiseId: variantId, quantity: qty }] } });
-    cart = data?.cartCreate?.cart;
+    result = await createCart(lines);
   } else {
     const data = await shopifyFetch(`
       mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
-        cartLinesAdd(cartId: $cartId, lines: $lines) { cart { ${CART_FIELDS} } }
-      }`, { cartId: cart.id, lines: [{ merchandiseId: variantId, quantity: qty }] });
-    cart = data?.cartLinesAdd?.cart;
+        cartLinesAdd(cartId: $cartId, lines: $lines) { cart { ${CART_FIELDS} } userErrors { code message } }
+      }`, { cartId: cart.id, lines });
+    result = data?.cartLinesAdd ?? null;
+    /* Shopify answered, but not with the bag: the stored id has outlived
+       its cart (checked out, or expired). Start a fresh one, once. */
+    if (data && result && !result.cart) {
+      cart = null; rememberCart();
+      result = await createCart(lines);
+    }
   }
+
+  /* Offline, or a call that died mid-way: the bag in hand stays. */
+  if (!result) { cart = prev; updateBagLink(bagCount); return { ok: false, error: OFFLINE_MSG }; }
+  /* Shopify said no: more than is in stock, or a variant that just sold
+     out. The bag is whatever it sent back, else the one we had. */
+  if (result.userErrors?.length) {
+    cart = result.cart || prev;
+    if (cart) { rememberCart(); renderCart(); } else updateBagLink(bagCount);
+    return { ok: false, error: result.userErrors[0].message };
+  }
+  cart = result.cart || prev;
 
   /* The pick-up time rides on the cart, so it prints on the order and in
      the confirmation mail. */
@@ -447,14 +493,28 @@ export async function addToCartHandler(variantId, quantity = 1, pickup = null) {
     cart = data?.cartAttributesUpdate?.cart || cart;
   }
 
-  /* The add failed -- offline, or the cart id died mid-call. Put the count
-     back rather than leaving the bag reading "..." forever. */
-  if (!cart) { updateBagLink(bagCount); return; }
+  if (!cart) { updateBagLink(bagCount); return { ok: false, error: OFFLINE_MSG }; }
 
   rememberCart();
   renderCart();
   openCart();
+  return { ok: true, error: null };
 }
+
+/* Take lines out of the bag: the Remove link on each line, and any drink
+   line found in a restored bag while drinks are not sold here. */
+async function removeLines(lineIds) {
+  if (!cart || !lineIds.length) return;
+  const data = await shopifyFetch(`
+    mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+      cartLinesRemove(cartId: $cartId, lineIds: $lineIds) { cart { ${CART_FIELDS} } userErrors { message } }
+    }`, { cartId: cart.id, lineIds });
+  cart = data?.cartLinesRemove?.cart || cart;
+  rememberCart();
+  renderCart();
+}
+
+export function removeLine(lineId) { return removeLines([lineId]); }
 
 function rememberCart() {
   try {
@@ -471,9 +531,18 @@ async function restoreCart() {
   try { id = localStorage.getItem(CART_KEY); } catch (e) { return; }
   if (!id) return;
   const data = await shopifyFetch(`query cart($id: ID!) { cart(id: $id) { ${CART_FIELDS} } }`, { id });
-  cart = data?.cart ?? null;
+  /* No answer is not the same as no cart: the ticket stays for next time. */
+  if (!data) return;
+  cart = data.cart ?? null;
   if (!cart) { try { localStorage.removeItem(CART_KEY); } catch (e) {} return; }
   renderCart();
+  /* A bag from the days the site sold drinks may still hold one, with a
+     pick-up time on it. It cannot be bought now, so it comes out. */
+  if (!DRINKS_ORDERABLE) {
+    const drinks = cart.lines.edges.map(e => e.node)
+      .filter(l => (l.merchandise?.product?.tags || []).includes('drink')).map(l => l.id);
+    if (drinks.length) await removeLines(drinks);
+  }
 }
 
 let bagCount = 0;
@@ -498,6 +567,7 @@ export function renderCart() {
           <div>
             <div class="ci-name">${esc(titleToUS(m.product.title))}</div>
             <div class="ci-sub">${m.title !== 'Default Title' ? esc(usWeight(m.title)) : ''} &times; ${line.quantity}</div>
+            <button class="ci-remove" type="button" onclick="removeLine('${esc(line.id)}')" aria-label="Remove ${esc(titleToUS(m.product.title))} from the bag">Remove</button>
           </div>
           <div class="ci-price">${formatPrice(m.price.amount * line.quantity)}</div>
         </div>`;
@@ -511,19 +581,6 @@ export function renderCart() {
 export function updateBagLink(count) {
   const el = document.getElementById('bag-link');
   if (el) el.textContent = `Bag (${count})`;
-}
-
-/* The Shop column of the footer is the catalogue, on every page that has a
-   footer, which is every page. Written here rather than in each page's module
-   because the footer is now the same everywhere and should stay that way. */
-/* The footer sells in three words, not a product list; the links are static
-   in the markup. The hook stays so a page without them still gets a set. */
-function renderFooterLinks() {
-  const ul = document.getElementById('footer-links');
-  if (!ul || ul.children.length > 1) return;
-  ul.innerHTML = `
-    <li><a href="shop.html">Coffee</a></li>
-    <li><a href="index.html#menu">Drinks</a></li>`;
 }
 
 export function openCart() {
@@ -575,7 +632,10 @@ function placeQaModal() {
   modal.style.margin = '';
   modal.style.width = '';
   modal.style.maxWidth = '';
-  if (!originRect) return;
+  /* On a phone the stylesheet's sheet is the right shape and can scroll;
+     a fixed panel pinned to a button cannot once it is taller than the
+     screen. */
+  if (!originRect || matchMedia('(max-width: 768px)').matches) return;
   /* The panel takes the button's own width and closes on its bottom edge,
      at every viewport. A very narrow button (two-up phone cards) gets a
      300px floor so the form stays usable, centred over the button. */
@@ -635,6 +695,7 @@ export function closePdp(e) {
   if (e && e.target && e.target.id !== 'pdp-overlay') return;
   document.getElementById('pdp-overlay').classList.remove('open');
   document.body.style.overflow = '';
+  originRect = null;
   if (pdpOpener) { pdpOpener.focus?.(); pdpOpener = null; }
 }
 
@@ -666,10 +727,23 @@ export async function pdpAddToCart() {
     ? null : document.getElementById('pdp-pickup').value;
   btn.disabled = true;
   btn.textContent = 'Adding...';
-  await addToCartHandler(selectedVariant.id, qty, pickup);
+  const back = pdpOpener;
+  const { ok, error } = await addToCartHandler(selectedVariant.id, qty, pickup);
   btn.disabled = false;
+  if (!ok) {
+    /* The panel stays, with the reason on the button, so the customer can
+       try again or change the count. */
+    btn.textContent = error;
+    setTimeout(() => { if (btn.textContent === error) btn.textContent = 'Add to Cart'; }, 4000);
+    return;
+  }
   btn.textContent = 'Add to Cart';
+  /* The drawer is open now and has focus. The panel closes without
+     pulling focus back, and closing the drawer later returns to the card
+     the whole thing started from. */
+  pdpOpener = null;
   closePdp();
+  cartOpener = back;
 }
 
 /* ── INIT ──
@@ -679,7 +753,7 @@ function mountBagAndPanel() {
   mountChrome();
 
   Object.assign(window, {
-    openProduct, closePdp, selectVariant, pdpAddToCart,
+    openProduct, closePdp, selectVariant, pdpAddToCart, removeLine,
     addToCartHandler, openCart, closeCart, goToCheckout,
   });
 
@@ -693,8 +767,8 @@ function mountBagAndPanel() {
 export async function initStore({ render } = {}) {
   mountBagAndPanel();
   await loadProducts();
-  render?.(products.filter(p => !isDrink(p)));
-  renderFooterLinks();
+  try { render?.(products.filter(p => !isDrink(p))); }
+  catch (e) { console.error('render failed:', e); }
   await restoreCart();
   return products;
 }
@@ -704,6 +778,5 @@ export async function initStore({ render } = {}) {
    making bought them nothing. */
 export async function initBag() {
   mountBagAndPanel();
-  renderFooterLinks();
   await restoreCart();
 }

@@ -54,7 +54,7 @@
 <!-- HERO -->
 <section class="visit-hero">
   <div class="visit-hero-img">
-    <img fetchpriority="high" class="shift-up" src="images/concierge-coffee-courtyard-arts-district-los-angeles.webp" alt="The courtyard at 821 Traction Ave" />
+    <img fetchpriority="high" class="shift-up" src="images/concierge-coffee-courtyard-arts-district-los-angeles.webp" srcset="images/concierge-coffee-courtyard-arts-district-los-angeles-800.webp 800w, images/concierge-coffee-courtyard-arts-district-los-angeles.webp 1920w" sizes="100vw" alt="The courtyard at 821 Traction Ave" />
   </div>
   <div class="visit-hero-meta">
     <h1 class="visit-title">Arrangements.</h1>
@@ -88,7 +88,7 @@
       Bring the room, the date and the number of people.
     </p>
     <div class="arr-img">
-      <img src="images/concierge-coffee-abrazo-women-around-table.webp" alt="Women around a table on an Abrazo night" loading="lazy" />
+      <img src="images/concierge-coffee-abrazo-women-around-table.webp" srcset="images/concierge-coffee-abrazo-women-around-table-800.webp 800w, images/concierge-coffee-abrazo-women-around-table.webp 1400w" sizes="(max-width: 768px) 100vw, 600px" alt="Women around a table on an Abrazo night" loading="lazy" />
     </div>
   </div>
 </section>
@@ -106,7 +106,7 @@
       Standing arrangements as well as single days.
     </p>
     <div class="arr-img">
-      <img src="images/concierge-coffee-catering-821-traction-ave.webp" alt="The room at 821 Traction Ave in service" loading="lazy" />
+      <img src="images/concierge-coffee-catering-821-traction-ave.webp" srcset="images/concierge-coffee-catering-821-traction-ave-800.webp 800w, images/concierge-coffee-catering-821-traction-ave.webp 1080w" sizes="(max-width: 768px) 100vw, 600px" alt="The room at 821 Traction Ave in service" loading="lazy" />
     </div>
   </div>
 </section>
@@ -177,10 +177,10 @@
     <p class="ws-done" id="ws-done" tabindex="-1" hidden></p>
 
     <div class="arr-img">
-      <img src="images/concierge-coffee-bags-on-shelf-wholesale.webp" alt="Concierge bags on the shelf" loading="lazy" />
+      <img src="images/concierge-coffee-bags-on-shelf-wholesale.webp" srcset="images/concierge-coffee-bags-on-shelf-wholesale-800.webp 800w, images/concierge-coffee-bags-on-shelf-wholesale.webp 1080w" sizes="(max-width: 768px) 100vw, 600px" alt="Concierge bags on the shelf" loading="lazy" />
     </div>
     <div class="arr-img">
-      <img src="images/concierge-coffee-wholesale-green-coffee.webp" alt="A sack of green coffee from Cajamarca, Peru" loading="lazy" />
+      <img src="images/concierge-coffee-wholesale-green-coffee.webp" srcset="images/concierge-coffee-wholesale-green-coffee-800.webp 800w, images/concierge-coffee-wholesale-green-coffee.webp 1080w" sizes="(max-width: 768px) 100vw, 600px" alt="A sack of green coffee from Cajamarca, Peru" loading="lazy" />
     </div>
   </div>
 </section>
@@ -203,8 +203,8 @@
   </div>
   <!-- The homepage slider, in the homepage frame. -->
   <div class="abrazo-slides" id="abrazo-slides">
-    <div class="slide on"><img src="images/concierge-coffee-abrazo-evening-room.webp" alt="The room on an Abrazo night" loading="lazy" /></div>
-    <div class="slide"><img src="images/concierge-coffee-abrazo-wine-on-ice.webp" alt="Wine on ice for an Abrazo night" loading="lazy" /></div>
+    <div class="slide on"><img src="images/concierge-coffee-abrazo-evening-room.webp" srcset="images/concierge-coffee-abrazo-evening-room-800.webp 800w, images/concierge-coffee-abrazo-evening-room.webp 1280w" sizes="(max-width: 768px) 100vw, 66vw" alt="The room on an Abrazo night" loading="lazy" /></div>
+    <div class="slide"><img src="images/concierge-coffee-abrazo-wine-on-ice.webp" srcset="images/concierge-coffee-abrazo-wine-on-ice-800.webp 800w, images/concierge-coffee-abrazo-wine-on-ice.webp 1280w" sizes="(max-width: 768px) 100vw, 66vw" alt="Wine on ice for an Abrazo night" loading="lazy" /></div>
     <div class="abrazo-arrows">
       <button type="button" aria-label="Previous photograph" onclick="abrazoStep(-1)">&larr;</button>
       <button type="button" aria-label="Next photograph" onclick="abrazoStep(1)">&rarr;</button>
@@ -229,7 +229,7 @@
   // Abrazo slideshow, as on the homepage: five-second crossfade plus arrows.
   // A click moves the frame and restarts the clock. Reduced motion keeps the
   // arrows and drops only the automatic advance.
-  let abrazoStep;
+  let abrazoStep = () => {};  // the arrows exist before the slider decides it has enough slides
   (function () {
     const slides = [...document.querySelectorAll('#abrazo-slides .slide')];
     if (slides.length < 2) return;
@@ -262,9 +262,6 @@
     document.getElementById('nav-toggle').setAttribute('aria-expanded', open);
     document.body.style.overflow = open ? 'hidden' : '';
   }
-
-  document.querySelectorAll('.nav-r a').forEach(a =>
-    a.addEventListener('click', () => toggleNav(false)));
 
   document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleNav(false); });
 
@@ -313,6 +310,7 @@
       if (res && res.ok && body.ok) { finish(THANKS); return; }
       // The function answered and said no: show why, keep the form.
       if (res && (res.status === 400 || res.status === 502) && body.error) { fail(body.error); return; }
+      if (res && body.error) console.error('wholesale form:', res.status, body.error);
       // Nothing behind the form on this host: the mail app instead.
       const lines = [
         ['Business', data.business], ['Contact', data.name], ['Email', data.email], ['Phone', data.phone],

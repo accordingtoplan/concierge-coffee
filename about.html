@@ -54,7 +54,7 @@
 <!-- HERO -->
 <section class="visit-hero">
   <div class="visit-hero-img visit-hero-img--bw">
-    <img fetchpriority="high" class="shift-up" src="images/concierge-coffee-front-room-821-traction-ave.webp" alt="The front room at 821 Traction Ave" />
+    <img fetchpriority="high" class="shift-up" src="images/concierge-coffee-front-room-821-traction-ave.webp" srcset="images/concierge-coffee-front-room-821-traction-ave-800.webp 800w, images/concierge-coffee-front-room-821-traction-ave.webp 1920w" sizes="100vw" alt="The front room at 821 Traction Ave" />
   </div>
   <div class="visit-hero-meta">
     <h1 class="visit-title">About.</h1>
@@ -96,15 +96,15 @@
 
 <section class="arr-pair">
   <div class="arr-pair-grid">
-    <div class="arr-pair-img"><img src="images/concierge-coffee-benjamin-espresso-machine-berlin.webp" alt="Benjamin behind the machine in Berlin" loading="lazy" /></div>
-    <div class="arr-pair-img"><img src="images/concierge-coffee-steel-sign-traction-ave.webp" alt="The steel sign on Traction Ave" loading="lazy" /></div>
+    <div class="arr-pair-img"><img src="images/concierge-coffee-benjamin-espresso-machine-berlin.webp" srcset="images/concierge-coffee-benjamin-espresso-machine-berlin-800.webp 800w, images/concierge-coffee-benjamin-espresso-machine-berlin.webp 1200w" sizes="50vw" alt="Benjamin behind the machine in Berlin" loading="lazy" /></div>
+    <div class="arr-pair-img"><img src="images/concierge-coffee-steel-sign-traction-ave.webp" srcset="images/concierge-coffee-steel-sign-traction-ave-800.webp 800w, images/concierge-coffee-steel-sign-traction-ave.webp 1200w" sizes="50vw" alt="The steel sign on Traction Ave" loading="lazy" /></div>
   </div>
 </section>
 
 <section class="arr-pair">
   <div class="arr-pair-grid">
-    <div class="arr-pair-img"><img src="images/concierge-coffee-berlin-storefront-luetzowstrasse.webp" alt="The Berlin storefront" loading="lazy" /></div>
-    <div class="arr-pair-img"><img src="images/concierge-coffee-bar-luetzowstrasse-berlin.webp" alt="The bar at L&uuml;tzowstra&szlig;e 92" loading="lazy" /></div>
+    <div class="arr-pair-img"><img src="images/concierge-coffee-berlin-storefront-luetzowstrasse.webp" srcset="images/concierge-coffee-berlin-storefront-luetzowstrasse-800.webp 800w, images/concierge-coffee-berlin-storefront-luetzowstrasse.webp 1080w" sizes="50vw" alt="The Berlin storefront" loading="lazy" /></div>
+    <div class="arr-pair-img"><img src="images/concierge-coffee-bar-luetzowstrasse-berlin.webp" srcset="images/concierge-coffee-bar-luetzowstrasse-berlin-800.webp 800w, images/concierge-coffee-bar-luetzowstrasse-berlin.webp 915w" sizes="50vw" alt="The bar at L&uuml;tzowstra&szlig;e 92" loading="lazy" /></div>
   </div>
 </section>
 
@@ -128,8 +128,8 @@
 
 <section class="arr-pair">
   <div class="arr-pair-grid">
-    <div class="arr-pair-img"><img src="images/concierge-coffee-green-coffee-cajamarca-peru.webp" alt="A sack of green coffee from Cajamarca, Peru" loading="lazy" /></div>
-    <div class="arr-pair-img"><img src="images/concierge-coffee-roasters.webp" alt="The roasters" loading="lazy" /></div>
+    <div class="arr-pair-img"><img src="images/concierge-coffee-green-coffee-cajamarca-peru.webp" srcset="images/concierge-coffee-green-coffee-cajamarca-peru-800.webp 800w, images/concierge-coffee-green-coffee-cajamarca-peru.webp 1080w" sizes="50vw" alt="A sack of green coffee from Cajamarca, Peru" loading="lazy" /></div>
+    <div class="arr-pair-img"><img src="images/concierge-coffee-roasters.webp" srcset="images/concierge-coffee-roasters-800.webp 800w, images/concierge-coffee-roasters.webp 1080w" sizes="50vw" alt="The roasters" loading="lazy" /></div>
   </div>
 </section>
 
@@ -149,8 +149,8 @@
 
 <section class="arr-pair">
   <div class="arr-pair-grid">
-    <div class="arr-pair-img"><img src="images/concierge-coffee-abrazo-wine-on-ice.webp" alt="Wine on ice for an Abrazo night" loading="lazy" /></div>
-    <div class="arr-pair-img"><img src="images/concierge-coffee-abrazo-coasters.webp" alt="Abrazo coasters on the bar" loading="lazy" /></div>
+    <div class="arr-pair-img"><img src="images/concierge-coffee-abrazo-wine-on-ice.webp" srcset="images/concierge-coffee-abrazo-wine-on-ice-800.webp 800w, images/concierge-coffee-abrazo-wine-on-ice.webp 1280w" sizes="50vw" alt="Wine on ice for an Abrazo night" loading="lazy" /></div>
+    <div class="arr-pair-img"><img src="images/concierge-coffee-abrazo-coasters.webp" srcset="images/concierge-coffee-abrazo-coasters-800.webp 800w, images/concierge-coffee-abrazo-coasters.webp 1280w" sizes="50vw" alt="Abrazo coasters on the bar" loading="lazy" /></div>
   </div>
 </section>
 
@@ -179,9 +179,6 @@
     document.getElementById('nav-toggle').setAttribute('aria-expanded', open);
     document.body.style.overflow = open ? 'hidden' : '';
   }
-
-  document.querySelectorAll('.nav-r a').forEach(a =>
-    a.addEventListener('click', () => toggleNav(false)));
 
   document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleNav(false); });
 

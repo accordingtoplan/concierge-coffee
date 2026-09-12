@@ -83,9 +83,6 @@
     document.body.style.overflow = open ? 'hidden' : '';
   }
 
-  document.querySelectorAll('.nav-r a').forEach(a =>
-    a.addEventListener('click', () => toggleNav(false)));
-
   document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleNav(false); });
 
   // Leaving the breakpoint with the sheet open would strand the scroll lock.
@@ -95,12 +92,17 @@
 <script type="module">
   /* The shop page is the coffee, from Shopify. Drinks and merch came off
      the site 11 Sep 2026; drinks are ordered through Square Online. */
-  import { initStore, shopCardHTML } from './shopify.js';
+  import { initStore, shopCardHTML, storeOffline } from './shopify.js';
 
   function render(products) {
+    /* Two absences: Shopify not answering, and Shopify answering with
+       nothing on sale. */
+    const empty = storeOffline()
+      ? 'The shop is not answering just now. Try again in a moment.'
+      : 'Nothing is on sale online just now. The bar at 821 Traction Ave is open as usual.';
     document.getElementById('coffee-grid').innerHTML = products.length
       ? products.map(shopCardHTML).join('')
-      : '<p class="sp-note" style="grid-column:1/-1">The shop is not answering just now. Try again in a moment.</p>';
+      : `<p class="sp-note" style="grid-column:1/-1">${empty}</p>`;
 
   }
 

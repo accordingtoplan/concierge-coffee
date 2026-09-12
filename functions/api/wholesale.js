@@ -20,6 +20,8 @@ const LABELS = {
   coffees: 'Coffees and kilos a month', method: 'Delivery or pick-up', notes: 'Notes',
 };
 const clean = v => String(v ?? '').replace(/\s+/g, ' ').trim().slice(0, 2000);
+/* Notes keep their line breaks; everything else is one line. */
+const cleanNotes = v => String(v ?? '').replace(/\r\n?/g, '\n').replace(/[^\S\n]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim().slice(0, 4000);
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function onRequestPost({ request, env }) {
@@ -31,12 +33,13 @@ export async function onRequestPost({ request, env }) {
   } catch {
     return reply(request, json, 400, { ok: false, error: 'Could not read the form.' });
   }
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) raw = {};
 
   /* Honeypot: a field no person sees. A bot that fills it gets a yes and
      sends nothing. */
   if (clean(raw.website)) return reply(request, json, 200, { ok: true });
 
-  const d = Object.fromEntries(FIELDS.map(k => [k, clean(raw[k])]));
+  const d = Object.fromEntries(FIELDS.map(k => [k, k === 'notes' ? cleanNotes(raw[k]) : clean(raw[k])]));
   const missing = [];
   if (!d.business) missing.push('business');
   if (!d.name) missing.push('name');

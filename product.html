@@ -83,9 +83,6 @@
     document.body.style.overflow = open ? 'hidden' : '';
   }
 
-  document.querySelectorAll('.nav-r a').forEach(a =>
-    a.addEventListener('click', () => toggleNav(false)));
-
   document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleNav(false); });
 
   // Leaving the breakpoint with the sheet open would strand the scroll lock.
@@ -98,7 +95,7 @@
      product out of that rather than asking Shopify a second question. */
   import {
     initStore, esc, formatPrice, productName, productSizes, usWeight,
-    getProductImage, sized, variants, variantSize, shopCardHTML, addToCartHandler,
+    getProductImage, sized, srcsetAttr, variants, variantSize, shopCardHTML, addToCartHandler,
     productByHandle, isDrink, barOpen, barOpensAt, pickupSlots, storeOffline,
     DRINKS_ORDERABLE,
   } from './shopify.js';
@@ -139,7 +136,7 @@
     document.getElementById('pd-body').innerHTML = `
       <div class="pd-split">
         <div>
-          <div class="pd-main"><img id="pd-img" src="${esc(main)}" alt="${esc(current.title)}" /></div>
+          <div class="pd-main"><img id="pd-img" src="${esc(main)}"${srcsetAttr(current, '(max-width: 768px) 100vw, 50vw')} alt="${esc(current.title)}" decoding="async" /></div>
           ${images.length > 1 ? `<div class="pd-thumbs">${images.slice(0, 4).map(im =>
             `<button class="pd-thumb" onclick="pdSwap('${esc(sized(im.url, 1600))}')" aria-label="Show another picture"><img src="${esc(sized(im.url, 240))}" alt="" /></button>`).join('')}</div>` : ''}
         </div>
@@ -194,16 +191,21 @@
     document.getElementById('more-grid').innerHTML = rest.slice(0, 3).map(shopCardHTML).join('');
   }
 
-  window.pdSwap = url => { document.getElementById('pd-img').src = url; };
+  window.pdSwap = url => { const im = document.getElementById('pd-img'); im.removeAttribute('srcset'); im.src = url; };
   window.pdSelect = id => { chosen = variants(current).find(v => v.id === id) || chosen; price(); };
   window.pdAdd = async () => {
     if (!chosen || !chosen.availableForSale) return;
     if (isDrink(current) && !barOpen()) return;
     const btn = document.getElementById('pd-atc');
     btn.disabled = true; btn.textContent = 'Adding...';
-    await addToCartHandler(chosen.id, document.getElementById('pd-qty').value,
+    const { ok, error } = await addToCartHandler(chosen.id, document.getElementById('pd-qty').value,
       document.getElementById('pd-pickup')?.value || null);
     btn.disabled = false;
+    if (!ok) {
+      btn.textContent = error;
+      setTimeout(() => { if (btn.textContent === error) price(); }, 4000);
+      return;
+    }
     price();
   };
 

@@ -12,7 +12,7 @@ Headless Shopify. Plain HTML, one `styles.css`, two ES modules. No build step, n
 | `shop.html` | Catalogue: coffee, proposals, merch as sections |
 | `product.html?p=<handle>` | One page per coffee, off the loaded catalogue |
 | `about.html`, `visit.html`, `arrangements.html` | Content pages, no storefront code. Arrangements holds events, catering, wholesale and Abrazo |
-| `shopify.js` | The storefront: API calls, product query, cart mutations, gram to ounce conversion, the bag drawer and quick add panel (both injected, never written into a page), `CONCEPTS` and `MERCH` lists, `shopCardHTML()`. Drinks (`tag: drink`) carry pickup slots from `BAR_HOURS` |
+| `shopify.js` | The storefront: API calls, product query, cart mutations, gram to ounce conversion, the bag drawer and quick add panel (both injected, never written into a page), `shopCardHTML()`. Drinks (`tag: drink`) stay out of every grid; `DRINKS_ORDERABLE` gates the pickup code kept from the September build |
 | `layout.js` | Nav and footer markup, injected into every page's empty `<nav>` and `<footer>` |
 | `styles.css` | The one stylesheet. Two variant classes carry the only intentional page differences (homepage Abrazo strip, About hero) |
 | `images/` | All local, WebP, named `concierge-coffee-<what-it-shows>.webp`, sized to the slot |

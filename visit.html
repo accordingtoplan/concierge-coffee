@@ -54,7 +54,7 @@
 <!-- HERO -->
 <section class="visit-hero">
   <div class="visit-hero-img">
-    <img fetchpriority="high" src="images/concierge-coffee-courtyard-arts-district-los-angeles.webp" alt="Concierge Coffee — Arts District" />
+    <img fetchpriority="high" src="images/concierge-coffee-courtyard-arts-district-los-angeles.webp" srcset="images/concierge-coffee-courtyard-arts-district-los-angeles-800.webp 800w, images/concierge-coffee-courtyard-arts-district-los-angeles.webp 1920w" sizes="100vw" alt="Concierge Coffee — Arts District" />
   </div>
   <div class="visit-hero-meta">
     <h1 class="visit-title">Arts District.<br>Los Angeles.</h1>
@@ -104,19 +104,19 @@
 <!-- PHOTO GRID -->
 <section class="photo-grid">
   <div class="photo-cell wide">
-    <img src="images/concierge-coffee-espresso-machine-arched-window.webp" alt="The espresso machine by the arched window at 821 Traction Ave" loading="lazy" />
+    <img src="images/concierge-coffee-espresso-machine-arched-window.webp" srcset="images/concierge-coffee-espresso-machine-arched-window-800.webp 800w, images/concierge-coffee-espresso-machine-arched-window.webp 1600w" sizes="(max-width: 768px) 100vw, 66vw" alt="The espresso machine by the arched window at 821 Traction Ave" loading="lazy" />
   </div>
   <div class="photo-cell">
-    <img src="images/concierge-coffee-terrazzo-bar-arts-district.webp" alt="The terrazzo bar and timber stools in the Arts District" loading="lazy" />
+    <img src="images/concierge-coffee-terrazzo-bar-arts-district.webp" srcset="images/concierge-coffee-terrazzo-bar-arts-district-800.webp 800w, images/concierge-coffee-terrazzo-bar-arts-district.webp 1000w" sizes="(max-width: 768px) 50vw, 33vw" alt="The terrazzo bar and timber stools in the Arts District" loading="lazy" />
   </div>
   <div class="photo-cell">
-    <img src="images/concierge-coffee-glass-table-timber-stools.webp" alt="The glass-topped table under the arched windows" loading="lazy" />
+    <img src="images/concierge-coffee-glass-table-timber-stools.webp" srcset="images/concierge-coffee-glass-table-timber-stools-800.webp 800w, images/concierge-coffee-glass-table-timber-stools.webp 1000w" sizes="(max-width: 768px) 50vw, 33vw" alt="The glass-topped table under the arched windows" loading="lazy" />
   </div>
   <div class="photo-cell">
-    <img src="images/concierge-coffee-bar-through-doorway.webp" alt="The bar seen through the doorway" loading="lazy" />
+    <img src="images/concierge-coffee-bar-through-doorway.webp" srcset="images/concierge-coffee-bar-through-doorway-800.webp 800w, images/concierge-coffee-bar-through-doorway.webp 1000w" sizes="(max-width: 768px) 50vw, 33vw" alt="The bar seen through the doorway" loading="lazy" />
   </div>
   <div class="photo-cell">
-    <img src="images/concierge-coffee-front-room-821-traction-ave.webp" alt="The front room at 821 Traction Ave" loading="lazy" />
+    <img src="images/concierge-coffee-front-room-821-traction-ave.webp" srcset="images/concierge-coffee-front-room-821-traction-ave-800.webp 800w, images/concierge-coffee-front-room-821-traction-ave.webp 1920w" sizes="(max-width: 768px) 50vw, 33vw" alt="The front room at 821 Traction Ave" loading="lazy" />
   </div>
 </section>
 
@@ -157,16 +157,16 @@
 <!-- BERLIN PHOTOS -->
 <section class="photo-grid">
   <div class="photo-cell wide">
-    <img src="images/concierge-coffee-long-table-rya-berlin.webp" alt="The long table under the rya in Berlin" loading="lazy" />
+    <img src="images/concierge-coffee-long-table-rya-berlin.webp" srcset="images/concierge-coffee-long-table-rya-berlin-800.webp 800w, images/concierge-coffee-long-table-rya-berlin.webp 1080w" sizes="(max-width: 768px) 100vw, 66vw" alt="The long table under the rya in Berlin" loading="lazy" />
   </div>
   <div class="photo-cell">
-    <img src="images/concierge-coffee-bar-luetzowstrasse-berlin.webp" alt="The bar at Lützowstraße 92" loading="lazy" />
+    <img src="images/concierge-coffee-bar-luetzowstrasse-berlin.webp" srcset="images/concierge-coffee-bar-luetzowstrasse-berlin-800.webp 800w, images/concierge-coffee-bar-luetzowstrasse-berlin.webp 915w" sizes="(max-width: 768px) 50vw, 33vw" alt="The bar at Lützowstraße 92" loading="lazy" />
   </div>
   <div class="photo-cell">
-    <img src="images/concierge-coffee-table-for-two-berlin.webp" alt="A table for two in Berlin" loading="lazy" />
+    <img src="images/concierge-coffee-table-for-two-berlin.webp" srcset="images/concierge-coffee-table-for-two-berlin-800.webp 800w, images/concierge-coffee-table-for-two-berlin.webp 1080w" sizes="(max-width: 768px) 50vw, 33vw" alt="A table for two in Berlin" loading="lazy" />
   </div>
   <div class="photo-cell wide">
-    <img src="images/concierge-coffee-back-room-berlin.webp" alt="The back room in Berlin" loading="lazy" />
+    <img src="images/concierge-coffee-back-room-berlin.webp" srcset="images/concierge-coffee-back-room-berlin-800.webp 800w, images/concierge-coffee-back-room-berlin.webp 1080w" sizes="(max-width: 768px) 100vw, 66vw" alt="The back room in Berlin" loading="lazy" />
   </div>
 </section>
 
@@ -186,9 +186,6 @@
     document.getElementById('nav-toggle').setAttribute('aria-expanded', open);
     document.body.style.overflow = open ? 'hidden' : '';
   }
-
-  document.querySelectorAll('.nav-r a').forEach(a =>
-    a.addEventListener('click', () => toggleNav(false)));
 
   document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleNav(false); });
 
