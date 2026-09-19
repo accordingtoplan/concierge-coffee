@@ -686,6 +686,37 @@
   .menu-pickup a { border-bottom: 1px solid #eee; transition: border-color 0.15s; }
   .menu-pickup a:hover { border-color: #111; }
   .menu-lead.menu-lead--photos { grid-template-columns: repeat(2, 1fr); }
+
+  /* ── PICK-UP ORDERING (order.js) ──
+     The list under the photographs, in sections, each drink with a price
+     and an Order button; the panel and the bag borrow the quick add and
+     drawer classes. Doubled selectors on purpose against the .menu-grid
+     breakpoints later in the file. */
+  .menu-grid.menu-grid--list { display: block; }
+  .menu-sec { margin-top: 32px; }
+  .menu-sec-h { font-family: var(--serif); font-size: 15px; font-weight: 400; margin-bottom: 4px; }
+  .menu-row { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 12px 0; border-bottom: 1px solid #eee; }
+  .menu-row-name { font-family: var(--serif); font-size: 17px; font-weight: 400; line-height: 1.2; }
+  .menu-row-ing { margin-top: 3px; font-size: 11px; line-height: 1.6; color: var(--muted); max-width: 40ch; }
+  .menu-row-right { display: flex; align-items: center; gap: 16px; white-space: nowrap; }
+  .menu-row-price { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .menu-row-add { padding: 9px 14px; border: 1px solid #111; background: #fff; color: #111; font: inherit; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.15s, color 0.15s; }
+  .menu-row-add:hover { background: #111; color: #fff; }
+  .menu-row-add:disabled { border-color: #ddd; color: var(--muted); cursor: default; }
+  .menu-bag-link { display: inline-block; margin-left: 12px; padding: 0; border: 0; border-bottom: 1px solid #111; background: none; font: inherit; color: #111; cursor: pointer; }
+  .po-many { border: 0; padding: 0; margin: 0; min-width: 0; }
+  .po-many .qa-lbl { display: block; margin-bottom: 4px; }
+  .po-opt { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #eee; font-size: 11px; cursor: pointer; }
+  .po-opt input { margin: 0; accent-color: #111; }
+  .po-opt-price { margin-left: auto; color: var(--muted); font-size: 10px; letter-spacing: 0.04em; }
+  .pb-form { display: flex; flex-direction: column; gap: 14px; }
+  .pb-form .cart-footer { margin-top: 6px; }
+  .pb-note { font-size: 10px; line-height: 1.6; color: var(--muted); margin: 8px 0 12px; }
+  .pb-error { font-size: 11px; line-height: 1.6; color: #111; }
+  .ci--pickup { grid-template-columns: 1fr auto; }
+  @media (max-width: 640px) {
+    .menu-row-right { flex-direction: column; align-items: flex-end; gap: 8px; }
+  }
   .drink-ing {
     margin-top: 6px;
     font-size: 11px;

@@ -1,0 +1,4 @@
+# Copy to .dev.vars for `npx wrangler pages dev .`; never commit .dev.vars
+SQUARE_ACCESS_TOKEN=
+SQUARE_ENV=sandbox
+RESEND_API_KEY=

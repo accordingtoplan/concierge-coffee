@@ -241,7 +241,7 @@
     productByHandle, inStock, barOpen, barOpensAt, storeOffline,
     productHref, DRINKS_ORDERABLE, hasPhoto, menuStub, srcsetAttr,
   } from './shopify.js';
-  import { ORDER_URL } from './layout.js';
+  import { ORDER_URL, PICKUP_ORDERING } from './layout.js';
 
   /* The drinks, leads and grid alike, rendered from Shopify in the shop
      card language. The handle lists are the only layout decision the page
@@ -335,7 +335,18 @@
     document.getElementById('menu').hidden = !photos.length;
   }
 
-  function renderDrinks() {
+  async function renderDrinks() {
+    /* Pick-up through Square: the menu and the bag come from order.js.
+       Anything wrong (no function on this host, Square down), and the
+       four photographs stand in. */
+    if (PICKUP_ORDERING) {
+      try {
+        const mod = await import('./order.js');
+        await mod.loadMenu();
+        mod.renderPickupMenu();
+        return;
+      } catch (e) { console.warn('pick-up ordering unavailable:', e.message); }
+    }
     if (!DRINKS_ORDERABLE) { renderMenu(); return; }
     const fill = (id, handles) => {
       document.getElementById(id).innerHTML = handles

@@ -11,6 +11,12 @@
    so the content pages get it without loading the storefront. */
 export const ORDER_URL = '';
 
+/* Pick-up ordering on the site itself, through Square's hosted checkout
+   (order.js, functions/api/menu.js and order.js). Off until Benjamin and
+   Namy say so after the Square Online period; on GitHub Pages it cannot
+   run anyway, and the homepage falls back to the four photographs. */
+export const PICKUP_ORDERING = false;
+
 const NAV = `
   <a href="index.html" class="logo" aria-label="Concierge Coffee &mdash; home">
     <svg class="lk" viewBox="0 0 151.07 120.06" aria-hidden="true"><use href="#cc-keys"/></svg>
