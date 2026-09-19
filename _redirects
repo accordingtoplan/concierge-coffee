@@ -1,0 +1,3 @@
+# One host. The canonical and OG tags, the sitemap and robots all say the
+# apex, so www sends there.
+https://www.conciergecoffee.com/* https://conciergecoffee.com/:splat 301

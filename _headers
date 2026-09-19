@@ -1,0 +1,25 @@
+# Cloudflare Pages headers. Images and the font are named for their content
+# and change name when they change, so they can be cached for a year. The
+# stylesheet and the two modules are referenced without a version, so a
+# year would strand returning visitors on old rules after a push; an hour
+# is long enough to spare the origin and short enough to ship a change.
+# The policy allows only what the site loads: itself, inline script and
+# style (the pages carry both), product photographs from Shopify's CDN,
+# and the Storefront API on the store domain for cart and checkout.
+
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/styles.css
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/*.js
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://cdn.shopify.com; font-src 'self'; connect-src 'self' https://concierge-coffee-2245.myshopify.com; form-action 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'
