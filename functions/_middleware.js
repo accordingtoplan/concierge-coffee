@@ -17,7 +17,13 @@ export async function onRequest({ request, env, next }) {
     let decoded = '';
     try { decoded = atob(header.slice(6)); } catch (e) { decoded = ''; }
     const password = decoded.slice(decoded.indexOf(':') + 1);
-    if (decoded.includes(':') && safeEqual(password, secret)) return next();
+    if (decoded.includes(':') && safeEqual(password, secret)) {
+      /* Behind the gate nothing may sit in the edge cache: a photograph
+         fetched by someone with the password would otherwise be served to
+         the next visitor without one. The year-long image cache in _headers
+         comes back the day the gate goes. */
+      return uncached(await next());
+    }
   }
 
   return new Response('Concierge Coffee. Not open yet.', {
@@ -28,6 +34,14 @@ export async function onRequest({ request, env, next }) {
       'Content-Type': 'text/plain; charset=utf-8',
     },
   });
+}
+
+/* The same response with edge caching switched off. */
+function uncached(res) {
+  const out = new Response(res.body, res);
+  out.headers.set('Cache-Control', 'private, no-store');
+  out.headers.set('Vary', 'Authorization');
+  return out;
 }
 
 /* Same length, same bytes, in constant time. */
