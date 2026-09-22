@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://concierge-coffee.accordingtoplan.co/sitemap.xml
+Sitemap: https://conciergecoffee.com/sitemap.xml

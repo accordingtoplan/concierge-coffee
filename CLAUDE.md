@@ -16,13 +16,13 @@ Headless Shopify. Plain HTML, one `styles.css`, two ES modules. No build step, n
 | `layout.js` | Nav and footer markup, injected into every page's empty `<nav>` and `<footer>` |
 | `styles.css` | The one stylesheet. Two variant classes carry the only intentional page differences (homepage Abrazo strip, About hero) |
 | `images/` | All local, WebP, named `concierge-coffee-<what-it-shows>.webp`, sized to the slot |
-| `CNAME`, `robots.txt`, `sitemap.xml`, `404.html` | Hosting files. URLs point at the preview domain until cutover |
+| `_headers`, `_redirects`, `robots.txt`, `sitemap.xml`, `404.html` | Hosting files for Cloudflare Pages: cache and security headers, www to apex, production URLs |
 | `functions/api/wholesale.js` | Cloudflare Pages Function: mails the wholesale form to orders@ through Resend (`RESEND_API_KEY` in the Pages project). Inert on GitHub Pages, where the page falls back to a `mailto:` |
 | `order.js`, `functions/api/menu.js`, `functions/api/order.js`, `functions/_lib/menu.js`, `functions/_lib/square.js` | Pick-up ordering through Square's hosted checkout, behind `PICKUP_ORDERING` in `layout.js`. The curated menu with Square catalog ids is `_lib/menu.js`; prices and options come from Square live. `SQUARE_ACCESS_TOKEN` in the Pages project, never in the repo |
 
 Store: `concierge-coffee-2245.myshopify.com`, Basic plan. Product handles are load-bearing: the frontend keys fallback images on `p.handle`. Never rename a handle in Shopify without the paired change here.
 
-Repo: `github.com/accordingtoplan/concierge-coffee`, branch `main`. Preview: `concierge-coffee.accordingtoplan.co` (GitHub Pages, interim). Production host from launch: Cloudflare Pages, client-owned account.
+Repo: `github.com/accordingtoplan/concierge-coffee`, branch `main`. Host: Cloudflare Pages, client-owned account, at `conciergecoffee.com`. The GitHub Pages preview at `concierge-coffee.accordingtoplan.co` served until cutover.
 
 ## Rules
 
