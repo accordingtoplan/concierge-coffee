@@ -36,8 +36,10 @@ const fromPrice = item => Math.min(...item.sizes.map(s => s.price));
 function photoCardHTML(item) {
   const closed = !barOpen();
   const price = money(fromPrice(item));
-  const cta = closed ? `Closed · ${barOpensAt()}` : item.sizes.length > 1 ? `Order for Pick-up · from ${price}` : `Order for Pick-up · ${price}`;
-  const tight = closed ? `Closed · ${barOpensAt()}` : item.sizes.length > 1 ? `Pick-up · from ${price}` : `Pick-up · ${price}`;
+  /* The price sits on the card's foot already; the button says only what it
+     does (Frederik, 23 Sep). */
+  const cta = closed ? `Closed · ${barOpensAt()}` : 'Order for pick-up';
+  const tight = closed ? `Closed · ${barOpensAt()}` : 'Order';
   const sizes = item.sizes.map(s => s.label).filter(l => l !== 'Regular').join(' / ');
   const src = item.photo, small = item.photo.replace(/\.webp$/, '-800.webp');
   return `
@@ -52,7 +54,7 @@ function photoCardHTML(item) {
           </div>
           <div>
             <div class="card-meta"><span>${esc(sizes)}</span><span>${price}</span></div>
-            <button class="card-cta"${closed ? ' disabled' : ''} aria-label="${esc(cta)}" data-drink="${esc(item.key)}"><span class="cta-full" aria-hidden="true">${esc(cta)}</span><span class="cta-tight" aria-hidden="true">${esc(tight)}</span></button>
+            <button class="card-cta"${closed ? ' disabled' : ''} aria-label="${closed ? esc(cta) : `Order ${esc(item.name)} for pick-up`}" data-drink="${esc(item.key)}"><span class="cta-full" aria-hidden="true">${esc(cta)}</span><span class="cta-tight" aria-hidden="true">${esc(tight)}</span></button>
           </div>
         </div>
       </div>
