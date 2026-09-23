@@ -686,6 +686,13 @@
   .menu-pickup a { border-bottom: 1px solid #eee; transition: border-color 0.15s; }
   .menu-pickup a:hover { border-color: #111; }
   .menu-lead.menu-lead--photos { grid-template-columns: repeat(2, 1fr); }
+  /* With ordering on, each lead carries a name, the ingredient line, a size,
+     a price and a button. Two up on a phone that was a 173px square with the
+     text over the drink; one up it reads. Supersedes the two-column-at-every-
+     width call of 11 Sep for phones (23 Sep). */
+  @media (max-width: 480px) {
+    .menu-lead.menu-lead--photos { grid-template-columns: 1fr; }
+  }
 
   /* ── PICK-UP ORDERING (order.js) ──
      The list under the photographs, in sections, each drink with a price
@@ -704,6 +711,9 @@
   .menu-row-add:hover { background: #111; color: #fff; }
   .menu-row-add:disabled { border-color: #ddd; color: var(--muted); cursor: default; }
   .menu-bag-link { display: inline-block; margin-left: 12px; padding: 0; border: 0; border-bottom: 1px solid #111; background: none; font: inherit; color: #111; cursor: pointer; }
+  /* On a phone the link always wraps to its own line, where the 12px read as
+     a stray indent. */
+  @media (max-width: 480px) { .menu-bag-link { display: block; width: max-content; margin: 6px 0 0; } }
   .po-many { border: 0; padding: 0; margin: 0; min-width: 0; }
   .po-many .qa-lbl { display: block; margin-bottom: 4px; }
   .po-opt { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #eee; font-size: 11px; cursor: pointer; }
@@ -826,6 +836,11 @@
     .pdp-overlay { padding: 12px; }
     .qa-modal { max-width: 460px; }
     .cart-drawer { width: 100%; right: -100%; padding: 24px 16px; }
+    /* On a phone the drawer scrolls as one piece. The desktop drawer pins its
+       footer and scrolls the item list, which on a short screen, or with the
+       keyboard up, crushed the list to nothing under the pick-up form. */
+    .cart-drawer { overflow-y: auto; }
+    .cart-items { flex: 1 0 auto; overflow: visible; padding-bottom: 24px; }
     footer { padding-top: 36px; gap: 28px; }
     .ft-copy { flex-direction: column; gap: 8px; padding-top: 24px; }
   }
@@ -973,6 +988,10 @@
     .cart-close { padding: 12px; margin: -12px; }
     .abrazo-arrows button { width: 44px; height: 44px; }
     .qa-back, .qa-details { display: inline-block; padding: 12px 0; margin: -12px 0; }
+    /* The 44px close sits 4px in from the modal's edge; Details ends at the
+       panel's 16px padding and was 32px under it, so a tap on Details closed
+       the panel. The right margin keeps the link clear of the button. */
+    .qa-details { margin-right: 40px; }
     .ci-remove { display: inline-block; padding: 12px 0; margin: -6px 0 -12px; }
   }
 
@@ -1244,4 +1263,12 @@
   @media (max-width: 480px) {
     .card-meta, .sp-foot, .ft-h, .ft-copy, .qa-lbl, .pd-crumb, .pd-sizes,
     .head-link, .qa-back, .detail-lbl, .ci-sub, .ci-remove { font-size: 11px; }
+  }
+
+  /* Form controls, last in the file on purpose, after the .ws-in rule they
+     override. iPhone Safari zooms the page when a field under 16px takes
+     focus and does not zoom back, so on a touch screen every select and
+     input comes up to 16px; the labels around them keep the 11px register. */
+  @media (hover: none) {
+    .qa-sel, .ws-in { font-size: 16px; }
   }
