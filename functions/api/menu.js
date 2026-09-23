@@ -9,7 +9,7 @@
    homepage falls back to the four-photograph menu. Test locally with
    `npx wrangler pages dev .` and a `.dev.vars` holding SQUARE_ACCESS_TOKEN. */
 
-import { MENU, LISTS, SECTIONS, variationIds } from '../_lib/menu.js';
+import { MENU_LIVE, LISTS, SECTIONS, variationIds } from '../_lib/menu.js';
 import { square, squareError, json } from '../_lib/square.js';
 
 const TTL = 300;
@@ -38,7 +38,7 @@ export async function onRequestGet({ request, env }) {
     };
   }
 
-  const items = MENU.map(m => {
+  const items = MENU_LIVE.map(m => {
     const sizes = m.sizes.map(s => {
       const o = objects.get(s.id);
       const v = o?.item_variation_data;

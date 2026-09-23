@@ -87,10 +87,16 @@ export function renderPickupMenu() {
 
   const photos = menu.items.filter(i => i.photo);
   lead.innerHTML = photos.map(photoCardHTML).join('');
-  grid.innerHTML = menu.sections.map(sec => {
-    const items = menu.items.filter(i => i.section === sec);
-    return items.length ? `<div class="menu-sec"><h3 class="menu-sec-h">${esc(sec)}</h3>${items.map(rowHTML).join('')}</div>` : '';
-  }).join('');
+  /* The list carries what the photographs do not; a pictured drink is
+     ordered from its card. A short list runs flat, section heads only
+     earn their place once there are enough rows to need finding. */
+  const rows = menu.items.filter(i => !i.photo);
+  grid.innerHTML = rows.length > 8
+    ? menu.sections.map(sec => {
+        const items = rows.filter(i => i.section === sec);
+        return items.length ? `<div class="menu-sec"><h3 class="menu-sec-h">${esc(sec)}</h3>${items.map(rowHTML).join('')}</div>` : '';
+      }).join('')
+    : `<div class="menu-sec">${rows.map(rowHTML).join('')}</div>`;
 
   line.innerHTML = barOpen()
     ? `Order here, pay with Square, pick up at the bar. 821 Traction Ave, Arts District, Downtown LA. <button type="button" class="menu-bag-link" id="menu-bag-link" hidden></button>`

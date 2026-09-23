@@ -738,8 +738,19 @@ export const MENU = [
   }
 ];
 
+/* What the site shows, 23 Sep: the four photographed drinks and five more
+   as a list. Frederik's call after the first mobile pass: the full list was
+   too long on a phone. Everything else above stays keyed and ready; to
+   bring a drink back, add its key here. The five are staples standing in
+   until Benjamin names the best sellers from Square's item sales report. */
+export const LIVE = [
+  'einspanner', 'yuzu-matcha-tonic', 'latte-iced', 'saffron-latte',
+  'latte', 'cappuccino', 'cortado', 'cold-brew', 'matcha-latte',
+];
+export const MENU_LIVE = MENU.filter(m => LIVE.includes(m.key));
+
 export const byKey = Object.fromEntries(MENU.map(m => [m.key, m]));
-export const variationIds = MENU.flatMap(m => m.sizes.map(s => s.id));
+export const variationIds = MENU_LIVE.flatMap(m => m.sizes.map(s => s.id));
 export function variationOf(id) {
   for (const m of MENU) for (const s of m.sizes) if (s.id === id) return { item: m, size: s };
   return null;
