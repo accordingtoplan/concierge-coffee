@@ -12,10 +12,10 @@
 export const ORDER_URL = '';
 
 /* Pick-up ordering on the site itself, through Square's hosted checkout
-   (order.js, functions/api/menu.js and order.js). Off until Benjamin and
-   Namy say so after the Square Online period; on GitHub Pages it cannot
-   run anyway, and the homepage falls back to the four photographs. */
-export const PICKUP_ORDERING = false;
+   (order.js, functions/api/menu.js and order.js). On since 22 Sep 2026,
+   Benjamin and Namy's call; the token lives on the Pages project. Without
+   it the homepage falls back to the four photographs. */
+export const PICKUP_ORDERING = true;
 
 const NAV = `
   <a href="index.html" class="logo" aria-label="Concierge Coffee &mdash; home">

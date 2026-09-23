@@ -158,14 +158,15 @@ export function formatPrice(amount, currency = 'USD') {
 }
 
 /* Shopify carries the variants in grams and kilos. The shop is in Los Angeles,
-   so every weight the site shows is converted. Under a pound reads in ounces. */
+   so every weight the site shows is converted, and always to ounces: two
+   sizes side by side have to be comparable without doing the sum. */
 export function usWeight(label) {
   return String(label ?? '').replace(
     /(\d+(?:[.,]\d+)?)\s*(kg|kilogramme?s?|kilograms?|g|gramme?s?|grams?)\b/gi,
     (_, n, unit) => {
       const grams = parseFloat(n.replace(',', '.')) * (/^k/i.test(unit) ? 1000 : 1);
       const oz = grams / 28.349523125;
-      return oz >= 16 ? `${(oz / 16).toFixed(1)} lb` : `${oz.toFixed(1)} oz`;
+      return `${oz.toFixed(1)} oz`;
     }
   );
 }

@@ -47,7 +47,7 @@ export function squareError(result, fallback) {
 export function json(status, body, extra = {}) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', ...extra },
+    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...extra },
   });
 }
 
