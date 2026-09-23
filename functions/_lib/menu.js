@@ -231,7 +231,7 @@ export const MENU = [
     "key": "cortado",
     "name": "Cortado",
     "section": "Espresso",
-    "ingredients": "",
+    "ingredients": "Espresso, an equal pour of steamed milk",
     "photo": null,
     "sizes": [
       {
@@ -265,7 +265,7 @@ export const MENU = [
     "key": "cappuccino",
     "name": "Cappuccino",
     "section": "Espresso",
-    "ingredients": "",
+    "ingredients": "Espresso, foamed milk",
     "photo": null,
     "sizes": [
       {
@@ -282,7 +282,7 @@ export const MENU = [
     "key": "latte",
     "name": "Latte",
     "section": "Espresso",
-    "ingredients": "",
+    "ingredients": "Espresso, steamed milk",
     "photo": null,
     "sizes": [
       {
@@ -375,7 +375,7 @@ export const MENU = [
     "key": "cold-brew",
     "name": "Cold Brew",
     "section": "Iced",
-    "ingredients": "",
+    "ingredients": "Slow-steeped, over ice",
     "photo": null,
     "sizes": [
       {
@@ -738,16 +738,18 @@ export const MENU = [
   }
 ];
 
-/* What the site shows, 23 Sep: the four photographed drinks and five more
+/* What the site shows, 23 Sep: the four photographed drinks and six more
    as a list. Frederik's call after the first mobile pass: the full list was
-   too long on a phone. Everything else above stays keyed and ready; to
+   too long on a phone. Ingredient lines for the six are drafts of 23 Sep,
+   for Benjamin to confirm. Everything else above stays keyed and ready; to
    bring a drink back, add its key here. The five are staples standing in
    until Benjamin names the best sellers from Square's item sales report. */
 export const LIVE = [
   'einspanner', 'yuzu-matcha-tonic', 'latte-iced', 'saffron-latte',
-  'latte', 'cappuccino', 'cortado', 'cold-brew', 'matcha-latte',
+  'latte', 'cappuccino', 'flat-white', 'cortado', 'cold-brew', 'matcha-latte',
 ];
-export const MENU_LIVE = MENU.filter(m => LIVE.includes(m.key));
+/* In LIVE's order: the list on the page reads in the order written here. */
+export const MENU_LIVE = LIVE.map(k => MENU.find(m => m.key === k)).filter(Boolean);
 
 export const byKey = Object.fromEntries(MENU.map(m => [m.key, m]));
 export const variationIds = MENU_LIVE.flatMap(m => m.sizes.map(s => s.id));

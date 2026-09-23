@@ -77,6 +77,21 @@ function rowHTML(item) {
     </div>`;
 }
 
+function tileHTML(item) {
+  const closed = !barOpen();
+  const sizes = item.sizes.map(s => s.label).filter(l => l !== 'Regular').join(' / ');
+  const prices = item.sizes.map(s => money(s.price)).join(' / ');
+  return `
+    <div class="menu-tile" role="listitem">
+      <div class="menu-row-name">${esc(item.name)}</div>
+      <div class="menu-row-ing">${esc(item.ingredients || '')}</div>
+      <div class="menu-tile-foot">
+        <div class="menu-row-price">${sizes ? `<span>${esc(sizes)}</span>` : ''}<span>${prices}</span></div>
+        <button class="menu-row-add" type="button"${closed ? ' disabled' : ''} data-drink="${esc(item.key)}" aria-label="Order ${esc(item.name)} for pick-up">${closed ? 'Closed' : 'Order'}</button>
+      </div>
+    </div>`;
+}
+
 export function renderPickupMenu() {
   const lead = document.getElementById('menu-lead');
   const grid = document.getElementById('menu-grid');
@@ -91,12 +106,18 @@ export function renderPickupMenu() {
      ordered from its card. A short list runs flat, section heads only
      earn their place once there are enough rows to need finding. */
   const rows = menu.items.filter(i => !i.photo);
-  grid.innerHTML = rows.length > 8
-    ? menu.sections.map(sec => {
-        const items = rows.filter(i => i.section === sec);
-        return items.length ? `<div class="menu-sec"><h3 class="menu-sec-h">${esc(sec)}</h3>${items.map(rowHTML).join('')}</div>` : '';
-      }).join('')
-    : `<div class="menu-sec">${rows.map(rowHTML).join('')}</div>`;
+  if (rows.length > 8) {
+    grid.innerHTML = menu.sections.map(sec => {
+      const items = rows.filter(i => i.section === sec);
+      return items.length ? `<div class="menu-sec"><h3 class="menu-sec-h">${esc(sec)}</h3>${items.map(rowHTML).join('')}</div>` : '';
+    }).join('');
+  } else {
+    /* Three tiles across, each a name, its ingredients, then size, price
+       and the button along the foot; a row of six drinks at full width had
+       the name at one edge and the price at the other. */
+    grid.classList.add('menu-grid--tiles');
+    grid.innerHTML = rows.map(tileHTML).join('');
+  }
 
   line.innerHTML = barOpen()
     ? `Order here, pay with Square, pick up at the bar. 821 Traction Ave, Arts District, Downtown LA. <button type="button" class="menu-bag-link" id="menu-bag-link" hidden></button>`

@@ -727,6 +727,17 @@
   @media (max-width: 640px) {
     .menu-row-right { flex-direction: column; align-items: flex-end; gap: 8px; }
   }
+  /* The short list as tiles: three across, two on a tablet, one on a phone.
+     Doubled selector on purpose against the .menu-grid breakpoints later in
+     the file. The ingredient line takes the slack so every foot in a row
+     sits on the same line. */
+  .menu-grid.menu-grid--tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 var(--card-gap); margin-top: 24px; }
+  .menu-tile { display: flex; flex-direction: column; padding: 18px 0 22px; border-top: 1px solid #eee; }
+  .menu-tile .menu-row-ing { flex: 1; margin-top: 4px; max-width: none; }
+  .menu-tile-foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 14px; }
+  .menu-tile .menu-row-price { align-items: flex-start; }
+  @media (max-width: 768px) { .menu-grid.menu-grid--tiles { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .menu-grid.menu-grid--tiles { grid-template-columns: 1fr; } }
   .drink-ing {
     margin-top: 6px;
     font-size: 11px;
