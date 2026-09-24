@@ -197,7 +197,7 @@ export const MENU = [
     "key": "espresso",
     "name": "Espresso",
     "section": "Espresso",
-    "ingredients": "",
+    "ingredients": "A double shot",
     "photo": null,
     "sizes": [
       {
@@ -333,7 +333,7 @@ export const MENU = [
     "key": "americano",
     "name": "Americano",
     "section": "Espresso",
-    "ingredients": "",
+    "ingredients": "Espresso, hot water",
     "photo": null,
     "sizes": [
       {
@@ -738,15 +738,16 @@ export const MENU = [
   }
 ];
 
-/* What the site shows, 23 Sep: the four photographed drinks and six more
-   as a list. Frederik's call after the first mobile pass: the full list was
+/* What the site shows, 23 Sep: the four photographed drinks and eight more
+   as a grid. Frederik's call after the first mobile pass: the full list was
    too long on a phone. Ingredient lines for the six are drafts of 23 Sep,
    for Benjamin to confirm. Everything else above stays keyed and ready; to
    bring a drink back, add its key here. The five are staples standing in
    until Benjamin names the best sellers from Square's item sales report. */
 export const LIVE = [
   'einspanner', 'yuzu-matcha-tonic', 'latte-iced', 'saffron-latte',
-  'latte', 'cappuccino', 'flat-white', 'cortado', 'cold-brew', 'matcha-latte',
+  'latte', 'cappuccino', 'flat-white', 'cortado',
+  'espresso', 'americano', 'cold-brew', 'matcha-latte',
 ];
 /* In LIVE's order: the list on the page reads in the order written here. */
 export const MENU_LIVE = LIVE.map(k => MENU.find(m => m.key === k)).filter(Boolean);

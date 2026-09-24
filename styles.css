@@ -741,17 +741,20 @@
   @media (max-width: 640px) {
     .menu-row-right { flex-direction: column; align-items: flex-end; gap: 8px; }
   }
-  /* The short list as tiles: three across, two on a tablet, one on a phone.
-     Doubled selector on purpose against the .menu-grid breakpoints later in
-     the file. The ingredient line takes the slack so every foot in a row
-     sits on the same line. */
-  .menu-grid.menu-grid--tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 var(--card-gap); margin-top: 24px; }
-  .menu-tile { display: flex; flex-direction: column; padding: 18px 0 22px; border-top: 1px solid #eee; }
+  /* The short list as tiles: four across, two on a tablet and a phone, no
+     rules between them. Each is a small line-drawn cup, the name, its
+     ingredients, size and price, then the button the width of the column.
+     Doubled selector on purpose against the .menu-grid breakpoints later
+     in the file. The ingredient line takes the slack so every button in a
+     row sits on the same line. */
+  .menu-grid.menu-grid--tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px var(--card-gap); margin-top: 28px; }
+  .menu-tile { display: flex; flex-direction: column; }
+  .menu-art { display: block; width: 56px; height: 56px; margin-bottom: 14px; }
   .menu-tile .menu-row-ing { flex: 1; margin-top: 4px; max-width: none; }
-  .menu-tile-foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 14px; }
-  .menu-tile .menu-row-price { align-items: flex-start; }
-  @media (max-width: 768px) { .menu-grid.menu-grid--tiles { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 480px) { .menu-grid.menu-grid--tiles { grid-template-columns: 1fr; } }
+  .menu-tile .menu-row-price { align-items: flex-start; margin: 14px 0 10px; }
+  .menu-tile .menu-row-add { width: 100%; padding: 12px 8px; }
+  @media (max-width: 768px) { .menu-grid.menu-grid--tiles { grid-template-columns: repeat(2, 1fr); gap: 32px var(--card-gap); } }
+  @media (max-width: 480px) { .menu-grid.menu-grid--tiles { gap: 28px var(--card-gap); } .menu-art { width: 48px; height: 48px; } }
   .drink-ing {
     margin-top: 6px;
     font-size: 11px;
@@ -990,6 +993,7 @@
      invisible behind the packshot. */
   @media (hover: none) {
     .card-cta { opacity: 1; transform: none; pointer-events: auto; min-height: 44px; }
+    .menu-row-add { min-height: 44px; }
     .shop-card .card-alt { display: none; }
 
     /* A footer link was a 24x12 target. A thumb needs 44px, and that is a

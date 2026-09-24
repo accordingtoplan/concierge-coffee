@@ -79,18 +79,54 @@ function rowHTML(item) {
     </div>`;
 }
 
+/* ── THE DRAWINGS ──
+   One line-drawn cup per drink, its layers from the bottom up as shares of
+   the cup: espresso black, milk white, foam grey, matcha a mid grey. Three
+   vessels: a mug with a handle, a small cup on a saucer for espresso, a
+   tall glass for cold brew. Keyed on the drink key; a drink without an
+   entry gets the plain mug. Frederik, 23 Sep: the grid should carry a
+   drawing, more minimal than the reference. */
+const FILL = { espresso: '#111', milk: 'none', foam: '#d4d4d4', matcha: '#8c8c8c', water: '#3a3a3a' };
+const ART = {
+  'latte':        { cup: 'mug',  layers: [['espresso', 0.18], ['milk', 0.66], ['foam', 0.10]] },
+  'cappuccino':   { cup: 'mug',  layers: [['espresso', 0.22], ['milk', 0.36], ['foam', 0.36]] },
+  'flat-white':   { cup: 'mug',  layers: [['espresso', 0.26], ['milk', 0.62], ['foam', 0.06]] },
+  'cortado':      { cup: 'mug',  layers: [['espresso', 0.42], ['milk', 0.42], ['foam', 0.04]] },
+  'espresso':     { cup: 'demi', layers: [['espresso', 0.62]] },
+  'americano':    { cup: 'mug',  layers: [['water', 0.82]] },
+  'cold-brew':    { cup: 'tall', layers: [['espresso', 0.86]], ice: true },
+  'matcha-latte': { cup: 'mug',  layers: [['milk', 0.72], ['matcha', 0.18]] },
+};
+function artSVG(key) {
+  const a = ART[key] || { cup: 'mug', layers: [] };
+  /* Body of each vessel: x, y, width, height, corner. */
+  const body = a.cup === 'demi' ? [22, 28, 28, 24, 2.5] : a.cup === 'tall' ? [23, 10, 26, 48, 2] : [18, 16, 32, 40, 3];
+  const [x, y, w, h, r] = body;
+  const inset = 1.5;
+  let fills = '', level = y + h - inset;
+  for (const [what, share] of a.layers) {
+    const lh = (h - inset * 2) * share;
+    if (FILL[what] !== 'none') fills += `<rect x="${x + inset}" y="${(level - lh).toFixed(1)}" width="${w - inset * 2}" height="${lh.toFixed(1)}" fill="${FILL[what]}"/>`;
+    level -= lh;
+  }
+  const handle = a.cup === 'mug' ? `<path d="M${x + w} ${y + 10} h5 a7 7 0 0 1 0 14 h-5" fill="none"/>`
+               : a.cup === 'demi' ? `<path d="M${x + w} ${y + 6} h4 a5.5 5.5 0 0 1 0 11 h-4" fill="none"/><path d="M16 ${y + h + 4} h40" />`
+               : '';
+  const ice = a.ice ? `<rect x="${x + 6}" y="${y + 6}" width="7" height="7" fill="#fff"/><rect x="${x + 14}" y="${y + 13}" width="6" height="6" fill="#fff"/>` : '';
+  return `<svg class="menu-art" viewBox="0 0 72 72" aria-hidden="true" stroke="#111" stroke-width="1.5" stroke-linecap="round">${fills}${ice}<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="none"/>${handle}</svg>`;
+}
+
 function tileHTML(item) {
   const closed = !barOpen();
   const sizes = item.sizes.map(s => s.label).filter(l => l !== 'Regular').join(' / ');
   const prices = item.sizes.map(s => money(s.price)).join(' / ');
   return `
     <div class="menu-tile" role="listitem">
+      ${artSVG(item.key)}
       <div class="menu-row-name">${esc(item.name)}</div>
       <div class="menu-row-ing">${esc(item.ingredients || '')}</div>
-      <div class="menu-tile-foot">
-        <div class="menu-row-price">${sizes ? `<span>${esc(sizes)}</span>` : ''}<span>${prices}</span></div>
-        <button class="menu-row-add" type="button"${closed ? ' disabled' : ''} data-drink="${esc(item.key)}" aria-label="Order ${esc(item.name)} for pick-up">${closed ? 'Closed' : 'Order'}</button>
-      </div>
+      <div class="menu-row-price">${sizes ? `<span>${esc(sizes)}</span>` : ''}<span>${prices}</span></div>
+      <button class="menu-row-add" type="button"${closed ? ' disabled' : ''} data-drink="${esc(item.key)}" aria-label="Order ${esc(item.name)} for pick-up">${closed ? 'Closed' : 'Order'}</button>
     </div>`;
 }
 
@@ -114,9 +150,9 @@ export function renderPickupMenu() {
       return items.length ? `<div class="menu-sec"><h3 class="menu-sec-h">${esc(sec)}</h3>${items.map(rowHTML).join('')}</div>` : '';
     }).join('');
   } else {
-    /* Three tiles across, each a name, its ingredients, then size, price
-       and the button along the foot; a row of six drinks at full width had
-       the name at one edge and the price at the other. */
+    /* Four tiles across, each a drawing, a name, its ingredients, size and
+       price, and a button the width of the column; a row of drinks at full
+       width had the name at one edge and the price at the other. */
     grid.classList.add('menu-grid--tiles');
     grid.innerHTML = rows.map(tileHTML).join('');
   }
