@@ -742,19 +742,24 @@
     .menu-row-right { flex-direction: column; align-items: flex-end; gap: 8px; }
   }
   /* The short list as tiles: four across, two on a tablet and a phone, no
-     rules between them. Each is a small line-drawn cup, the name, its
-     ingredients, size and price, then the button the width of the column.
+     rules between them. Each is the name with a small line-drawn cup to its
+     right, its ingredients, size and price, then the button the width of
+     the column.
      Doubled selector on purpose against the .menu-grid breakpoints later
      in the file. The ingredient line takes the slack so every button in a
      row sits on the same line. */
   .menu-grid.menu-grid--tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px var(--card-gap); margin-top: 28px; }
   .menu-tile { display: flex; flex-direction: column; }
-  .menu-art { display: block; width: 56px; height: 56px; margin-bottom: 14px; }
+  /* Name left, the drawing right on the same line, its rim level with the
+     name's cap height; all vessels stand on one baseline in the box, so a
+     tall glass rises above a short cup rather than dropping below it. */
+  .menu-tile-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+  .menu-art { display: block; flex: none; width: 40px; height: 40px; margin: -20px -6px -4px 0; }
   .menu-tile .menu-row-ing { flex: 1; margin-top: 4px; max-width: none; }
   .menu-tile .menu-row-price { align-items: flex-start; margin: 14px 0 10px; }
   .menu-tile .menu-row-add { width: 100%; padding: 12px 8px; }
   @media (max-width: 768px) { .menu-grid.menu-grid--tiles { grid-template-columns: repeat(2, 1fr); gap: 32px var(--card-gap); } }
-  @media (max-width: 480px) { .menu-grid.menu-grid--tiles { gap: 28px var(--card-gap); } .menu-art { width: 48px; height: 48px; } }
+  @media (max-width: 480px) { .menu-grid.menu-grid--tiles { gap: 28px var(--card-gap); } }
   .drink-ing {
     margin-top: 6px;
     font-size: 11px;
