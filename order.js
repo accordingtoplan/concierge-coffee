@@ -445,7 +445,11 @@ async function pay() {
     location.href = body.url;
     return;
   }
-  err.textContent = body.error || 'Could not reach Square. Try again, or order at the bar.';
+  /* A JSON error is Square's or the function's own words. Anything else is
+     the host answering with something that is not the function, and the
+     status says which: 401 the gate, 405 a redirect turned the POST into a
+     GET, 5xx the function fell over. */
+  err.textContent = body.error || (res ? `The order did not go through (${res.status}). Try again, or order at the bar.` : 'Could not reach Square. Try again, or order at the bar.');
   err.hidden = false;
   btn.disabled = false; btn.textContent = 'Pay with Square';
 }
