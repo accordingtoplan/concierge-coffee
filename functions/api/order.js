@@ -77,14 +77,31 @@ export async function onRequestPost({ request, env }) {
   pickup_details.recipient = { display_name: name, phone_number: phone, ...(email ? { email_address: email } : {}) };
   if (note) pickup_details.note = note;
 
+  /* ── TEST ORDER ──
+     While PICKUP_TEST_WORD is set on the Pages project (Settings, Variables
+     and Secrets, Production, then retry the deployment), an order whose
+     "Anything for the bar" note carries that word is discounted to one
+     dollar before tax. Square will not take a card payment under a dollar,
+     and a dollar proves what a free order could not: the ticket, the tax
+     line and the refund from the POS. The word stays in the note, so the
+     bar sees it is a test. Delete the variable when testing is done. */
+  let discounts;
+  const testWord = String(env.PICKUP_TEST_WORD || '').trim();
+  if (testWord && note.toLowerCase().includes(testWord.toLowerCase())) {
+    const cents = await subtotalCents(env, line_items);
+    if (cents === null) return json(502, { ok: false, error: 'Could not price the test order. Try again in a moment.' });
+    if (cents > 100) discounts = [{ name: 'Site test', scope: 'ORDER', amount_money: { amount: cents - 100, currency: 'USD' } }];
+  }
+
   const origin = new URL(request.url).origin;
   const res = await square(env, 'POST', '/v2/online-checkout/payment-links', {
     idempotency_key: crypto.randomUUID(),
     order: {
       location_id: env.SQUARE_LOCATION_ID || LOCATION_ID,
-      reference_id: `web-${Date.now().toString(36)}`,
+      reference_id: `${discounts ? 'test' : 'web'}-${Date.now().toString(36)}`,
       source: { name: 'conciergecoffee.com' },
       line_items,
+      ...(discounts ? { discounts } : {}),
       fulfillments: [{ type: 'PICKUP', state: 'PROPOSED', pickup_details }],
     },
     checkout_options: {
@@ -100,6 +117,23 @@ export async function onRequestPost({ request, env }) {
   const url = res.body?.payment_link?.url;
   if (!url) return json(502, { ok: false, error: 'Square did not return a checkout. Try again in a moment.' });
   return json(200, { ok: true, url, orderId: res.body?.payment_link?.order_id || null });
+}
+
+/* What the lines come to before tax, from the catalog: each variation's
+   price plus its modifiers', times the quantity. Null if Square does not
+   answer or a price is missing. Only the test order needs it. */
+async function subtotalCents(env, line_items) {
+  const ids = [...new Set(line_items.flatMap(l => [l.catalog_object_id, ...l.modifiers.map(m => m.catalog_object_id)]))];
+  const res = await square(env, 'POST', '/v2/catalog/batch-retrieve', { object_ids: ids, include_related_objects: false });
+  if (!res.ok) return null;
+  const price = new Map((res.body.objects || []).map(o => [o.id, o.item_variation_data?.price_money?.amount ?? o.modifier_data?.price_money?.amount ?? 0]));
+  let total = 0;
+  for (const l of line_items) {
+    if (!price.has(l.catalog_object_id)) return null;
+    const unit = price.get(l.catalog_object_id) + l.modifiers.reduce((s, m) => s + (price.get(m.catalog_object_id) || 0), 0);
+    total += unit * Number(l.quantity);
+  }
+  return total;
 }
 
 /* The page sends each chosen modifier as "listId:modifierId", so the
