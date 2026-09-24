@@ -174,9 +174,10 @@ export function renderPickupMenu() {
     grid.innerHTML = rows.map(tileHTML).join('');
   }
 
+  /* Frederik's wording, 24 Sep; the address opens Google Maps. */
   line.innerHTML = barOpen()
-    ? `Order here, pay with Square, pick up at the bar. 821 Traction Ave, Arts District, Downtown LA. <button type="button" class="menu-bag-link" id="menu-bag-link" hidden></button>`
-    : `Pick-up ordering opens with the bar at ${esc(barOpensAt().replace('Opens ', ''))}. 821 Traction Ave, Arts District, Downtown LA.`;
+    ? `Pre-order here, pay online, pick up at <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank" rel="noopener">821 Traction Ave, Arts District, Downtown LA</a>. <button type="button" class="menu-bag-link" id="menu-bag-link" hidden></button>`
+    : `Pre-ordering opens with the bar at ${esc(barOpensAt().replace('Opens ', ''))}. Pick up at <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank" rel="noopener">821 Traction Ave, Arts District, Downtown LA</a>.`;
   document.getElementById('menu').hidden = false;
 
   document.getElementById('menu').addEventListener('click', e => {
@@ -455,6 +456,6 @@ function thanks() {
   if (q.get('ordered') !== '1') return;
   bag = []; saveBag(); renderBag();
   const line = document.getElementById('menu-pickup');
-  line.innerHTML = 'Thank you. The bar has your order; the receipt is in your email. 821 Traction Ave, Arts District, Downtown LA.';
+  line.innerHTML = 'Thank you. The bar has your order; the receipt is in your email. Pick up at <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank" rel="noopener">821 Traction Ave, Arts District, Downtown LA</a>.';
   history.replaceState(null, '', location.pathname + '#menu');
 }

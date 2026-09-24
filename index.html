@@ -94,11 +94,11 @@
 <!-- MENU -->
 <section class="shop" id="menu">
   <div class="menu-head">
-    <h2 class="shop-title">Drinks</h2>
+    <h2 class="shop-title">Drinks pre-order</h2>
   </div>
   <!-- Rewritten by renderDrinks() while pick-up ordering lives in Square
        Online; this text is the wording for when the site sells drinks again. -->
-  <p class="menu-pickup" id="menu-pickup">Order online, pick up at the bar. 821 Traction Ave, Arts District, Downtown LA.</p>
+  <p class="menu-pickup" id="menu-pickup">Pre-order here, pay online, pick up at <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank" rel="noopener">821 Traction Ave, Arts District, Downtown LA</a>.</p>
   <!-- The two iced leads. Rendered from Shopify like the shop cards, so name,
        price and button all come from the store; the markup here is only the
        slot. Two columns, in place of the old Specialty of the Month band. -->
@@ -328,8 +328,8 @@
        there once order.conciergecoffee.com exists, and until then say
        where the bar is. The markup keeps the wording for selling again. */
     document.getElementById('menu-pickup').innerHTML = ORDER_URL
-      ? `<a href="${esc(ORDER_URL)}" target="_blank" rel="noopener">Order ahead for pick-up</a>. 821 Traction Ave, Arts District, Downtown LA.`
-      : 'Drinks at the bar, 821 Traction Ave, Arts District, Downtown LA.';
+      ? `<a href="${esc(ORDER_URL)}" target="_blank" rel="noopener">Pre-order for pick-up</a> at <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank" rel="noopener">821 Traction Ave, Arts District, Downtown LA</a>.`
+      : 'Drinks at the bar, <a href="https://maps.app.goo.gl/CeXuHqDg2wRRmApQ6" target="_blank" rel="noopener">821 Traction Ave, Arts District, Downtown LA</a>.';
     document.getElementById('menu').hidden = !photos.length;
   }
 
