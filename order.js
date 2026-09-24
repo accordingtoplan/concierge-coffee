@@ -88,14 +88,21 @@ function rowHTML(item) {
    drawing, more minimal than the reference. */
 const FILL = { espresso: '#111', milk: 'none', foam: '#d4d4d4', matcha: '#8c8c8c', water: '#3a3a3a' };
 const ART = {
-  'latte':        { cup: 'mug',  layers: [['espresso', 0.18], ['milk', 0.66], ['foam', 0.10]] },
-  'cappuccino':   { cup: 'mug',  layers: [['espresso', 0.22], ['milk', 0.36], ['foam', 0.36]] },
-  'flat-white':   { cup: 'mug',  layers: [['espresso', 0.26], ['milk', 0.62], ['foam', 0.06]] },
-  'cortado':      { cup: 'mug',  layers: [['espresso', 0.42], ['milk', 0.42], ['foam', 0.04]] },
-  'espresso':     { cup: 'demi', layers: [['espresso', 0.62]] },
-  'americano':    { cup: 'mug',  layers: [['water', 0.82]] },
-  'cold-brew':    { cup: 'tall', layers: [['espresso', 0.86]], ice: true },
-  'matcha-latte': { cup: 'mug',  layers: [['milk', 0.72], ['matcha', 0.18]] },
+  'latte':                 { cup: 'mug',  layers: [['espresso', 0.18], ['milk', 0.66], ['foam', 0.10]] },
+  'cappuccino':            { cup: 'mug',  layers: [['espresso', 0.22], ['milk', 0.36], ['foam', 0.36]] },
+  'flat-white':            { cup: 'mug',  layers: [['espresso', 0.26], ['milk', 0.62], ['foam', 0.06]] },
+  'cortado':               { cup: 'mug',  layers: [['espresso', 0.42], ['milk', 0.42], ['foam', 0.04]] },
+  'espresso':              { cup: 'demi', layers: [['espresso', 0.62]] },
+  'americano':             { cup: 'mug',  layers: [['water', 0.82]] },
+  'matcha-latte':          { cup: 'mug',  layers: [['milk', 0.72], ['matcha', 0.18]] },
+  /* Iced: a tall glass, ice at the top, and the pour the way it lands, the
+     shot or the matcha over the milk or the tonic. */
+  'cold-brew':             { cup: 'tall', layers: [['espresso', 0.86]], ice: true },
+  'americano-iced':        { cup: 'tall', layers: [['water', 0.86]], ice: true },
+  'vanilla-latte-iced':    { cup: 'tall', layers: [['milk', 0.58], ['espresso', 0.28]], ice: true },
+  'matcha-latte-iced':     { cup: 'tall', layers: [['milk', 0.58], ['matcha', 0.28]], ice: true },
+  'banana-cream-matcha':   { cup: 'tall', layers: [['matcha', 0.52], ['foam', 0.34]], ice: true },
+  'citrus-espresso-tonic': { cup: 'tall', layers: [['milk', 0.58], ['espresso', 0.28]], ice: true },
 };
 function artSVG(key) {
   const a = ART[key] || { cup: 'mug', layers: [] };

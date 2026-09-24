@@ -133,7 +133,7 @@ export const MENU = [
     "key": "citrus-espresso-tonic",
     "name": "Citrus Espresso Tonic",
     "section": "Signature",
-    "ingredients": "",
+    "ingredients": "Espresso, tonic, citrus, over ice",
     "photo": null,
     "sizes": [
       {
@@ -147,7 +147,7 @@ export const MENU = [
     "key": "banana-cream-matcha",
     "name": "Banana Cream Matcha",
     "section": "Signature",
-    "ingredients": "",
+    "ingredients": "Matcha, milk, banana cream top, over ice",
     "photo": null,
     "sizes": [
       {
@@ -396,7 +396,7 @@ export const MENU = [
     "key": "americano-iced",
     "name": "Americano, iced",
     "section": "Iced",
-    "ingredients": "",
+    "ingredients": "Espresso, water, over ice",
     "photo": null,
     "sizes": [
       {
@@ -489,7 +489,7 @@ export const MENU = [
     "key": "vanilla-latte-iced",
     "name": "Vanilla Latte, iced",
     "section": "Iced",
-    "ingredients": "",
+    "ingredients": "Espresso, vanilla, milk, over ice",
     "photo": null,
     "sizes": [
       {
@@ -740,14 +740,17 @@ export const MENU = [
 
 /* What the site shows, 23 Sep: the four photographed drinks and eight more
    as a grid. Frederik's call after the first mobile pass: the full list was
-   too long on a phone. Ingredient lines for the six are drafts of 23 Sep,
-   for Benjamin to confirm. Everything else above stays keyed and ready; to
+   too long on a phone. The eight are the top eight by quantity sold at
+   Traction Ave over the 90 days to 23 Sep, from Square's orders
+   (scripts/square-bestsellers.mjs), once the photographed four are taken
+   out; revisit in November with a fresh run. Ingredient lines written
+   23 Sep are drafts for Benjamin to confirm. Everything else above stays keyed and ready; to
    bring a drink back, add its key here. The five are staples standing in
-   until Benjamin names the best sellers from Square's item sales report. */
+   */
 export const LIVE = [
   'einspanner', 'yuzu-matcha-tonic', 'latte-iced', 'saffron-latte',
-  'latte', 'cappuccino', 'flat-white', 'cortado',
-  'espresso', 'americano', 'cold-brew', 'matcha-latte',
+  'americano-iced', 'vanilla-latte-iced', 'cold-brew', 'banana-cream-matcha',
+  'matcha-latte-iced', 'latte', 'citrus-espresso-tonic', 'cappuccino',
 ];
 /* In LIVE's order: the list on the page reads in the order written here. */
 export const MENU_LIVE = LIVE.map(k => MENU.find(m => m.key === k)).filter(Boolean);
