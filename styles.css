@@ -674,11 +674,11 @@
   @media (max-width: 480px) {
     .menu-lead { grid-template-columns: 1fr; }
   }
-  /* The drink button is there at rest, quietly: white text and a hairline
-     on the photograph, no fill. The hover fills it white, the way the shop
-     cards' button arrives. Frederik, 23 Sep: a visitor should see that a
-     drink can be ordered without having to find the hover. */
-  .drink-card .card-cta {
+  /* The card button is there at rest, quietly: white text and a hairline
+     on the photograph, no fill. The hover fills it white. Frederik, 23 Sep:
+     a visitor should see that a drink or a coffee can be ordered without
+     having to find the hover. Drinks first, the coffee cards the same day. */
+  .drink-card .card-cta, .shop-card .card-cta {
     opacity: 1; transform: none; pointer-events: auto;
     padding: 10px 12px;
     border: 1px solid rgba(255,255,255,0.7);
@@ -686,8 +686,9 @@
     color: #fff;
     transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
-  .drink-card:hover .card-cta, .drink-card .card-cta:hover { background: #fff; color: #111; border-color: #fff; }
-  .drink-card .card-cta:disabled { background: transparent; color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.35); }
+  .drink-card:hover .card-cta, .drink-card .card-cta:hover,
+  .shop-card:hover .card-cta, .shop-card .card-cta:hover { background: #fff; color: #111; border-color: #fff; }
+  .drink-card .card-cta:disabled, .shop-card .card-cta:disabled { background: transparent; color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.35); }
   /* ── MENU MODE ──
      Pick-up ordering lives in Square Online (11 Sep 2026), so the drinks
      read as a menu: the four photographed drinks make a row, as many

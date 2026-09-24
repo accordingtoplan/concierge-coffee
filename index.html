@@ -266,11 +266,9 @@
     const vs = variants(p).filter(v => !DRINKS_ORDERABLE || v.availableForSale);
     const price = formatPrice(Math.min(...vs.map(v => Number(v.price.amount))));
     const closed = !barOpen();
-    const cta = closed ? `Closed · ${barOpensAt()}`
-      : vs.length > 1 ? `Order for Pick-up · from ${price}` : `Order for Pick-up · ${price}`;
-    /* The short form for a two-up phone card; same meaning, less width. */
-    const ctaTight = closed ? `Closed · ${barOpensAt()}`
-      : vs.length > 1 ? `Pick-up · from ${price}` : `Pick-up · ${price}`;
+    /* The price is on the card's foot; the button says what it does. */
+    const cta = closed ? `Closed · ${barOpensAt()}` : 'Order for pick-up';
+    const ctaTight = closed ? `Closed · ${barOpensAt()}` : 'Order';
     const sizes = productSizes(p).join(' / ');
     /* The ingredient line is the Shopify description with the pick-up
        sentence taken off; one source for what is in the glass. */
@@ -382,14 +380,11 @@
       const sellable = only ? only.availableForSale : vs.some(v => v.availableForSale);
       // One size adds straight to the bag. More than one has to be chosen, so
       // the button opens the quick add panel instead of guessing.
-      const cta = !sellable ? 'Sold out'
-                : only ? `Buy ${esc(name)} \u2014 ${price}`
-                : `Choose size \u2014 from ${price}`;
-      // The short form for a two-up phone card. Same meaning, no product name:
-      // the name is already set across the top of the same card.
-      const ctaTight = !sellable ? 'Sold out'
-                     : only ? `Buy \u00b7 ${price}`
-                     : 'Choose size';
+      // The name and the price are on the card already; the button says
+      // only what it does (Frederik, 23 Sep).
+      const cta = !sellable ? 'Sold out' : only ? 'Add to Cart' : 'Choose size';
+      const ctaTight = cta;
+      const label = !sellable ? `${esc(name)}: sold out` : only ? `Add ${esc(name)} to cart` : `Choose a size for ${esc(name)}`;
       const action = only ? `addToCartHandler('${only.id}')` : `openProduct('${p.id}')`;
 
       return `
@@ -406,7 +401,7 @@
                   <span>${esc(sizes.join(' / '))}</span>
                   <span>${price}</span>
                 </div>
-                <button class="card-cta" ${sellable ? '' : 'disabled'} aria-label="${cta}"
+                <button class="card-cta" ${sellable ? '' : 'disabled'} aria-label="${label}"
                   onclick="event.stopPropagation(); ${sellable ? action : ''}"><span class="cta-full" aria-hidden="true">${cta}</span><span class="cta-tight" aria-hidden="true">${ctaTight}</span></button>
               </div>
             </div>
