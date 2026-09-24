@@ -39,7 +39,7 @@ function photoCardHTML(item) {
   /* The price sits on the card's foot already; the button says only what it
      does (Frederik, 23 Sep). */
   const cta = closed ? `Closed · ${barOpensAt()}` : 'Order for pick-up';
-  const tight = closed ? `Closed · ${barOpensAt()}` : 'Order';
+  const tight = cta;
   const sizes = item.sizes.map(s => s.label).filter(l => l !== 'Regular').join(' / ');
   const src = item.photo, small = item.photo.replace(/\.webp$/, '-800.webp');
   return `
@@ -74,7 +74,7 @@ function rowHTML(item) {
       </div>
       <div class="menu-row-right">
         <div class="menu-row-price">${sizes ? `<span>${esc(sizes)}</span>` : ''}<span>${prices}</span></div>
-        <button class="menu-row-add" type="button"${closed ? ' disabled' : ''} data-drink="${esc(item.key)}" aria-label="Order ${esc(item.name)} for pick-up">${closed ? 'Closed' : 'Order'}</button>
+        <button class="menu-row-add" type="button"${closed ? ' disabled' : ''} data-drink="${esc(item.key)}" aria-label="Order ${esc(item.name)} for pick-up">${closed ? `Closed · ${barOpensAt()}` : 'Order for pick-up'}</button>
       </div>
     </div>`;
 }
@@ -131,7 +131,7 @@ function tileHTML(item) {
       <div class="menu-tile-head"><div class="menu-row-name">${esc(item.name)}</div>${artSVG(item.key)}</div>
       <div class="menu-row-ing">${esc(item.ingredients || '')}</div>
       <div class="menu-row-price">${sizes ? `<span>${esc(sizes)}</span>` : ''}<span>${prices}</span></div>
-      <button class="menu-row-add" type="button"${closed ? ' disabled' : ''} data-drink="${esc(item.key)}" aria-label="Order ${esc(item.name)} for pick-up">${closed ? 'Closed' : 'Order'}</button>
+      <button class="menu-row-add" type="button"${closed ? ' disabled' : ''} data-drink="${esc(item.key)}" aria-label="Order ${esc(item.name)} for pick-up">${closed ? `Closed · ${barOpensAt()}` : 'Order for pick-up'}</button>
     </div>`;
 }
 
@@ -143,8 +143,20 @@ export function renderPickupMenu() {
   grid.classList.add('menu-grid--list');
   grid.setAttribute('role', 'list');
 
+  /* The photographed drinks bracket the grid: two above, two below
+     (Frederik, 24 Sep). The second pair lives in a container made here,
+     after the grid, in the lead's own classes. */
   const photos = menu.items.filter(i => i.photo);
-  lead.innerHTML = photos.map(photoCardHTML).join('');
+  lead.innerHTML = photos.slice(0, 2).map(photoCardHTML).join('');
+  let tail = document.getElementById('menu-lead-tail');
+  if (!tail) {
+    tail = document.createElement('div');
+    tail.id = 'menu-lead-tail';
+    tail.className = 'menu-lead menu-lead--photos menu-lead--tail';
+    grid.insertAdjacentElement('afterend', tail);
+  }
+  tail.innerHTML = photos.slice(2, 4).map(photoCardHTML).join('');
+  tail.hidden = photos.length <= 2;
   /* The list carries what the photographs do not; a pictured drink is
      ordered from its card. A short list runs flat, section heads only
      earn their place once there are enough rows to need finding. */

@@ -268,7 +268,7 @@
     const closed = !barOpen();
     /* The price is on the card's foot; the button says what it does. */
     const cta = closed ? `Closed · ${barOpensAt()}` : 'Order for pick-up';
-    const ctaTight = closed ? `Closed · ${barOpensAt()}` : 'Order';
+    const ctaTight = cta;
     const sizes = productSizes(p).join(' / ');
     /* The ingredient line is the Shopify description with the pick-up
        sentence taken off; one source for what is in the glass. */
