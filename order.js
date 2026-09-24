@@ -99,9 +99,10 @@ const ART = {
 };
 function artSVG(key) {
   const a = ART[key] || { cup: 'mug', layers: [] };
-  /* Body of each vessel: x, y, width, height, corner. */
-  const body = a.cup === 'demi' ? [22, 28, 28, 24, 2.5] : a.cup === 'tall' ? [23, 10, 26, 48, 2] : [18, 16, 32, 40, 3];
-  const [x, y, w, h, r] = body;
+  /* Body of each vessel: x, y, width, height. Square corners throughout
+     (Frederik, 23 Sep); the handles stay round because a handle is. */
+  const body = a.cup === 'demi' ? [22, 28, 28, 24] : a.cup === 'tall' ? [23, 10, 26, 48] : [18, 16, 32, 40];
+  const [x, y, w, h] = body;
   const inset = 1.5;
   let fills = '', level = y + h - inset;
   for (const [what, share] of a.layers) {
@@ -113,7 +114,7 @@ function artSVG(key) {
                : a.cup === 'demi' ? `<path d="M${x + w} ${y + 6} h4 a5.5 5.5 0 0 1 0 11 h-4" fill="none"/><path d="M16 ${y + h + 4} h40" />`
                : '';
   const ice = a.ice ? `<rect x="${x + 6}" y="${y + 6}" width="7" height="7" fill="#fff"/><rect x="${x + 14}" y="${y + 13}" width="6" height="6" fill="#fff"/>` : '';
-  return `<svg class="menu-art" viewBox="0 0 72 72" aria-hidden="true" stroke="#111" stroke-width="1.5" stroke-linecap="round">${fills}${ice}<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="none"/>${handle}</svg>`;
+  return `<svg class="menu-art" viewBox="0 0 72 72" aria-hidden="true" stroke="#111" stroke-width="1.5" stroke-linecap="butt" stroke-linejoin="miter">${fills}${ice}<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="none"/>${handle}</svg>`;
 }
 
 function tileHTML(item) {
